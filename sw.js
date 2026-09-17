@@ -7,7 +7,6 @@ const CACHE_NAME = 'smart-bar-mixology-v2.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './destin_drinks_and_bar_guide.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
@@ -62,7 +61,7 @@ self.addEventListener('fetch', (event) => {
             return cachedResponse;
           }
           if (event.request.mode === 'navigate') {
-            return caches.match('./index.html') || caches.match('./destin_drinks_and_bar_guide.html');
+            return caches.match('./index.html');
           }
         });
       })
