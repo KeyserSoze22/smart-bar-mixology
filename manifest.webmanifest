@@ -1,7 +1,7 @@
 {
-  "name": "Destin Cocktail Recipes & Smart Bar Builder",
-  "short_name": "Destin Drinks",
-  "description": "Authentic 32-oz beach buckets, McGuire's pub jars, classic vacation cocktails, and interactive shopping list builder.",
+  "name": "Beach & Vacation Drink Mixology Guide",
+  "short_name": "Vacation Drinks",
+  "description": "Authentic 32-oz beach buckets, coastal pub jars, steamer specialties, classic vacation cocktails, and interactive shopping list builder.",
   "start_url": "./destin_drinks_and_bar_guide.html",
   "scope": "./",
   "display": "standalone",
@@ -32,17 +32,24 @@
       "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
     },
     {
-      "name": "The Back Porch (14)",
-      "short_name": "Back Porch",
-      "description": "Back Porch punch and bucket recipes",
+      "name": "Beach Bar & Punch (14)",
+      "short_name": "Beach Bar",
+      "description": "Beach bar punch and bucket recipes",
       "url": "./destin_drinks_and_bar_guide.html#section-beachbar",
       "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
     },
     {
-      "name": "McGuire's Irish Pub (12)",
-      "short_name": "McGuire's",
-      "description": "McGuire's pub mason jar recipes",
+      "name": "Coastal Pub Drinks (12)",
+      "short_name": "Pub Drinks",
+      "description": "McGuire's style pub mason jar recipes",
       "url": "./destin_drinks_and_bar_guide.html#section-mcguiresdrinks",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Old Bay Steamer (8)",
+      "short_name": "Old Bay",
+      "description": "Seafood house cocktails and steamer specialties",
+      "url": "./destin_drinks_and_bar_guide.html#section-oldbaydrinks",
       "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
     },
     {

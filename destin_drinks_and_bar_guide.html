@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Destin Cocktail Recipes &amp; Smart Bar Builder | 32-oz Vessels &amp; 1.75L Handles</title>
+  <title>Beach &amp; Vacation Drink Mixology Guide | Smart Bar Builder &amp; Batch Cocktails</title>
   <!-- PWA & Mobile Web App Capabilities -->
   <link rel="manifest" href="manifest.webmanifest" />
   <meta name="theme-color" content="#0284c7" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Destin Drinks" />
+  <meta name="apple-mobile-web-app-title" content="Vacation Drinks" />
   <link rel="apple-touch-icon" href="icon-192.svg" />
   <meta name="mobile-web-app-capable" content="yes" />
 
@@ -23,7 +23,7 @@
        CSS RESET & VARIABLES (LIGHT THEME DEFAULT)
        ========================================================================== */
     :root {
-      --primary: #0284c7;         /* Emerald Coast Deep Blue */
+      --primary: #0284c7;         /* Deep Ocean Blue */
       --primary-dark: #0369a1;
       --primary-light: #e0f2fe;
       --teal: #0d9488;            /* Emerald Water Accent */
@@ -2248,7 +2248,7 @@
       display: none;
     }
 
-    /* Destination Mini Widget */
+    /* Vacationation Mini Widget */
     .toc-weather-box {
       margin: 10px 14px 6px;
       padding: 9px 12px;
@@ -4062,7 +4062,300 @@
       border-color: rgba(194, 65, 12, 0.35);
     }
 
-  </style>
+  
+    /* ==========================================================================
+       QOL NAVIGATION SUITE: CAROUSELS, STEPPERS, SEARCH, SCROLLSPY, CART PILL
+       ========================================================================== */
+    
+    /* Horizontal Recipe Pill Carousel */
+    .recipe-pill-carousel-wrap {
+      margin-bottom: 16px;
+    }
+    .recipe-pill-carousel {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 6px 2px 14px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .recipe-pill-carousel::-webkit-scrollbar {
+      height: 6px;
+    }
+    .recipe-pill-carousel::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: var(--radius-full);
+    }
+    .recipe-pill-btn {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      white-space: nowrap;
+      user-select: none;
+    }
+    .recipe-pill-btn:hover {
+      background: var(--surface-subtle);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .recipe-pill-btn.active {
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: #0284c7;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+      transform: translateY(-1px);
+    }
+    body.dark-mode .recipe-pill-btn {
+      background: #142238;
+      border-color: #233554;
+      color: #f8fafc;
+    }
+    body.dark-mode .recipe-pill-btn.active {
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+      color: #ffffff;
+    }
+
+    /* Recipe Stepper Controls Bar */
+    .recipe-stepper-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      background: var(--surface-subtle);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+    .recipe-stepper-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .recipe-stepper-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    body.dark-mode .recipe-stepper-btn {
+      background: #142238;
+      border-color: #233554;
+      color: #f8fafc;
+    }
+    .recipe-stepper-counter {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Return to Previous View / Bar Builder Breadcrumb */
+    .return-breadcrumb-bar {
+      margin-bottom: 14px;
+      animation: fadeIn 0.3s ease;
+    }
+    .return-breadcrumb-btn {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+      border-radius: var(--radius-full);
+      font-size: 0.84rem;
+      font-weight: 800;
+      padding: 7px 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .return-breadcrumb-btn:hover {
+      background: #bae6fd;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    body.dark-mode .return-breadcrumb-btn {
+      background: rgba(2, 132, 199, 0.25);
+      color: #7dd3fc;
+      border-color: #0284c7;
+    }
+
+    /* Universal Live Search Dropdown */
+    .universal-search-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      min-width: 320px;
+      max-height: 380px;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-xl);
+      z-index: 1100;
+      padding: 6px;
+      display: none;
+    }
+    body.dark-mode .universal-search-dropdown {
+      background: #142238;
+      border-color: #233554;
+    }
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      border-bottom: 1px solid var(--border);
+    }
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+    .search-result-item:hover, .search-result-item.selected {
+      background: var(--surface-subtle);
+    }
+    body.dark-mode .search-result-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .search-result-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .search-result-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .search-result-badge {
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Floating Quick Cart Pill */
+    .floating-quick-cart {
+      position: fixed;
+      bottom: 26px;
+      left: 24px;
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.4);
+      cursor: pointer;
+      z-index: 940;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: var(--transition);
+    }
+    .floating-quick-cart:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(2, 132, 199, 0.55);
+    }
+    @media (max-width: 768px) {
+      .floating-quick-cart {
+        bottom: 82px;
+        left: 14px;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+      }
+    }
+
+    /* Back To Top Floating Button Positioning & Transition */
+    .back-to-top {
+      position: fixed;
+      bottom: 26px;
+      right: 24px;
+      background: var(--primary);
+      color: #ffffff;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      font-weight: bold;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      z-index: 940;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(14px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .back-to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    @media (max-width: 768px) {
+      .back-to-top {
+        bottom: 82px;
+        right: 14px;
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    /* Active Scrollspy Links */
+    .streamlined-nav-link.active {
+      background: var(--primary) !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+    }
+    .mobile-app-tab.active {
+      color: var(--primary) !important;
+      font-weight: 800;
+    }
+    .mobile-app-tab.active .icon {
+      transform: scale(1.18);
+    }
+</style>
 </head>
 <body>
   <!-- Reading Progress Bar -->
@@ -4074,9 +4367,9 @@
     <header class="streamlined-header">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 12px;">
         <div class="streamlined-badges">
-          <span class="streamlined-badge">🏝️ Destin, FL 2026</span>
+          <span class="streamlined-badge">🏖️ Beach &amp; Vacation Mixology</span>
           <span class="streamlined-badge">🪣 32-oz Souvenir Buckets &amp; Jars</span>
-          <span class="streamlined-badge">🍾 Beach Liquors 1.75L Handles</span>
+          <span class="streamlined-badge">🍾 Standard 1.75L Handles &amp; Spirits</span>
           <span class="streamlined-badge">👥 6–8 Adults Pacing</span>
           <span class="streamlined-badge" style="background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.4); color: #ecfdf5;">⚡ Installable App</span>
         </div>
@@ -4090,16 +4383,17 @@
         </div>
       </div>
 
-      <h1 class="streamlined-title">🍹 Destin Cocktail Recipes &amp; Smart Bar Builder</h1>
+      <h1 class="streamlined-title">🍹 Beach &amp; Vacation Drink Mixology Guide</h1>
       <p class="streamlined-subtitle">
-        Your dedicated manual for <strong>46 authentic vacation cocktail recipes</strong> (14 Back Porch Beach Buckets + 12 McGuire's Irish Pub Mason Jars + 8 Old Bay Steamer Cocktails + 12 Vacation &amp; Beach Classics) and the interactive <strong>Smart Bar Builder</strong>. Select only the drinks your group wants to generate a consolidated 1.75L handle shopping list with verified Beach Liquors pricing, 1-gallon condo pitcher batches, and live vacation pacing!
+        Your dedicated manual for <strong>46 authentic beach bar &amp; vacation cocktail recipes</strong> (Beach Bar Coolers &amp; Buckets, Coastal Irish Pub Classics, Steamer Specialties, and All-Time Vacation Favorites) with the interactive <strong>Smart Bar Builder</strong>. Select only the drinks your group wants to calculate a consolidated 1.75L handle shopping list with retail price estimates, 1-gallon vacation pitcher batches, and cost splitters!
       </p>
 
       <div class="streamlined-toolbar">
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-          <div style="position: relative; min-width: 240px;">
+          <div style="position: relative; min-width: 260px; flex: 1; max-width: 360px;" class="universal-search-container">
             <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; color: var(--text-muted); pointer-events: none;">🔍</span>
-            <input type="text" id="drinkSearchInput" placeholder="Filter cocktails &amp; spirits..." oninput="handleDrinkSearch(this.value)" style="width: 100%; padding: 8px 14px 8px 36px; border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: #fff; font-size: 0.88rem; outline: none;">
+            <input type="text" id="drinkSearchInput" placeholder="Search 46 cocktails & spirits (Press /)..." oninput="handleUniversalSearch(this.value)" onfocus="handleUniversalSearch(this.value)" style="width: 100%; padding: 8px 14px 8px 36px; border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: #fff; font-size: 0.88rem; outline: none;" autocomplete="off">
+            <div id="universalSearchResults" class="universal-search-dropdown"></div>
           </div>
           <button onclick="window.print()" class="btn btn-secondary" style="padding: 8px 18px; border-radius: var(--radius-full); font-weight: 700; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;">
             🖨️ Print / PDF
@@ -4112,7 +4406,7 @@
           </button>
         </div>
         <div style="font-size: 0.85rem; font-weight: 700; opacity: 0.9;">
-          📍 The Islander Condos • Beach Liquors Destin (1257 Airport Rd)
+          📍 Vacation Rental Bar • Retail Spirits &amp; 1.75L Handle Planning Guide
         </div>
       </div>
     </header>
@@ -4139,7 +4433,7 @@
         <div style="display: flex; align-items: center; gap: 10px;">
           <span style="font-size: 1.4rem;">📅🍹</span>
           <div>
-            <h4 style="font-size: 1.05rem; margin: 0; color: var(--text-main);">7-Day Destin Vacation "Drink of the Day" Pairings</h4>
+            <h4 style="font-size: 1.05rem; margin: 0; color: var(--text-main);">7-Day Vacation "Drink of the Day" Occasion Pairings</h4>
             <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Curated cocktail themes matching your Holiday Isle itinerary • Click any day to view &amp; batch</p>
           </div>
         </div>
@@ -4148,35 +4442,35 @@
       <div class="itinerary-pairings-grid" id="itineraryPairingsGrid">
         <div class="itinerary-day-pill" onclick="navigateToRecipe('bp_ultimate_porchpunch')">
           <div>
-            <div style="font-size: 0.74rem; font-weight: 800; color: var(--coral); text-transform: uppercase;">Day 1 (Sun Arrival)</div>
+            <div style="font-size: 0.74rem; font-weight: 800; color: var(--coral); text-transform: uppercase;">Day 1 (Arrival &amp; Balcony Kickoff)</div>
             <div style="font-weight: 700; font-size: 0.88rem;">🍹 The Ultimate Back Porch Punch</div>
           </div>
           <span style="font-size: 0.8rem; color: var(--primary);">View ➔</span>
         </div>
         <div class="itinerary-day-pill" onclick="navigateToRecipe('mc_irish_wake')">
           <div>
-            <div style="font-size: 0.74rem; font-weight: 800; color: #15803d; text-transform: uppercase;">Day 2 (Mon McGuire's)</div>
+            <div style="font-size: 0.74rem; font-weight: 800; color: #15803d; text-transform: uppercase;">Day 2 (Pub Night &amp; Group Toasts)</div>
             <div style="font-weight: 700; font-size: 0.88rem;">🍀 McGuire's Irish Wake</div>
           </div>
           <span style="font-size: 0.8rem; color: var(--primary);">View ➔</span>
         </div>
         <div class="itinerary-day-pill" onclick="navigateToRecipe('bp_porchmargarita')">
           <div>
-            <div style="font-size: 0.74rem; font-weight: 800; color: #0284c7; text-transform: uppercase;">Day 3 (Tue Taco Sunset)</div>
+            <div style="font-size: 0.74rem; font-weight: 800; color: #0284c7; text-transform: uppercase;">Day 3 (Sunset &amp; Taco Fiesta)</div>
             <div style="font-weight: 700; font-size: 0.88rem;">🧂 Grand Porch Sunset Margarita</div>
           </div>
           <span style="font-size: 0.8rem; color: var(--primary);">View ➔</span>
         </div>
         <div class="itinerary-day-pill" onclick="navigateToRecipe('bp_beachbucket')">
           <div>
-            <div style="font-size: 0.74rem; font-weight: 800; color: var(--coral); text-transform: uppercase;">Day 4 (Wed Crab Island)</div>
+            <div style="font-size: 0.74rem; font-weight: 800; color: var(--coral); text-transform: uppercase;">Day 4 (Sandbar, Boat &amp; Pool Day)</div>
             <div style="font-weight: 700; font-size: 0.88rem;">🪣 32-oz Beach Bucket (No Glass!)</div>
           </div>
           <span style="font-size: 0.8rem; color: var(--primary);">View ➔</span>
         </div>
         <div class="itinerary-day-pill" onclick="navigateToRecipe('obs_blt')">
           <div>
-            <div style="font-size: 0.74rem; font-weight: 800; color: #c2410c; text-transform: uppercase;">Day 5 (Thu Steamer Feast)</div>
+            <div style="font-size: 0.74rem; font-weight: 800; color: #c2410c; text-transform: uppercase;">Day 5 (Seafood Boil &amp; Steamer Night)</div>
             <div style="font-weight: 700; font-size: 0.88rem;">🥃 The Steamer "BLT" (Sweet Tea &amp; Lemonade)</div>
           </div>
           <span style="font-size: 0.8rem; color: #c2410c;">View ➔</span>
@@ -4202,24 +4496,21 @@
     <!-- Sticky Navigation Tabs -->
     <nav class="streamlined-nav-bar" aria-label="Drinks Navigation">
       <div class="streamlined-nav-links">
-        <a href="#section-custombar" class="streamlined-nav-link active">
+        <a href="#section-custombar" class="streamlined-nav-link active" data-section="section-custombar">
           <span>🍸🛒</span> Smart Bar Builder &amp; Cart
         </a>
-        <a href="#section-beachbar" class="streamlined-nav-link">
-          <span>🌴</span> The Back Porch (14 Recipes)
+        <a href="#section-beachbar" class="streamlined-nav-link" data-section="section-beachbar">
+          <span>🌴</span> Beach Bar &amp; Punch (14)
         </a>
-        <a href="#section-mcguiresdrinks" class="streamlined-nav-link">
-          <span>🍀</span> McGuire's Pub (12 Recipes)
+        <a href="#section-mcguiresdrinks" class="streamlined-nav-link" data-section="section-mcguiresdrinks">
+          <span>🍀</span> McGuire's Pub (12)
         </a>
-        <a href="#section-oldbaydrinks" class="streamlined-nav-link">
-          <span>🦀</span> Old Bay Steamer (8 Recipes)
+        <a href="#section-oldbaydrinks" class="streamlined-nav-link" data-section="section-oldbaydrinks">
+          <span>🦀</span> Old Bay Steamer (8)
         </a>
-        <a href="#section-classicdrinks" class="streamlined-nav-link">
-          <span>🍸</span> Vacation Classics (12 Recipes)
+        <a href="#section-classicdrinks" class="streamlined-nav-link" data-section="section-classicdrinks">
+          <span>🍸</span> Vacation Classics (12)
         </a>
-      </div>
-      <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);">
-        🚫 Strictly No Glass on Beach/Boats
       </div>
     </nav>
 
@@ -4239,7 +4530,7 @@
       <div id="cabinetModeView" style="display: none; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
           <div>
-            <h3 style="font-size: 1.15rem; margin: 0; color: var(--text-main);">🍾 Condo Liquor Cabinet &amp; Pantry Inventory</h3>
+            <h3 style="font-size: 1.15rem; margin: 0; color: var(--text-main);">🍾 Vacation Rental Bar &amp; Pantry Inventory</h3>
             <p style="font-size: 0.86rem; color: var(--text-muted); margin: 2px 0 0;">Check off what bottles &amp; mixers you currently have on the counter to find instant matches:</p>
           </div>
           <div style="display: flex; gap: 8px;">
@@ -4270,12 +4561,12 @@
         <div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <h2><span>🍸🛒</span> Smart Consolidated Vacation Bar Builder &amp; Purchase List</h2>
-            <span class="badge badge-purple">Beach Liquors Destin</span>
+            <span class="badge badge-purple">Retail Spirits Reference</span>
             <span class="badge badge-green">Publix Mixers</span>
             <span class="badge badge-blue">Consolidated Brands</span>
           </div>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">
-            <strong>Select only the cocktails your group actually wants to make</strong> from The Back Porch &amp; McGuire's. The builder automatically consolidates ingredients, eliminates duplicate bottles, recommends <strong>1–2 high-quality workhorse brands</strong> reasonably priced for mixed beach drinks, and generates an exact Beach Liquors Destin shopping list!
+            <strong>Select only the cocktails your group actually wants to make</strong> from The Back Porch &amp; McGuire's. The builder automatically consolidates ingredients, eliminates duplicate bottles, recommends <strong>1–2 high-quality workhorse brands</strong> reasonably priced for mixed beach drinks, and generates an exact retail spirits and grocery shopping list!
           </p>
         </div>
       </div>
@@ -4283,7 +4574,7 @@
       <!-- BRAND CONSOLIDATION STRATEGY CALLOUT -->
       <div class="brand-strategy-box">
         <div class="brand-strategy-title">
-          <span>🏆</span> 1.75L Handle Strategy for 6–8 Adults &amp; 30–40oz Yeti Tumblers (Beach Liquors Destin):
+          <span>🏆</span> 1.75L Handle Strategy for 6–8 Adults &amp; 30–40oz Tumblers (Standard Retail Spirit Handles):
         </div>
         <p class="brand-strategy-desc">
           For <strong>6–8 adults drinking 2–4 drinks per day in 30–40oz Yeti mugs with heavy ice</strong>, standard 750ml bottles run dry in 1 afternoon! Stocking <strong>1.75L handles</strong> of core workhorse spirits slashes alcohol costs by <strong>30%–48% per ounce</strong> compared to 750ml fifths, giving your group ample volume for double beach pours all week without buying duplicate bottles:
@@ -4420,7 +4711,7 @@
         </div>
         <div class="custom-kpi-card">
           <div class="kpi-number" id="kpi-spirits-cost">$0</div>
-          <div class="kpi-label">Beach Liquors Spirits</div>
+          <div class="kpi-label">Retail Spirits Total</div>
         </div>
         <div class="custom-kpi-card grand-total-card">
           <div class="kpi-number" id="kpi-grand-total">$0</div>
@@ -4455,7 +4746,7 @@
             <span class="servings-icon">💰</span>
             <div>
               <div class="servings-main-val" id="servings-cost-per-drink">~$0.00 Standard / ~$0.00 Yeti Mug</div>
-              <div class="servings-sub-text">vs. $14–$18 standard / $25+ doubles at Destin beachfront bars &amp; Crab Island boats</div>
+              <div class="servings-sub-text">vs. $14–$18 standard / $25+ doubles at beachfront resort bars &amp; party boats</div>
             </div>
           </div>
           <div class="servings-item">
@@ -4522,7 +4813,7 @@
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border);">
           <div>
             <h3 style="font-size: 1.15rem; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
-              <span>🛒</span> Consolidated Beach Liquors &amp; Grocery Shopping List
+              <span>🛒</span> Consolidated Retail Spirits &amp; Grocery Shopping List
             </h3>
             <span id="custom-cart-progress-badge" class="cart-progress-badge">0 of 0 packed</span>
           </div>
@@ -4549,7 +4840,7 @@
         <div>
           <h2><span>🍹</span> Copycat "The Back Porch" Beach Bar & Punch Recipes</h2>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
-            Signature Destin beach cocktails served <strong>on the rocks & in cooler pitchers</strong>—100% blender-free with no frozen slush melting in the sun!
+            Signature beach bar cocktails served <strong>on the rocks &amp; in cooler pitchers</strong>—100% blender-free with no frozen slush melting in the sun!
           </p>
         </div>
         <button class="qol-btn" onclick="copyBarShoppingList()" style="background: var(--coral); color: #fff;">
@@ -4558,9 +4849,10 @@
       </div>
 
       <div class="beach-liquors-banner" style="border-left-color: var(--coral); background: #fff1f0; border-color: #fecdd3; color: #9f1239;">
-        🏪 <strong>Destin Pricing Reference — Beach Liquors:</strong> Located at <strong>1257 Airport Rd, Destin, FL 32541</strong> (Phone: <a href="tel:8506546161" style="color: inherit; text-decoration: underline; font-weight: 700;">(850) 654-6161</a>) — just 5 minutes across Highway 98 from The Islander Resort Condos. Store hours: Mon–Sat 9:00 AM – 10:00 PM, Sun 11:00 AM – 8:00 PM. All spirit bottle prices below are verified against Beach Liquors Destin retail inventory.
+        🏪 <strong>Retail Spirits &amp; Grocery Price Reference:</strong> Benchmarked against standard coastal liquor store retail pricing for 1.75L economy handles and 750ml premium bottles, designed to eliminate high resort markups!
       </div>
 
+      <div class="recipe-pill-carousel-wrap" id="carouselWrap_bp"><div class="recipe-pill-carousel" id="carousel_bp"></div></div>
       <div class="recipe-dropdown-wrap">
         <label for="drinkRecipeSelect">🍹 Select Any Signature "The Back Porch" Cocktail or Punch to View Recipe & Pitcher Measurements:</label>
         <select id="drinkRecipeSelect" class="recipe-select" onchange="showRecipe(this.value)">
@@ -4574,9 +4866,9 @@
           <option value="spicy_margarita">🌶️ Margarita #4: Back Porch Spicy Jalapeño "Hot Porch" Margarita (Fresh Jalapeño &amp; Tajín)</option>
           <option value="dragonfruit_margarita">🌺 Margarita #5: Back Porch Electric Dragon Fruit Margarita (Pitaya &amp; Optional Spicy Kick!)</option>
           <option value="bloodymary">🌶️ Back Porch Spicy Gulf Coast Bloody Mary (Old Bay Rim &amp; Pickled Okra)</option>
-          <option value="painkiller">🥥 Emerald Coast Painkiller (Rich Coconut, Dark Rum &amp; Ground Nutmeg)</option>
+          <option value="painkiller">🥥 Coastal Vacation Painkiller (Rich Coconut, Dark Rum &amp; Nutmeg)</option>
           <option value="rumrunner">🌴 Gulf Coast Rum Runner (Classic Florida Keys Tiki Punch)</option>
-          <option value="peachlemonade">🍋 Destin Sunset Peach Lemonade (Vodka, Peach Schnapps &amp; Pink Sunset Blush)</option>
+          <option value="peachlemonade">🍋 Sunset Beach Peach Lemonade (Vodka, Peach Schnapps &amp; Pink Sunset Blush)</option>
           <option value="sunset_punch_kid">🧒 The "Little Porch Sunset Punch" Mocktail (Fizzy Non-Alcoholic for the 2 Kids!)</option>
         </select>
       </div>
@@ -4592,9 +4884,9 @@
 <section class="recipe-section" id="section-mcguiresdrinks" style="border-top: 4px solid #16a34a;">
       <div class="recipe-header">
         <div>
-          <h2><span>🍀</span> Copycat McGuire's Irish Pub Specialty Cocktails &amp; Drinks</h2>
+          <h2><span>🍀</span> Coastal Irish Pub Specialty Cocktails &amp; Drinks (McGuire's Style)</h2>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
-            Legendary Destin harbor tavern cocktails served <strong>on the rocks &amp; in condo pitchers</strong>—100% blender-free with pricing calibrated directly from <strong>Beach Liquors in Destin</strong>!
+            Legendary harbor tavern and pub cocktails served <strong>on the rocks &amp; in vacation pitchers</strong>—100% blender-free with standard retail spirit price benchmarks!
           </p>
         </div>
         <button class="qol-btn" onclick="copyMcguiresBarList()" style="background: #15803d; color: #fff;">
@@ -4603,9 +4895,10 @@
       </div>
 
       <div class="beach-liquors-banner">
-        🏪 <strong>Destin Pricing Reference — Beach Liquors:</strong> Located at <strong>1257 Airport Rd, Destin, FL 32541</strong> (Phone: <a href="tel:8506546161" style="color: inherit; text-decoration: underline; font-weight: 700;">(850) 654-6161</a>) — just 5 minutes across Highway 98 from The Islander Resort Condos. Store hours: Mon–Sat 9:00 AM – 10:00 PM, Sun 11:00 AM – 8:00 PM. All spirit bottle prices below are verified against Beach Liquors Destin retail inventory.
+        🏪 <strong>Retail Spirits &amp; Grocery Price Reference:</strong> Benchmarked against standard coastal liquor store retail pricing for 1.75L economy handles and 750ml premium bottles, designed to eliminate high resort markups!
       </div>
 
+      <div class="recipe-pill-carousel-wrap" id="carousel_mc"><div class="recipe-pill-carousel" id="carousel_mc_strip"></div></div>
       <div class="recipe-dropdown-wrap">
         <label for="mcguiresDrinkRecipeSelect">🍀 Select Any Signature McGuire's Irish Pub Cocktail to View Recipe &amp; Pitcher Measurements:</label>
         <select id="mcguiresDrinkRecipeSelect" class="recipe-select" onchange="showMcguiresRecipe(this.value)">
@@ -4636,9 +4929,9 @@
     <section class="recipe-section" id="section-oldbaydrinks" style="border-top: 4px solid #c2410c;">
       <div class="recipe-header">
         <div>
-          <h2><span>🦀</span> Copycat Old Bay Steamer Specialty Cocktails &amp; Drinks</h2>
+          <h2><span>🦀</span> Coastal Steamer &amp; Bay Bar Specialties (Old Bay Steamer Style)</h2>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
-            Legendary Okaloosa Island seafood house cocktails served <strong>on the rocks &amp; in condo pitchers</strong>—calibrated for 32-oz vessels, Yeti tumblers, and consolidated 1.75L handles!
+            Legendary coastal seafood bar cocktails served <strong>on the rocks &amp; in vacation pitchers</strong>—calibrated for 32-oz vessels, tumblers, and consolidated 1.75L handles!
           </p>
         </div>
         <button class="qol-btn" onclick="copyOldBayBarList()" style="background: #c2410c; color: #fff;">
@@ -4647,19 +4940,20 @@
       </div>
 
       <div class="beach-liquors-banner" style="border-left-color: #c2410c; background: #fff7ed; border-color: #ffedd5; color: #9a3412;">
-        🦀 <strong>Destin Pricing Reference — Old Bay Steamer:</strong> Located at <strong>102 Santa Rosa Blvd, Fort Walton Beach, FL 32548</strong> (Phone: <a href="tel:8506642795" style="color: inherit; text-decoration: underline; font-weight: 700;">(850) 664-2795</a>) — just 10 minutes across Highway 98 bridge on Okaloosa Island. All spirit bottle prices below are verified against Beach Liquors Destin retail inventory.
+        🦀 <strong>Coastal Seafood Bar Reference:</strong> Classic gulf seafood house cocktail recipes scaled for vacation batches and benchmarked against standard retail bottle pricing.
       </div>
 
+      <div class="recipe-pill-carousel-wrap" id="carousel_obs"><div class="recipe-pill-carousel" id="carousel_obs_strip"></div></div>
       <div class="recipe-dropdown-wrap">
         <label for="oldBayDrinkRecipeSelect">🦀 Select Any Signature Old Bay Steamer Cocktail to View Recipe &amp; Pitcher Measurements:</label>
         <select id="oldBayDrinkRecipeSelect" class="recipe-select" onchange="showOldBayRecipe(this.value)">
           <option value="obs_blt" selected>🥃 The Steamer "BLT" (Bourbon/Whiskey, Lemonade &amp; Southern Sweet Tea)</option>
           <option value="obs_bahamamama">🌴 The Steamer Bahama Mama (Triple Rum, Banana &amp; Dark Rum Float)</option>
-          <option value="obs_cucumbercooler">🥒 The Okaloosa Cucumber Cooler (Beefeater Gin, Muddled Cucumber &amp; Lime)</option>
+          <option value="obs_cucumbercooler">🥒 The Coastal Cucumber Cooler (Beefeater Gin, Muddled Cucumber &amp; Lime)</option>
           <option value="obs_strongisland">⚡ The "Strong Island" (Old Bay Steamer 5-Spirits Legend • Limit of 1)</option>
           <option value="obs_seafoodbloodymary">🦀 The Old Bay Steamer Seafood Bloody Mary (Old Bay Rim &amp; Loaded Skewer)</option>
           <option value="obs_topshelfmargarita">🧂 The Steamer Grand Sunset Margarita (100% Agave, Grand Marnier &amp; Old Bay Rim)</option>
-          <option value="obs_bushwacker">🍫 The Emerald Coast Bushwacker (Dark Rum, Kahlúa, Cacao &amp; Coconut)</option>
+          <option value="obs_bushwacker">🍫 The Classic Coastal Bushwacker (Dark Rum, Kahlúa, Cacao &amp; Coconut)</option>
           <option value="obs_little_steamer_kid">🧒 The "Little Steamer" Lemon Sweet Tea (Sweet Tea &amp; Lemonade for Kids!)</option>
         </select>
       </div>
@@ -4674,7 +4968,7 @@
     <section class="recipe-section" id="section-classicdrinks" style="border-top: 4px solid #0284c7;">
       <div class="recipe-header">
         <div>
-          <h2><span>🍸</span> Copycat Emerald Coast &amp; Vacation Classic Cocktails</h2>
+          <h2><span>🍸</span> Resort &amp; Vacation Classic Cocktails</h2>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
             Essential beach, tiki, and all-time classic vacation drinks served <strong>on the rocks &amp; in condo pitchers</strong>—calibrated for 32-oz vessels, Yeti tumblers, and consolidated 1.75L handles!
           </p>
@@ -4685,17 +4979,18 @@
       </div>
 
       <div class="beach-liquors-banner" style="border-left-color: #0284c7; background: #f0f9ff; border-color: #bae6fd; color: #0369a1;">
-        🏪 <strong>Destin Pricing Reference — Beach Liquors:</strong> Located at <strong>1257 Airport Rd, Destin, FL 32541</strong> (Phone: <a href="tel:8506546161" style="color: inherit; text-decoration: underline; font-weight: 700;">(850) 654-6161</a>) — just 5 minutes across Highway 98 from The Islander Resort Condos. Store hours: Mon–Sat 9:00 AM – 10:00 PM, Sun 11:00 AM – 8:00 PM. All spirit bottle prices below are verified against Beach Liquors Destin retail inventory.
+        🏪 <strong>Retail Spirits &amp; Grocery Price Reference:</strong> Benchmarked against standard coastal liquor store retail pricing for 1.75L economy handles and 750ml premium bottles, designed to eliminate high resort markups!
       </div>
 
+      <div class="recipe-pill-carousel-wrap" id="carousel_cl"><div class="recipe-pill-carousel" id="carousel_cl_strip"></div></div>
       <div class="recipe-dropdown-wrap">
         <label for="classicDrinkRecipeSelect">🍸 Select Any All-Time Vacation Classic to View Recipe &amp; Pitcher Measurements:</label>
         <select id="classicDrinkRecipeSelect" class="recipe-select" onchange="showClassicRecipe(this.value)">
           <option value="classic_mojito" selected>🌿 The Classic Mojito (Fresh Muddled Mint, Lime &amp; Crisp Rum)</option>
           <option value="classic_pina_colada">🥥 Classic Piña Colada (On The Rocks with Coco López &amp; Dark Rum Float)</option>
           <option value="classic_mai_tai">🌺 The 1944 Mai Tai (Authentic Trader Vic's Tiki Masterpiece)</option>
-          <option value="classic_paloma">🍈 Emerald Coast Paloma (100% Agave Tequila, Grapefruit Soda &amp; Tajín)</option>
-          <option value="classic_tequila_sunrise">🌅 Classic Tequila Sunrise (Fresh Florida OJ &amp; Sunken Grenadine Glow)</option>
+          <option value="classic_paloma">🍈 Coastal Vacation Paloma (100% Agave Tequila, Grapefruit Soda &amp; Tajín)</option>
+          <option value="classic_tequila_sunrise">🌅 Classic Tequila Sunrise (Fresh Citrus OJ &amp; Sunken Grenadine Glow)</option>
           <option value="classic_moscow_mule">🧊 Classic Moscow Mule (Tito's Vodka, Fiery Ginger Beer &amp; Mint)</option>
           <option value="classic_daiquiri">🌴 Classic Cuban Daiquiri (Hemingway Beach Style • Crisp Rum &amp; Tart Lime)</option>
           <option value="classic_espresso_martini">☕ Beach Espresso Martini (Cold Brew, Tito's &amp; Kahlúa on the Rocks)</option>
@@ -4716,15 +5011,15 @@
     <footer class="streamlined-footer">
       <div style="margin-bottom: 16px;">
         <a href="destin_vacation_itinerary.html" class="guide-back-btn" style="font-size: 0.95rem; padding: 10px 22px;">
-          <span>🌴</span> Return to Full Destin Vacation Itinerary ➔
+          <span>🌴</span> Return to Companion Vacation Itinerary ➔
         </a>
       </div>
       <p style="font-weight: 700; color: var(--text-main); margin-bottom: 4px;">
-        Destin Cocktail Recipes &amp; Smart Bar Builder
+        Beach &amp; Vacation Drink Mixology Guide
       </p>
       <p style="font-size: 0.85rem;">
-        Calibrated for 12 People (10 Adults, 2 Kids) at The Islander Resort Condos on Holiday Isle • Sept 20–26, 2026<br>
-        Liquor pricing verified with Beach Liquors Destin (1257 Airport Rd | (850) 654-6161)
+        Calibrated for 12 People (10 Adults, 2 Kids) at the vacation rental on Holiday Isle • Sept 20–26, 2026<br>
+        Liquor prices based on standard retail beverage store benchmarks for 1.75L handles and 750ml bottles
       </p>
     </footer>
 
@@ -4796,6 +5091,451 @@
       cl_classic_dark_and_stormy: { spirit: 'rum', flavor: 'tart', potency: 'med', spiritsOz: 4.0, layers: ['#fed7aa', '#3e2723'], layerNames: ['Spicy Craft Ginger Beer', 'Myers\'s Rum Storm Cloud'] },
       cl_classic_coconut_limeade_kid: { spirit: 'none', flavor: 'mocktail', potency: 'mocktail', spiritsOz: 0.0, layers: ['#ecfdf5', '#86efac'], layerNames: ['Coco López & Lemonade', 'Fresh Lime & Sprite'] }
     };
+
+    // NAVIGATION SUITE: CAROUSELS, STEPPERS, SEARCH, SCROLLSPY & GESTURES
+    // ==========================================================================
+
+    const venueDrinkKeys = {
+      bp: ['ultimate_porchpunch', 'porchpunch', 'pattywacked', 'beachbucket', 'porchmargarita', 'strawberry_margarita', 'mango_margarita', 'spicy_margarita', 'dragonfruit_margarita', 'bloodymary', 'painkiller', 'rumrunner', 'peachlemonade', 'sunset_punch_kid'],
+      mc: ['irish_wake', 'emory_chenoweth', 'iced_irish_coffee', 'bloody_irish', 'dublin_mule', 'blueberry_lemon_drop', 'strawberry_twist', 'chocolate_moose', 'james_bond', 'south_of_the_border', 'smoked_old_fashioned', 'root_beer_float_kid'],
+      obs: ['obs_blt', 'obs_bahamamama', 'obs_cucumbercooler', 'obs_strongisland', 'obs_seafoodbloodymary', 'obs_topshelfmargarita', 'obs_bushwacker', 'obs_little_steamer_kid'],
+      cl: ['classic_mojito', 'classic_pina_colada', 'classic_mai_tai', 'classic_paloma', 'classic_tequila_sunrise', 'classic_moscow_mule', 'classic_daiquiri', 'classic_espresso_martini', 'classic_long_island', 'classic_whiskey_sour', 'classic_dark_and_stormy', 'classic_coconut_limeade_kid']
+    };
+
+    let currentRecipeKeys = {
+      bp: 'beachbucket',
+      mc: 'irish_wake',
+      obs: 'obs_blt',
+      cl: 'classic_mojito'
+    };
+
+    let previousNavigationState = null;
+
+    function recordNavigationOrigin(sourceName) {
+      previousNavigationState = {
+        scrollY: window.pageYOffset || document.documentElement.scrollTop,
+        source: sourceName || 'Smart Bar Builder'
+      };
+    }
+
+    function returnToPreviousLocation() {
+      if (previousNavigationState && typeof previousNavigationState.scrollY === 'number') {
+        window.scrollTo({
+          top: previousNavigationState.scrollY,
+          behavior: 'smooth'
+        });
+        showToast(`↩ Returned to ${previousNavigationState.source}`);
+      } else {
+        const bar = document.getElementById('section-custombar');
+        if (bar) bar.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function getReturnBreadcrumbHtml() {
+      if (!previousNavigationState) return '';
+      return `
+        <div class="return-breadcrumb-bar">
+          <button type="button" class="return-breadcrumb-btn" onclick="returnToPreviousLocation()">
+            <span>↩</span> Return to ${previousNavigationState.source}
+          </button>
+        </div>
+      `;
+    }
+
+    function renderRecipeCarousels() {
+      renderSingleCarousel('bp', 'carousel_bp', recipeData, showRecipe);
+      renderSingleCarousel('mc', 'carousel_mc_strip', mcguiresRecipeData, showMcguiresRecipe);
+      renderSingleCarousel('obs', 'carousel_obs_strip', oldBayRecipeData, showOldBayRecipe);
+      renderSingleCarousel('cl', 'carousel_cl_strip', classicRecipeData, showClassicRecipe);
+    }
+
+    function renderSingleCarousel(venue, containerId, dataset, showFn) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const keys = venueDrinkKeys[venue];
+      let html = '';
+      keys.forEach(k => {
+        const r = dataset[k];
+        if (!r) return;
+        const icon = (r.title.match(/^[^\w\s]+/g) || ['🍹'])[0];
+        const cleanTitle = r.title.replace(/^[^\w]+/, '').split('(')[0].trim();
+        html += `
+          <button type="button" class="recipe-pill-btn" id="pill_${venue}_${k}" onclick="${showFn.name}('${k}')">
+            <span>${icon}</span> <span>${cleanTitle}</span>
+          </button>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function updateCarouselActivePill(venue, key) {
+      currentRecipeKeys[venue] = key;
+      const containerId = venue === 'bp' ? 'carousel_bp' : (venue === 'mc' ? 'carousel_mc_strip' : (venue === 'obs' ? 'carousel_obs_strip' : 'carousel_cl_strip'));
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.querySelectorAll('.recipe-pill-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      const activeBtn = document.getElementById(`pill_${venue}_${key}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+
+    function stepRecipe(venue, delta) {
+      const keys = venueDrinkKeys[venue];
+      const currentKey = currentRecipeKeys[venue] || keys[0];
+      let idx = keys.indexOf(currentKey);
+      if (idx === -1) idx = 0;
+      let nextIdx = (idx + delta + keys.length) % keys.length;
+      const nextKey = keys[nextIdx];
+
+      if (venue === 'bp') showRecipe(nextKey);
+      else if (venue === 'mc') showMcguiresRecipe(nextKey);
+      else if (venue === 'obs') showOldBayRecipe(nextKey);
+      else if (venue === 'cl') showClassicRecipe(nextKey);
+    }
+
+    function getStepperHtml(venue, key, dataset) {
+      const keys = venueDrinkKeys[venue];
+      const idx = keys.indexOf(key);
+      const prevIdx = (idx - 1 + keys.length) % keys.length;
+      const nextIdx = (idx + 1) % keys.length;
+      const prevRaw = dataset[keys[prevIdx]]?.title || 'Previous';
+      const nextRaw = dataset[keys[nextIdx]]?.title || 'Next';
+      const prevTitle = prevRaw.split('(')[0].trim();
+      const nextTitle = nextRaw.split('(')[0].trim();
+
+      return `
+        <div class="recipe-stepper-bar">
+          <button type="button" class="recipe-stepper-btn" onclick="stepRecipe('${venue}', -1)" title="Previous: ${prevTitle}">
+            ◀ <span>${prevTitle}</span>
+          </button>
+          <span class="recipe-stepper-counter">Drink ${idx + 1} of ${keys.length}</span>
+          <button type="button" class="recipe-stepper-btn" onclick="stepRecipe('${venue}', 1)" title="Next: ${nextTitle}">
+            <span>${nextTitle}</span> ▶
+          </button>
+        </div>
+      `;
+    }
+
+    // ==========================================================================
+    // UNIVERSAL LIVE SEARCH & COMMAND PALETTE
+    // ==========================================================================
+    let allDrinksSearchIndex = null;
+
+    function buildSearchIndex() {
+      if (allDrinksSearchIndex) return allDrinksSearchIndex;
+      const list = [];
+
+      Object.keys(recipeData).forEach(k => {
+        const r = recipeData[k];
+        const fullKey = 'bp_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'bp',
+          venueName: '🌴 Beach Bar & Punch',
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'med',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      Object.keys(mcguiresRecipeData).forEach(k => {
+        const r = mcguiresRecipeData[k];
+        const fullKey = 'mc_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'mc',
+          venueName: "🍀 McGuire's Pub",
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'high',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      Object.keys(oldBayRecipeData).forEach(k => {
+        const r = oldBayRecipeData[k];
+        const fullKey = k.startsWith('obs_') ? k : 'obs_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'obs',
+          venueName: '🦀 Old Bay Steamer',
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'med',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      Object.keys(classicRecipeData).forEach(k => {
+        const r = classicRecipeData[k];
+        const fullKey = k.startsWith('cl_') ? k : 'cl_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'cl',
+          venueName: '🍸 Vacation Classics',
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'med',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      allDrinksSearchIndex = list;
+      return list;
+    }
+
+    function handleUniversalSearch(query) {
+      const q = (query || '').trim().toLowerCase();
+      const dropdown = document.getElementById('universalSearchResults');
+      if (!dropdown) return;
+
+      // Also filter Smart Bar cards
+      handleDrinkSearch(query);
+
+      const index = buildSearchIndex();
+      if (!q) {
+        // Quick suggestions
+        let html = '<div style="padding: 6px 12px; font-size: 0.74rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">✨ Quick Picks & Popular Cocktails</div>';
+        index.slice(0, 6).forEach(item => {
+          html += renderSearchResultItem(item);
+        });
+        dropdown.innerHTML = html;
+        dropdown.style.display = 'block';
+        return;
+      }
+
+      const matches = index.filter(item => {
+        return item.title.toLowerCase().includes(q) ||
+               item.tag.toLowerCase().includes(q) ||
+               item.desc.toLowerCase().includes(q) ||
+               item.spirit.toLowerCase().includes(q) ||
+               item.venueName.toLowerCase().includes(q) ||
+               item.ingredients.toLowerCase().includes(q);
+      });
+
+      if (matches.length === 0) {
+        dropdown.innerHTML = `
+          <div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+            No cocktails found matching "<strong>${query}</strong>".<br>Try searching <em>rum, tequila, margarita, punch, mocktail, or cold brew</em>.
+          </div>
+        `;
+        dropdown.style.display = 'block';
+        return;
+      }
+
+      let html = `<div style="padding: 6px 12px; font-size: 0.74rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Found ${matches.length} Drink${matches.length > 1 ? 's' : ''}</div>`;
+      matches.forEach(item => {
+        html += renderSearchResultItem(item);
+      });
+      dropdown.innerHTML = html;
+      dropdown.style.display = 'block';
+    }
+
+    function renderSearchResultItem(item) {
+      const inCart = customBarSelectedDrinks && customBarSelectedDrinks.has(item.key);
+      const cleanTitle = item.title.split('(')[0].trim();
+      return `
+        <div class="search-result-item" onclick="selectSearchResult('${item.key}')">
+          <div>
+            <div class="search-result-title">
+              <span>${cleanTitle}</span>
+              ${inCart ? '<span style="color: #16a34a; font-size: 0.75rem; font-weight: 800;">✓ In Cart</span>' : ''}
+            </div>
+            <div class="search-result-sub">${item.venueName} • ${item.tag}</div>
+          </div>
+          <span class="deal-badge" style="font-size: 0.7rem; background: var(--primary-light); color: var(--primary); font-weight: 800;">
+            ${item.spirit ? item.spirit.toUpperCase() : 'DRINK'}
+          </span>
+        </div>
+      `;
+    }
+
+    function selectSearchResult(key) {
+      hideUniversalSearch();
+      navigateToRecipe(key, null, 'Universal Search');
+    }
+
+    function hideUniversalSearch() {
+      const dropdown = document.getElementById('universalSearchResults');
+      if (dropdown) dropdown.style.display = 'none';
+    }
+
+    document.addEventListener('click', (e) => {
+      const searchWrap = document.querySelector('.universal-search-container');
+      if (searchWrap && !searchWrap.contains(e.target)) {
+        hideUniversalSearch();
+      }
+    });
+
+    // ==========================================================================
+    // SCROLLSPY, FLOATING QUICK-CART & SWIPE GESTURES
+    // ==========================================================================
+    function initScrollspyAndFloatingControls() {
+      const sections = [
+        document.getElementById('section-custombar'),
+        document.getElementById('section-beachbar'),
+        document.getElementById('section-mcguiresdrinks'),
+        document.getElementById('section-oldbaydrinks'),
+        document.getElementById('section-classicdrinks')
+      ].filter(Boolean);
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              document.querySelectorAll('.streamlined-nav-link').forEach(link => {
+                const target = link.getAttribute('data-section') || link.getAttribute('href')?.replace('#', '');
+                if (target === id) link.classList.add('active');
+                else link.classList.remove('active');
+              });
+              document.querySelectorAll('.mobile-app-tab').forEach(tab => {
+                const target = tab.getAttribute('data-section') || tab.getAttribute('href')?.replace('#', '');
+                if (target === id) tab.classList.add('active');
+                else tab.classList.remove('active');
+              });
+            }
+          });
+        }, {
+          threshold: 0.2,
+          rootMargin: '-80px 0px -40% 0px'
+        });
+
+        sections.forEach(sec => observer.observe(sec));
+      }
+
+      window.addEventListener('scroll', () => {
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Back to top button
+        const btt = document.getElementById('backToTopBtn');
+        if (btt) {
+          if (scrollY > 400) btt.classList.add('show');
+          else btt.classList.remove('show');
+        }
+
+        // Floating quick cart pill
+        const cartPill = document.getElementById('floatingQuickCartPill');
+        const customBarSec = document.getElementById('section-custombar');
+        if (cartPill && customBarSec) {
+          const customBarRect = customBarSec.getBoundingClientRect();
+          const hasDrinks = customBarSelectedDrinks && customBarSelectedDrinks.size > 0;
+          if (hasDrinks && customBarRect.bottom < 80) {
+            cartPill.style.display = 'inline-flex';
+          } else {
+            cartPill.style.display = 'none';
+          }
+        }
+      }, { passive: true });
+    }
+
+    function jumpToBarCart() {
+      const bar = document.getElementById('section-custombar');
+      if (bar) {
+        const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar');
+        const navHeight = navBar ? navBar.offsetHeight + 18 : 80;
+        const rect = bar.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        window.scrollTo({
+          top: Math.max(0, rect.top + scrollTop - navHeight),
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    function updateFloatingCartPill() {
+      const countEl = document.getElementById('quickCartCountText');
+      const totalEl = document.getElementById('quickCartTotalText');
+      if (!countEl || !totalEl) return;
+      const cart = calculateCustomCart();
+      countEl.textContent = `${cart.selectedCount} Drink${cart.selectedCount === 1 ? '' : 's'}`;
+      totalEl.textContent = `~$${cart.grandTotal.toFixed(0)}`;
+    }
+
+    function attachSwipeListeners(elementId, venue) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      let startX = 0;
+      let startY = 0;
+
+      el.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      el.addEventListener('touchend', (e) => {
+        if (e.changedTouches.length === 1) {
+          const deltaX = e.changedTouches[0].clientX - startX;
+          const deltaY = e.changedTouches[0].clientY - startY;
+          if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+            if (deltaX < 0) {
+              stepRecipe(venue, 1);
+            } else {
+              stepRecipe(venue, -1);
+            }
+          }
+        }
+      }, { passive: true });
+    }
+
+    function initDeepLinkingAndHotkeys() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#drink=')) {
+        const dKey = hash.replace('#drink=', '');
+        if (dKey) {
+          setTimeout(() => navigateToRecipe(dKey, null, 'Shared Link', false), 300);
+        }
+      }
+
+      window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.drink) {
+          navigateToRecipe(e.state.drink, null, null, false);
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        const activeEl = document.activeElement;
+        const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable);
+
+        if (!isInput && (e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'))) {
+          e.preventDefault();
+          const searchInput = document.getElementById('drinkSearchInput');
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+            handleUniversalSearch(searchInput.value);
+          }
+        } else if (e.key === 'Escape') {
+          hideUniversalSearch();
+        }
+      });
+    }
+
 
     // 1. FLAVOR & SPIRIT FILTER CHIPS
     let activeFilterCategory = 'all';
@@ -5049,9 +5789,9 @@
       const perPerson = groupAdultCount > 0 ? (cart.grandTotal / groupAdultCount) : 0;
       const selectedNames = [...customBarSelectedDrinks].map(k => customBarDatabase.drinks[k]?.name).slice(0, 5).join(', ');
 
-      let text = `🍹 Destin 2026 Condo Bar Split (${groupAdultCount} Adults)
+      let text = `🍹 Vacation Bar Split (${groupAdultCount} Adults)
 `;
-      text += `Total Beach Liquors & grocery tab: $${cart.grandTotal.toFixed(2)}
+      text += `Total Retail Spirits & grocery tab: $${cart.grandTotal.toFixed(2)}
 `;
       text += `Selected drinks: ${selectedNames}...
 `;
@@ -5074,8 +5814,8 @@
       const cart = calculateCustomCart();
       const perPerson = groupAdultCount > 0 ? (cart.grandTotal / groupAdultCount) : 0;
       const shareData = {
-        title: 'Destin 2026 Vacation Bar Cart',
-        text: `🍹 Here is our Destin Vacation Bar Cart! ${cart.selectedCount} cocktails selected, ~$${perPerson.toFixed(2)} per adult for the entire week of unlimited beach drinks.`,
+        title: 'Vacation Bar Cart',
+        text: `🍹 Here is our Vacation Bar Cart! ${cart.selectedCount} cocktails selected, ~$${perPerson.toFixed(2)} per adult for the entire week of unlimited beach drinks.`,
         url: window.location.href
       };
 
@@ -5388,7 +6128,7 @@ const recipeData = {
           "Sunrise Base: Drizzle 1/2 oz Rose's Grenadine directly down the inside wall of each bucket; it will settle heavily to the bottom creating a bright crimson sunrise base.",
           "The Pour: Pour the chilled punch from the pitcher over the ice until about 1.5 inches from the brim.",
           "Sunset Floaters: Gently float 2 oz Cranberry Juice, then float 1 oz Myers's Dark Rum across the surface to crown the cocktail.",
-          "Garnish: Spear an orange wheel, lime wheel, and cherries on a garnish pick, pop in extra-wide straws, and carry down to the Islander beach!"
+          "Garnish: Spear an orange wheel, lime wheel, and cherries on a garnish pick, pop in extra-wide straws, and carry down to the beach!"
         ]
       },
       porchpunch: {
@@ -5421,13 +6161,13 @@ const recipeData = {
           "Pack 32-oz beach buckets or Yeti tumblers with fresh ice.",
           "Pour punch mixture over ice, leaving 1 inch at top.",
           "Float 2 oz cranberry juice over each pour for the trademark Back Porch blush.",
-          "Garnish with sliced fruit wheels and enjoy poolside at The Islander!"
+          "Garnish with sliced fruit wheels and enjoy poolside at your vacation rental!"
         ]
       },
       pattywacked: {
         title: "🍫 The Legendary \"Patty'Wacked\" (On The Rocks)",
         tag: "Rich Dark Rum, Coffee & Chocolate Mudslide • 32-oz Bucket",
-        desc: "The Back Porch's most decadent cocktail creation! A boozy, velvety dessert mudslide made with rich Myers's Jamaican dark rum, Kahlúa coffee liqueur, and dark crème de cacao over crushed ice. Never blended into watery slush—served on the rocks so it stays rich in the Destin heat!",
+        desc: "The Back Porch's most decadent cocktail creation! A boozy, velvety dessert mudslide made with rich Myers's Jamaican dark rum, Kahlúa coffee liqueur, and dark crème de cacao over crushed ice. Never blended into watery slush—served on the rocks so it stays rich in the summer beach heat!",
         single: [
           "2 oz Myers's Original Dark Rum",
           "1.5 oz Kahlúa Coffee Liqueur",
@@ -5455,7 +6195,7 @@ const recipeData = {
       beachbucket: {
         title: "🪣 The 32-oz Back Porch Beach Bucket (Rum Bucket)",
         tag: "4-Rum Tropical Party Bucket • 32-oz Legend",
-        desc: "The official beach party bucket of the Emerald Coast! Loaded with 4 Caribbean rums (Coconut, Light, Spiced, and a Dark Rum floater) mixed with pineapple, orange, and cranberry juices. Served in souvenir buckets with extra-long party straws!",
+        desc: "The official beach party bucket! Loaded with 4 Caribbean rums (Coconut, Light, Spiced, and a Dark Rum floater) mixed with pineapple, orange, and cranberry juices. Served in souvenir buckets with extra-long party straws!",
         single: [
           "1.5 oz Malibu Caribbean Coconut Rum",
           "1 oz Bacardi Superior White Rum",
@@ -5607,7 +6347,7 @@ const recipeData = {
       dragonfruit_margarita: {
         title: "🌺 Margarita #5: Back Porch Electric Dragon Fruit Margarita",
         tag: "Vibrant Pitaya & Agave • 32-oz Bucket",
-        desc: "The most eye-catching, vibrant magenta cocktail on the Emerald Coast! Deep pink Pitaya (dragon fruit) purée shaken with 100% blue agave tequila, orange liqueur, and tart lime juice on the rocks.",
+        desc: "The most eye-catching, vibrant magenta cocktail on the coast! Deep pink Pitaya (dragon fruit) purée shaken with 100% blue agave tequila, orange liqueur, and tart lime juice on the rocks.",
         single: [
           "3.5 oz Espolòn 100% Blue Agave Tequila",
           "1.5 oz DeKuyper Triple Sec",
@@ -5662,7 +6402,7 @@ const recipeData = {
         ]
       },
       painkiller: {
-        title: "🥥 Emerald Coast Painkiller (On the Rocks)",
+        title: "🥥 Coastal Vacation Painkiller (On the Rocks)",
         tag: "Creamy Pineapple-Coconut Dark Rum Legend • 32-oz Bucket",
         desc: "A Florida panhandle staple! Rich Myers's Jamaican dark rum shaken with Dole pineapple juice, fresh Florida orange juice, and luscious Coco López cream of coconut, crowned with fresh grated nutmeg.",
         single: [
@@ -5691,7 +6431,7 @@ const recipeData = {
       rumrunner: {
         title: "🌴 Gulf Coast Rum Runner (On the Rocks)",
         tag: "Light & Dark Rums with Blackberry/Banana • 32-oz Bucket",
-        desc: "The classic Florida Keys tiki punch brought to the Destin shores! Dual rums blended with blackberry and banana liqueurs, pineapple, orange juice, and a sweet grenadine float.",
+        desc: "The classic Florida Keys tiki punch brought to the vacation shores! Dual rums blended with blackberry and banana liqueurs, pineapple, orange juice, and a sweet grenadine float.",
         single: [
           "2 oz Bacardi Superior White Rum",
           "1.5 oz Myers's Original Dark Rum",
@@ -5720,7 +6460,7 @@ const recipeData = {
         ]
       },
       peachlemonade: {
-        title: "🍋 Destin Sunset Peach Lemonade (Vodka Cooler)",
+        title: "🍋 Vacation Sunset Peach Lemonade (Vodka Cooler)",
         tag: "Tito's Vodka, Peach Schnapps & Lemonade • 32-oz Bucket",
         desc: "Ultra-crisp and ridiculously refreshing! Tito's Handmade Vodka and sweet peach schnapps shaken with tart Simply Lemonade and finished with a pink cranberry sunset float over ice.",
         single: [
@@ -5825,7 +6565,11 @@ const recipeData = {
         `;
       }
 
+      updateCarouselActivePill('bp', key);
+      const sel = document.getElementById('drinkRecipeSelect'); if (sel) sel.value = key;
       displayArea.innerHTML = `
+        ${getReturnBreadcrumbHtml()}
+        ${getStepperHtml('bp', key, recipeData)}
         <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid var(--coral);">
           <div class="recipe-title-bar">
             <div>
@@ -5885,7 +6629,7 @@ const recipeData = {
           <div class="insider-tip" style="margin-top: 12px; border-left-color: var(--coral);">
             💡 <strong>Beach Pro-Tip:</strong> ${r.beachTip || ''}
             <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
-              ☀️ <strong>Florida Heat Safety:</strong> In 90° Destin humidity, pace with 1 full glass of ice water per 32-oz vessel!
+              ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
             </div>
           </div>
         </div>
@@ -5964,7 +6708,7 @@ const mcguiresRecipeData = {
         tag: "Cold Brew & Bushmills Whiskey • 32-oz Mason Jar",
         desc: "The ultimate beach & boat upgrade to the pub classic! Smooth Bushmills Original Irish Whiskey and rich Carolans Irish Cream shaken with unsweetened cold brew coffee and brown sugar syrup, finished with sweet cream and nutmeg over crushed ice.",
         single: [
-          "3.5 oz Bushmills Original Irish Whiskey (from Beach Liquors)",
+          "3.5 oz Bushmills Original Irish Whiskey (from Retail Spirits)",
           "1.5 oz Carolans Irish Cream Liqueur (5 oz total spirits)",
           "8 oz Chilled Cold Brew Coffee (unsweetened Stok or Starbucks)",
           "1 oz Brown Sugar Simple Syrup",
@@ -6283,7 +7027,11 @@ const mcguiresRecipeData = {
         `;
       }
 
+      updateCarouselActivePill('mc', key);
+      const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
       displayArea.innerHTML = `
+        ${getReturnBreadcrumbHtml()}
+        ${getStepperHtml('mc', key, mcguiresRecipeData)}
         <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid #16a34a;">
           <div class="recipe-title-bar">
             <div>
@@ -6343,7 +7091,7 @@ const mcguiresRecipeData = {
           <div class="insider-tip" style="margin-top: 12px; border-left-color: #16a34a;">
             💡 <strong>Beach Pro-Tip:</strong> ${r.beachTip || ''}
             <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
-              ☀️ <strong>Florida Heat Safety:</strong> In 90° Destin humidity, pace with 1 full glass of ice water per 32-oz vessel!
+              ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
             </div>
           </div>
         </div>
@@ -6388,7 +7136,7 @@ const oldBayRecipeData = {
   obs_bahamamama: {
     title: "🌴 The Steamer Bahama Mama",
     tag: "Triple Rum, Banana, Tropical Juices & Dark Rum Float • 32-oz Bucket",
-    desc: "Old Bay Steamer's famous Okaloosa Island tiki classic! Crisp white rum and tropical coconut rum shaken with sweet crème de banana, Dole pineapple juice, and Florida OJ, topped with a rich Myers's Jamaican dark rum float.",
+    desc: "Old Bay Steamer's famous coastal island tiki classic! Crisp white rum and tropical coconut rum shaken with sweet crème de banana, Dole pineapple juice, and Florida OJ, topped with a rich Myers's Jamaican dark rum float.",
     single: [
       "2 oz Bacardi Superior White Rum",
       "1.5 oz Malibu Caribbean Coconut Rum",
@@ -6420,11 +7168,11 @@ const oldBayRecipeData = {
     beachTip: "The crème de banana gives this classic Bahama Mama an authentic Caribbean tiki depth that standard fruit punches lack."
   },
   obs_cucumbercooler: {
-    title: "🥒 The Okaloosa Cucumber Cooler",
+    title: "🥒 The Coastal Cucumber Cooler",
     tag: "Beefeater Gin, Muddled Cucumber, Lime & Tonic • 32-oz Vessel",
-    desc: "The crispest, most refreshing cocktail on Okaloosa Island! Fresh English cucumber ribbons muddled with pure cane sugar and fresh lime juice, shaken with Beefeater London Dry Gin and topped with crisp tonic water or club soda.",
+    desc: "The crispest, most refreshing cocktail on coastal island! Fresh English cucumber ribbons muddled with pure cane sugar and fresh lime juice, shaken with Beefeater London Dry Gin and topped with crisp tonic water or club soda.",
     single: [
-      "4 oz Beefeater London Dry Gin (Beach Liquors 1.75L)",
+      "4 oz Beefeater London Dry Gin (Retail Spirits 1.75L)",
       "5–6 thick slices English Seedless Cucumber (muddled)",
       "2 oz Fresh Squeezed Lime Juice",
       "1.5 oz Pure Simple Syrup or Agave",
@@ -6540,7 +7288,7 @@ const oldBayRecipeData = {
     beachTip: "Old Bay on a margarita rim adds a warm, aromatic spice note that elevates the agave without being overwhelmingly spicy."
   },
   obs_bushwacker: {
-    title: "🍫 The Emerald Coast Bushwacker (On The Rocks)",
+    title: "🍫 The Classic Coastal Bushwacker (On The Rocks)",
     tag: "Dark Rum, Kahlúa, Crème de Cacao & Coconut • 32-oz Mug",
     desc: "The Gulf Coast's most legendary dessert cocktail! Myers's Jamaican dark rum, Kahlúa, dark crème de cacao, and rich Coco López cream of coconut shaken with half-and-half over crushed ice in a chocolate-swirled 32-oz mug.",
     single: [
@@ -6601,11 +7349,11 @@ const oldBayRecipeData = {
 // ==========================================================================
 const classicRecipeData = {
   classic_mojito: {
-    title: "🌿 The Classic Mojito (Emerald Coast Balcony Cooler)",
+    title: "🌿 The Classic Mojito (Coastal Balcony Cooler)",
     tag: "Crisp Rum, Fresh Muddled Mint & Tart Lime • 32-oz Vessel",
     desc: "The ultimate hot-weather Caribbean refresher! Fresh Florida spearmint gently muddled with pure cane sugar and fresh lime juice, topped with crisp Bacardi Superior white rum and topped with effervescent club soda over crushed ice.",
     single: [
-      "4 oz Bacardi Superior White Rum (Beach Liquors 1.75L)",
+      "4 oz Bacardi Superior White Rum (Retail Spirits 1.75L)",
       "2.5 oz Fresh Squeezed Lime Juice (approx. 2 fresh limes)",
       "2 oz Pure Simple Syrup (or Agave Nectar)",
       "12–15 Fresh Mint Leaves (slapped & gently bruised)",
@@ -6659,7 +7407,7 @@ const classicRecipeData = {
       "Gently float 1.5 oz Myers's dark rum across the top to create an authentic tiki two-tone contrast.",
       "Garnish with pineapple slices and cherries!"
     ],
-    beachTip: "In 90° Destin sunshine, frozen blender drinks turn into warm syrupy soup in under 5 minutes. Serving Piña Coladas heavily iced on the rocks keeps the coconut rich, frosty, and ice-cold to the very last sip."
+    beachTip: "In 90° Vacation sunshine, frozen blender drinks turn into warm syrupy soup in under 5 minutes. Serving Piña Coladas heavily iced on the rocks keeps the coconut rich, frosty, and ice-cold to the very last sip."
   },
   classic_mai_tai: {
     title: "🌺 The 1944 Mai Tai (Authentic Polynesian Tiki)",
@@ -6694,9 +7442,9 @@ const classicRecipeData = {
     beachTip: "The dark rum floater is key! Drinking through a straw lets you taste the bright citrus-almond base first, followed by the aromatic molasses warmth of Jamaican dark rum as the ice chills down."
   },
   classic_paloma: {
-    title: "🍈 The Emerald Coast Paloma (Tequila & Grapefruit Cooler)",
+    title: "🍈 The Coastal Vacation Paloma (Tequila & Grapefruit Cooler)",
     tag: "Espolòn 100% Agave, Grapefruit & Tajín • 32-oz Bucket",
-    desc: "Mexico's most beloved everyday highball and the ultimate thirst-quencher under the Destin sun! Crisp 100% Blue Agave Espolòn tequila, fresh lime juice, a pinch of sea salt, and fizzy pink grapefruit soda with a spicy Tajín rim.",
+    desc: "Mexico's most beloved everyday highball and the ultimate thirst-quencher under the Vacation sun! Crisp 100% Blue Agave Espolòn tequila, fresh lime juice, a pinch of sea salt, and fizzy pink grapefruit soda with a spicy Tajín rim.",
     single: [
       "4 oz Espolòn 100% Blue Agave Tequila (Blanco or Reposado)",
       "2 oz Fresh Squeezed Lime Juice",
@@ -6726,7 +7474,7 @@ const classicRecipeData = {
   },
   classic_tequila_sunrise: {
     title: "🌅 Classic Tequila Sunrise (Gulf Coast Ombre Sunset)",
-    tag: "Espolòn Tequila, Fresh Florida OJ & Sunken Grenadine • 32-oz Bucket",
+    tag: "Espolòn Tequila, Fresh Citrus OJ & Sunken Grenadine • 32-oz Bucket",
     desc: "The 1970s Sausalito classic made world-famous by the Rolling Stones! Smooth Espolòn 100% Blue Agave Tequila and chilled Florida orange juice layered over ice with a slow-drizzled crimson grenadine sunrise that sinks to the bottom.",
     single: [
       "4 oz Espolòn 100% Blue Agave Tequila",
@@ -6757,7 +7505,7 @@ const classicRecipeData = {
     tag: "Tito's Vodka, Fiery Ginger Beer & Slapped Mint • 32-oz Mug/Yeti",
     desc: "The crisp, spicy 1941 cocktail that made vodka famous in America! 6x-distilled Tito's Handmade Vodka, spicy craft ginger beer, fresh tart lime juice, and aromatic mint over cracked ice in your 30–40oz Yeti tumbler.",
     single: [
-      "4 oz Tito's Handmade Vodka (Beach Liquors 1.75L)",
+      "4 oz Tito's Handmade Vodka (Retail Spirits 1.75L)",
       "2 oz Fresh Squeezed Lime Juice (approx. 1.5 fresh limes)",
       "1/2 oz Simple Syrup or Agave Nectar",
       "10 oz Chilled Craft Ginger Beer (Q or Fever-Tree)",
@@ -6994,7 +7742,11 @@ const classicRecipeData = {
         `;
       }
 
+      updateCarouselActivePill('cl', key);
+      const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
       displayArea.innerHTML = `
+        ${getReturnBreadcrumbHtml()}
+        ${getStepperHtml('cl', key, classicRecipeData)}
         <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid #0284c7;">
           <div class="recipe-title-bar">
             <div>
@@ -7054,7 +7806,7 @@ const classicRecipeData = {
           <div class="insider-tip" style="margin-top: 12px; border-left-color: #0284c7;">
             💡 <strong>Beach Pro-Tip:</strong> ${r.beachTip || ''}
             <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
-              ☀️ <strong>Florida Heat Safety:</strong> In 90° Destin humidity, pace with 1 full glass of ice water per 32-oz vessel!
+              ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
             </div>
           </div>
         </div>
@@ -7130,7 +7882,11 @@ function copyBarShoppingList() {
         `;
       }
 
+      updateCarouselActivePill('obs', key);
+      const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
       displayArea.innerHTML = `
+        ${getReturnBreadcrumbHtml()}
+        ${getStepperHtml('obs', key, oldBayRecipeData)}
         <div class="recipe-display-card" id="recipeCard_${strippedKey}" style="border-left: 4px solid #c2410c;">
           <div class="recipe-title-bar">
             <div>
@@ -7224,43 +7980,43 @@ function copyMcguiresBarList() {
 // ==========================================================================
 const customBarDatabase = {
       items: {
-        // Spirits (Beach Liquors Destin - 1257 Airport Rd | (850) 654-6161)
-        vodka: { id: "vodka", name: "Vodka (1.75L Handle)", brand: "Tito's Handmade Vodka (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 29.99, bottleOz: 59.17, yield: "~17 32-oz Buckets (3.5 oz pour)", note: "1.75L Handle — 6x-distilled corn vodka workhorse for 32-oz buckets & Yeti tumblers (saves $0.36/oz vs 750ml)" },
-        tequila: { id: "tequila", name: "100% Blue Agave Tequila (1.75L Handle)", brand: "Espolòn Blanco or Reposado (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 48.99, bottleOz: 59.17, yield: "~15–17 32-oz Margaritas (3.5–4 oz pour)", note: "1.75L Handle — 100% Blue Weber Agave workhorse, saves $50+ vs Casamigos handle ($99+) with pure agave taste" },
-        rum_white: { id: "rum_white", name: "Light / White Rum (1.75L Handle)", brand: "Bacardi Superior White Rum (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 21.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — clean, crisp rum standard for punches, buckets & 32-oz mason jars" },
-        rum_dark: { id: "rum_dark", name: "Dark / Black Rum (1.75L Handle)", brand: "Myers's Original Dark Rum (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 39.99, bottleOz: 59.17, yield: "~30–40 32-oz Floaters / Buckets", note: "1.75L Handle — rich Jamaican dark rum for mudslides, painkillers & floaters" },
-        rum_coconut: { id: "rum_coconut", name: "Coconut Rum (1.75L Handle)", brand: "Malibu Caribbean Coconut Rum (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 24.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — the essential coconut base for Porch punches, buckets & beach mixes" },
-        rum_spiced: { id: "rum_spiced", name: "Spiced Rum (1.75L Handle)", brand: "Captain Morgan Original Spiced (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 25.99, bottleOz: 59.17, yield: "~40–50 32-oz Beach Buckets (1 oz pour)", note: "1.75L Handle — for 32-oz Beach Buckets & spiced highballs" },
-        rum_151: { id: "rum_151", name: "151 Overproof Rum (750ml)", brand: "Diamond Reserve 151 or Don Q 151 (750ml)", cat: "spirits", store: "Beach Liquors Destin", price: 23.99, bottleOz: 25.36, yield: "~17 32-oz Irish Wakes (1.5 oz pour)", note: "750ml — high-octane punch kicker for McGuire's Irish Wake (rarely bottled in handles; 750ml covers 17 large wakes)" },
-        whiskey_irish: { id: "whiskey_irish", name: "Irish Whiskey (1.75L Handle)", brand: "Bushmills Original Irish Whiskey (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 54.39, bottleOz: 59.17, yield: "~17 32-oz Mason Jars (3.5 oz pour)", note: "1.75L Handle — McGuire's house pour (or Jameson 1.75L handle @ $44.99) for iced coffees & Dublin mules" },
-        triple_sec: { id: "triple_sec", name: "Triple Sec / Orange Liqueur (1.0L Bottle)", brand: "DeKuyper Triple Sec 48° (1.0 Liter)", cat: "spirits", store: "Beach Liquors Destin", price: 10.99, bottleOz: 33.81, yield: "~22–34 32-oz Margaritas (1–1.5 oz)", note: "1.0L Bottle — saves $27–$30 vs Grand Marnier/Cointreau with great orange sweetness for mixed drinks" },
-        kahlua: { id: "kahlua", name: "Coffee Liqueur (1.75L Handle)", brand: "Kahlúa Original (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 52.99, bottleOz: 59.17, yield: "~40 32-oz Mudslides (1.5 oz pour)", note: "1.75L Handle — rich coffee bean base for Patty'Wacked & Chocolate Moose" },
-        irish_cream: { id: "irish_cream", name: "Irish Cream Liqueur (1.75L Handle)", brand: "Carolans Irish Cream (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 26.99, bottleOz: 59.17, yield: "~40 32-oz Iced Coffees (1.5 oz pour)", note: "1.75L Handle — real Irish spirits, rich cream & honey (saves $20 vs Baileys 1.75L)" },
-        blue_curacao: { id: "blue_curacao", name: "Blue Curaçao Liqueur (750ml)", brand: "DeKuyper Blue Curaçao (750ml)", cat: "spirits", store: "Beach Liquors Destin", price: 11.99, bottleOz: 25.36, yield: "~25 32-oz Irish Wakes (1 oz pour)", note: "750ml — gives McGuire's Irish Wake its trademark emerald green glow" },
-        creme_de_cacao: { id: "creme_de_cacao", name: "Dark Crème de Cacao (750ml)", brand: "DeKuyper Dark Crème de Cacao (750ml)", cat: "spirits", store: "Beach Liquors Destin", price: 11.99, bottleOz: 25.36, yield: "~20–25 32-oz Mudslides (1–1.5 oz)", note: "750ml — rich cocoa liqueur for Patty'Wacked & Chocolate Moose" },
-        peach_schnapps: { id: "peach_schnapps", name: "Peach Schnapps (1.0L Bottle)", brand: "DeKuyper Peachtree Schnapps (1.0 Liter)", cat: "spirits", store: "Beach Liquors Destin", price: 13.99, bottleOz: 33.81, yield: "~22–34 32-oz Buckets (1–1.5 oz)", note: "1.0L Bottle — for Back Porch Punch, Peach Lemonade & Strawberry Twist" },
-        fruit_liqueurs: { id: "fruit_liqueurs", name: "Blackberry & Banana Liqueurs (750ml pair)", brand: "DeKuyper Blackberry & Banana (750ml pair)", cat: "spirits", store: "Beach Liquors Destin", price: 25.98, bottleOz: 50.72, yield: "~25 32-oz Rum Runners (1 oz each)", note: "750ml pair — only needed for Gulf Coast Rum Runners" },
-        bitters_angostura: { id: "bitters_angostura", name: "Aromatic Bitters (4 oz)", brand: "Angostura Aromatic Bitters (4 oz)", cat: "spirits", store: "Beach Liquors Destin", price: 9.99, bottleOz: 4.0, yield: "~100+ dashes (Old Fashioneds)", note: "4 oz — for McGuire's Tavern Old Fashioned" },
+        // Spirits (Retail Spirits Store - Local Retail Store | (850) 654-6161)
+        vodka: { id: "vodka", name: "Vodka (1.75L Handle)", brand: "Tito's Handmade Vodka (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 29.99, bottleOz: 59.17, yield: "~17 32-oz Buckets (3.5 oz pour)", note: "1.75L Handle — 6x-distilled corn vodka workhorse for 32-oz buckets & Yeti tumblers (saves $0.36/oz vs 750ml)" },
+        tequila: { id: "tequila", name: "100% Blue Agave Tequila (1.75L Handle)", brand: "Espolòn Blanco or Reposado (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 48.99, bottleOz: 59.17, yield: "~15–17 32-oz Margaritas (3.5–4 oz pour)", note: "1.75L Handle — 100% Blue Weber Agave workhorse, saves $50+ vs Casamigos handle ($99+) with pure agave taste" },
+        rum_white: { id: "rum_white", name: "Light / White Rum (1.75L Handle)", brand: "Bacardi Superior White Rum (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 21.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — clean, crisp rum standard for punches, buckets & 32-oz mason jars" },
+        rum_dark: { id: "rum_dark", name: "Dark / Black Rum (1.75L Handle)", brand: "Myers's Original Dark Rum (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 39.99, bottleOz: 59.17, yield: "~30–40 32-oz Floaters / Buckets", note: "1.75L Handle — rich Jamaican dark rum for mudslides, painkillers & floaters" },
+        rum_coconut: { id: "rum_coconut", name: "Coconut Rum (1.75L Handle)", brand: "Malibu Caribbean Coconut Rum (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 24.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — the essential coconut base for Porch punches, buckets & beach mixes" },
+        rum_spiced: { id: "rum_spiced", name: "Spiced Rum (1.75L Handle)", brand: "Captain Morgan Original Spiced (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 25.99, bottleOz: 59.17, yield: "~40–50 32-oz Beach Buckets (1 oz pour)", note: "1.75L Handle — for 32-oz Beach Buckets & spiced highballs" },
+        rum_151: { id: "rum_151", name: "151 Overproof Rum (750ml)", brand: "Diamond Reserve 151 or Don Q 151 (750ml)", cat: "spirits", store: "Retail Spirits Store", price: 23.99, bottleOz: 25.36, yield: "~17 32-oz Irish Wakes (1.5 oz pour)", note: "750ml — high-octane punch kicker for McGuire's Irish Wake (rarely bottled in handles; 750ml covers 17 large wakes)" },
+        whiskey_irish: { id: "whiskey_irish", name: "Irish Whiskey (1.75L Handle)", brand: "Bushmills Original Irish Whiskey (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 54.39, bottleOz: 59.17, yield: "~17 32-oz Mason Jars (3.5 oz pour)", note: "1.75L Handle — McGuire's house pour (or Jameson 1.75L handle @ $44.99) for iced coffees & Dublin mules" },
+        triple_sec: { id: "triple_sec", name: "Triple Sec / Orange Liqueur (1.0L Bottle)", brand: "DeKuyper Triple Sec 48° (1.0 Liter)", cat: "spirits", store: "Retail Spirits Store", price: 10.99, bottleOz: 33.81, yield: "~22–34 32-oz Margaritas (1–1.5 oz)", note: "1.0L Bottle — saves $27–$30 vs Grand Marnier/Cointreau with great orange sweetness for mixed drinks" },
+        kahlua: { id: "kahlua", name: "Coffee Liqueur (1.75L Handle)", brand: "Kahlúa Original (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 52.99, bottleOz: 59.17, yield: "~40 32-oz Mudslides (1.5 oz pour)", note: "1.75L Handle — rich coffee bean base for Patty'Wacked & Chocolate Moose" },
+        irish_cream: { id: "irish_cream", name: "Irish Cream Liqueur (1.75L Handle)", brand: "Carolans Irish Cream (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 26.99, bottleOz: 59.17, yield: "~40 32-oz Iced Coffees (1.5 oz pour)", note: "1.75L Handle — real Irish spirits, rich cream & honey (saves $20 vs Baileys 1.75L)" },
+        blue_curacao: { id: "blue_curacao", name: "Blue Curaçao Liqueur (750ml)", brand: "DeKuyper Blue Curaçao (750ml)", cat: "spirits", store: "Retail Spirits Store", price: 11.99, bottleOz: 25.36, yield: "~25 32-oz Irish Wakes (1 oz pour)", note: "750ml — gives McGuire's Irish Wake its trademark emerald green glow" },
+        creme_de_cacao: { id: "creme_de_cacao", name: "Dark Crème de Cacao (750ml)", brand: "DeKuyper Dark Crème de Cacao (750ml)", cat: "spirits", store: "Retail Spirits Store", price: 11.99, bottleOz: 25.36, yield: "~20–25 32-oz Mudslides (1–1.5 oz)", note: "750ml — rich cocoa liqueur for Patty'Wacked & Chocolate Moose" },
+        peach_schnapps: { id: "peach_schnapps", name: "Peach Schnapps (1.0L Bottle)", brand: "DeKuyper Peachtree Schnapps (1.0 Liter)", cat: "spirits", store: "Retail Spirits Store", price: 13.99, bottleOz: 33.81, yield: "~22–34 32-oz Buckets (1–1.5 oz)", note: "1.0L Bottle — for Back Porch Punch, Peach Lemonade & Strawberry Twist" },
+        fruit_liqueurs: { id: "fruit_liqueurs", name: "Blackberry & Banana Liqueurs (750ml pair)", brand: "DeKuyper Blackberry & Banana (750ml pair)", cat: "spirits", store: "Retail Spirits Store", price: 25.98, bottleOz: 50.72, yield: "~25 32-oz Rum Runners (1 oz each)", note: "750ml pair — only needed for Gulf Coast Rum Runners" },
+        bitters_angostura: { id: "bitters_angostura", name: "Aromatic Bitters (4 oz)", brand: "Angostura Aromatic Bitters (4 oz)", cat: "spirits", store: "Retail Spirits Store", price: 9.99, bottleOz: 4.0, yield: "~100+ dashes (Old Fashioneds)", note: "4 oz — for McGuire's Tavern Old Fashioned" },
 
-        // Mixers (Publix / Beach Liquors)
+        // Mixers (Publix / Retail Spirits)
         juice_pineapple: { id: "juice_pineapple", name: "Dole Pineapple Juice (52 oz)", brand: "Dole 100% Pineapple Juice", cat: "mixers", store: "Publix", price: 4.25, yield: "~17 servings (3 oz)" },
         juice_orange: { id: "juice_orange", name: "Florida Orange Juice (52 oz)", brand: "Florida's Natural / Publix Deli OJ", cat: "mixers", store: "Publix", price: 4.99, yield: "~13–17 servings (3–4 oz)" },
         juice_cranberry: { id: "juice_cranberry", name: "Ocean Spray Cranberry Juice (64 oz)", brand: "Ocean Spray Cranberry", cat: "mixers", store: "Publix", price: 4.50, yield: "~42 splashes (1.5 oz)" },
         juice_lime_bottled: { id: "juice_lime_bottled", name: "Lime Juice (15 oz)", brand: "ReaLime or Fresh Squeezed", cat: "mixers", store: "Publix", price: 2.99, yield: "~30 pours (0.5 oz)" },
-        syrup_grenadine: { id: "syrup_grenadine", name: "Rose's Grenadine (12 oz)", brand: "Rose's Grenadine", cat: "mixers", store: "Beach Liquors / Publix", price: 3.99, yield: "~24 dashes (0.5 oz)" },
+        syrup_grenadine: { id: "syrup_grenadine", name: "Rose's Grenadine (12 oz)", brand: "Rose's Grenadine", cat: "mixers", store: "Retail Spirits / Publix", price: 3.99, yield: "~24 dashes (0.5 oz)" },
         syrup_agave: { id: "syrup_agave", name: "Agave Nectar (11.75 oz)", brand: "Wholesome or Publix Agave Nectar", cat: "mixers", store: "Publix", price: 4.99, yield: "~24 pours (0.5 oz)" },
         puree_strawberry: { id: "puree_strawberry", name: "Strawberry Purée / Berries", brand: "Publix Strawberries or Purée", cat: "mixers", store: "Publix", price: 4.99, yield: "~8–10 margaritas (1.5 oz)" },
         puree_mango: { id: "puree_mango", name: "Mango Nectar / Purée (33.8 oz)", brand: "Looza or Jumex Mango Nectar", cat: "mixers", store: "Publix", price: 3.49, yield: "~16 margaritas/punches (2 oz)" },
         puree_dragonfruit: { id: "puree_dragonfruit", name: "Dragon Fruit / Pitaya Juice", brand: "Pitaya Plus or Dragonfruit juice", cat: "mixers", store: "Publix", price: 4.99, yield: "~8–10 margaritas (1.5 oz)" },
         cream_coconut: { id: "cream_coconut", name: "Coco Lopez Cream of Coconut (15 oz)", brand: "Coco Lopez Real Cream of Coconut", cat: "mixers", store: "Publix", price: 3.99, yield: "~7–8 painkillers (2 oz)" },
-        mix_bloodymary: { id: "mix_bloodymary", name: "Zing Zang Bloody Mary Mix (32 oz)", brand: "Zing Zang", cat: "mixers", store: "Beach Liquors / Publix", price: 5.99, yield: "~8 Bloody Marys (4 oz)" },
+        mix_bloodymary: { id: "mix_bloodymary", name: "Zing Zang Bloody Mary Mix (32 oz)", brand: "Zing Zang", cat: "mixers", store: "Retail Spirits / Publix", price: 5.99, yield: "~8 Bloody Marys (4 oz)" },
         soda_lemonlime: { id: "soda_lemonlime", name: "Sprite / Lemon-Lime Soda (2-Liter)", brand: "Sprite 2-Liter", cat: "mixers", store: "Publix", price: 2.49, yield: "~16 tall splashes (4 oz)" },
         soda_gingerbeer: { id: "soda_gingerbeer", name: "Ginger Beer (4-Pack)", brand: "Q Mixers or Fever-Tree Ginger Beer", cat: "mixers", store: "Publix", price: 5.99, yield: "~8 mules (3–4 oz)" },
         soda_rootbeer: { id: "soda_rootbeer", name: "Root Beer (2-Liter)", brand: "Barq's or A&W Root Beer", cat: "mixers", store: "Publix", price: 2.49, yield: "~8–10 kid floats (8 oz)" },
         coffee_coldbrew: { id: "coffee_coldbrew", name: "Chilled Cold Brew Coffee (48 oz)", brand: "Stok Unsweetened or Publix Deli", cat: "mixers", store: "Publix", price: 5.99, yield: "~12 iced coffees (4 oz)" },
         dairy_cream: { id: "dairy_cream", name: "Half-and-Half or Heavy Cream (pint)", brand: "Publix Dairy", cat: "mixers", store: "Publix", price: 3.49, yield: "~16 splashes (1 oz)" },
         syrup_chocolate: { id: "syrup_chocolate", name: "Hershey's Chocolate Syrup (24 oz)", brand: "Hershey's Squeeze Bottle", cat: "mixers", store: "Publix", price: 3.49, yield: "~24 glass swirls" },
-        beer_guinness: { id: "beer_guinness", name: "Guinness Extra Stout (Single/4-pack)", brand: "Guinness Extra Stout", cat: "mixers", store: "Beach Liquors / Publix", price: 4.99, yield: "~6 pub floats (2 oz)" },
+        beer_guinness: { id: "beer_guinness", name: "Guinness Extra Stout (Single/4-pack)", brand: "Guinness Extra Stout", cat: "mixers", store: "Retail Spirits / Publix", price: 4.99, yield: "~6 pub floats (2 oz)" },
         lemonade: { id: "lemonade", name: "Simply Lemonade (52 oz)", brand: "Simply Lemonade", cat: "mixers", store: "Publix", price: 3.99, yield: "~13 coolers (4 oz)" },
         icecream_vanilla: { id: "icecream_vanilla", name: "Vanilla Bean Ice Cream (tub)", brand: "Breyers or Publix Vanilla", cat: "mixers", store: "Publix", price: 5.49, yield: "~8–10 scoops (kid floats)" },
 
@@ -7278,17 +8034,17 @@ const customBarDatabase = {
         // Barware & Supplies (Scaled for 6–8 Adults with 30–40oz Yeti Tumblers)
         supplies_ice: { id: "supplies_ice", name: "3× 16-lb Ice Bags (48 lbs total)", brand: "Reddy Ice / Publix (keep in condo freezer)", cat: "supplies", store: "Publix / Resort", price: 11.97, yield: "48 lbs ice (~45–60 Yeti mugs packed with ice)" },
         supplies_cups: { id: "supplies_cups", name: "50-pack 16-oz Plastic Party Tumblers + BYO 30–40oz Yeti Mugs", brand: "Solo / Hefty Clear Cups (NO GLASS on beach/boats)", cat: "supplies", store: "Publix", price: 6.99, yield: "50 cups + BYO Yeti tumblers" },
-                // Classic Spirits & Mixers additions (Beach Liquors & Publix)
+                // Classic Spirits & Mixers additions (Retail Spirits & Publix)
                 // Old Bay Steamer Additions (Publix)
         tea_sweettea: { id: "tea_sweettea", name: "Southern Sweet Tea (Publix Deli 1-Gallon)", brand: "Publix Deli Southern Sweet Tea", cat: "mixers", store: "Publix", price: 3.99, yield: "~16 pours (8 oz)" },
         produce_cucumber: { id: "produce_cucumber", name: "English Seedless Cucumber (1 cucumber)", brand: "Publix Fresh Produce", cat: "citrus", store: "Publix", price: 1.99, yield: "~30–40 slices" },
         rim_oldbay: { id: "rim_oldbay", name: "Old Bay Seasoning (6 oz can)", brand: "McCormick Old Bay", cat: "citrus", store: "Publix", price: 4.49, yield: "~50+ rims & seafood steaming" },
-        gin: { id: "gin", name: "London Dry Gin (1.75L Handle)", brand: "Beefeater London Dry Gin (1.75L Handle)", cat: "spirits", store: "Beach Liquors Destin", price: 34.99, bottleOz: 59.17, yield: "~15–20 32-oz Cocktails (3–4 oz pour)", note: "1.75L Handle — classic juniper-forward London dry gin for Martinis, Long Islands & G&Ts" },
+        gin: { id: "gin", name: "London Dry Gin (1.75L Handle)", brand: "Beefeater London Dry Gin (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 34.99, bottleOz: 59.17, yield: "~15–20 32-oz Cocktails (3–4 oz pour)", note: "1.75L Handle — classic juniper-forward London dry gin for Martinis, Long Islands & G&Ts" },
         soda_grapefruit: { id: "soda_grapefruit", name: "Grapefruit Soda (2-Liter / 4-pack)", brand: "Squirt, Jarritos or Fever-Tree", cat: "mixers", store: "Publix", price: 3.49, yield: "~8–10 Palomas (4–5 oz)" },
         soda_clubsoda: { id: "soda_clubsoda", name: "Club Soda / Sparkling Water (2-Liter)", brand: "Schweppes or Canada Dry", cat: "mixers", store: "Publix", price: 2.49, yield: "~12–16 highballs (4 oz)" },
         soda_cola: { id: "soda_cola", name: "Coca-Cola Classic (2-Liter)", brand: "Coca-Cola", cat: "mixers", store: "Publix", price: 2.99, yield: "~16 highball splashes (4 oz)" },
-        syrup_orgeat: { id: "syrup_orgeat", name: "Orgeat / Almond Syrup (12 oz)", brand: "Torani or Monin Almond/Orgeat", cat: "mixers", store: "Publix / Beach Liquors", price: 5.99, yield: "~12–16 Mai Tais (1 oz)" },
-        supplies_shaker: { id: "supplies_shaker", name: "16-oz Plastic/Metal Cocktail Shaker", brand: "Barware Shaker with strainer", cat: "supplies", store: "Beach Liquors / Publix", price: 9.99, yield: "Reusable all week" }
+        syrup_orgeat: { id: "syrup_orgeat", name: "Orgeat / Almond Syrup (12 oz)", brand: "Torani or Monin Almond/Orgeat", cat: "mixers", store: "Publix / Retail Spirits", price: 5.99, yield: "~12–16 Mai Tais (1 oz)" },
+        supplies_shaker: { id: "supplies_shaker", name: "16-oz Plastic/Metal Cocktail Shaker", brand: "Barware Shaker with strainer", cat: "supplies", store: "Retail Spirits / Publix", price: 9.99, yield: "Reusable all week" }
       },
 
       drinks: {
@@ -7334,7 +8090,7 @@ const customBarDatabase = {
           items: ["vodka", "mix_bloodymary", "produce_lemons", "produce_limes", "produce_celery_olives", "rim_salt_tajin", "supplies_ice", "supplies_cups"]
         },
         bp_painkiller: {
-          key: "bp_painkiller", name: "Emerald Coast Painkiller", venue: "The Back Porch", icon: "🥥", tag: "32-oz Bucket • Myers's Dark Rum, Coconut & Nutmeg", liquorOz: 4.0,
+          key: "bp_painkiller", name: "Coastal Vacation Painkiller", venue: "The Back Porch", icon: "🥥", tag: "32-oz Bucket • Myers's Dark Rum, Coconut & Nutmeg", liquorOz: 4.0,
           items: ["rum_dark", "juice_pineapple", "juice_orange", "cream_coconut", "spice_nutmeg", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         bp_rumrunner: {
@@ -7342,7 +8098,7 @@ const customBarDatabase = {
           items: ["rum_white", "rum_dark", "fruit_liqueurs", "juice_pineapple", "juice_orange", "syrup_grenadine", "produce_limes", "produce_oranges", "supplies_ice", "supplies_cups"]
         },
         bp_peachlemonade: {
-          key: "bp_peachlemonade", name: "Destin Sunset Peach Lemonade", venue: "The Back Porch", icon: "🍋", tag: "32-oz Bucket • Tito's Vodka, Peach & Lemonade", liquorOz: 5.0,
+          key: "bp_peachlemonade", name: "Vacation Sunset Peach Lemonade", venue: "The Back Porch", icon: "🍋", tag: "32-oz Bucket • Tito's Vodka, Peach & Lemonade", liquorOz: 5.0,
           items: ["vodka", "peach_schnapps", "lemonade", "juice_cranberry", "produce_lemons", "produce_mint", "supplies_ice", "supplies_cups"]
         },
         bp_sunset_punch_kid: {
@@ -7409,7 +8165,7 @@ const customBarDatabase = {
           items: ["rum_white", "rum_coconut", "rum_dark", "fruit_liqueurs", "juice_pineapple", "juice_orange", "syrup_grenadine", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         obs_cucumbercooler: {
-          key: "obs_cucumbercooler", name: "The Okaloosa Cucumber Cooler", venue: "Old Bay Steamer", icon: "🥒", tag: "32-oz Vessel • Beefeater Gin, Cucumber & Lime", liquorOz: 4.0,
+          key: "obs_cucumbercooler", name: "The Coastal Cucumber Cooler", venue: "Old Bay Steamer", icon: "🥒", tag: "32-oz Vessel • Beefeater Gin, Cucumber & Lime", liquorOz: 4.0,
           items: ["gin", "produce_cucumber", "juice_lime_bottled", "syrup_agave", "soda_clubsoda", "produce_limes", "supplies_ice", "supplies_cups"]
         },
         obs_strongisland: {
@@ -7425,7 +8181,7 @@ const customBarDatabase = {
           items: ["tequila", "triple_sec", "juice_lime_bottled", "syrup_agave", "juice_orange", "rim_oldbay", "produce_limes", "supplies_ice", "supplies_cups", "supplies_shaker"]
         },
         obs_bushwacker: {
-          key: "obs_bushwacker", name: "Emerald Coast Bushwacker", venue: "Old Bay Steamer", icon: "🍫", tag: "32-oz Mug • Dark Rum, Kahlúa, Cacao & Coconut", liquorOz: 5.5,
+          key: "obs_bushwacker", name: "Coastal Vacation Bushwacker", venue: "Old Bay Steamer", icon: "🍫", tag: "32-oz Mug • Dark Rum, Kahlúa, Cacao & Coconut", liquorOz: 5.5,
           items: ["rum_dark", "kahlua", "creme_de_cacao", "cream_coconut", "dairy_cream", "syrup_chocolate", "spice_nutmeg", "supplies_ice", "supplies_cups"]
         },
         obs_little_steamer_kid: {
@@ -7446,11 +8202,11 @@ const customBarDatabase = {
           items: ["rum_white", "rum_dark", "triple_sec", "syrup_orgeat", "juice_lime_bottled", "juice_orange", "produce_limes", "produce_mint", "supplies_ice", "supplies_cups"]
         },
         cl_classic_paloma: {
-          key: "cl_classic_paloma", name: "Emerald Coast Paloma", venue: "Vacation Classics", icon: "🍈", tag: "32-oz Bucket • Espolòn 100% Agave, Grapefruit Soda & Tajín", liquorOz: 4.0,
+          key: "cl_classic_paloma", name: "Coastal Vacation Paloma", venue: "Vacation Classics", icon: "🍈", tag: "32-oz Bucket • Espolòn 100% Agave, Grapefruit Soda & Tajín", liquorOz: 4.0,
           items: ["tequila", "juice_lime_bottled", "soda_grapefruit", "syrup_agave", "produce_limes", "rim_salt_tajin", "supplies_ice", "supplies_cups"]
         },
         cl_classic_tequila_sunrise: {
-          key: "cl_classic_tequila_sunrise", name: "Classic Tequila Sunrise", venue: "Vacation Classics", icon: "🌅", tag: "32-oz Bucket • Espolòn Tequila, Fresh Florida OJ & Grenadine", liquorOz: 4.0,
+          key: "cl_classic_tequila_sunrise", name: "Classic Tequila Sunrise", venue: "Vacation Classics", icon: "🌅", tag: "32-oz Bucket • Espolòn Tequila, Fresh Citrus OJ & Grenadine", liquorOz: 4.0,
           items: ["tequila", "juice_orange", "syrup_grenadine", "produce_limes", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         cl_classic_moscow_mule: {
@@ -7592,31 +8348,37 @@ const customBarDatabase = {
       if (clSelect) showClassicRecipe(clSelect.value);
     }
 
-    function navigateToRecipe(dKey, event) {
+    function navigateToRecipe(dKey, event, sourceName, pushHistory = true) {
       if (event) event.stopPropagation();
+      recordNavigationOrigin(sourceName || 'Smart Bar Builder');
+
       const isBp = dKey.startsWith('bp_');
       const isMc = dKey.startsWith('mc_');
+      const isObs = dKey.startsWith('obs_');
       let key = dKey;
       let selectId = 'classicDrinkRecipeSelect';
       let sectionId = 'section-classicdrinks';
       let showFunc = showClassicRecipe;
+      let venue = 'cl';
 
-      const isObs = dKey.startsWith('obs_');
       if (isBp) {
         key = dKey.replace('bp_', '');
         selectId = 'drinkRecipeSelect';
         sectionId = 'section-beachbar';
         showFunc = showRecipe;
+        venue = 'bp';
       } else if (isMc) {
         key = dKey.replace('mc_', '');
         selectId = 'mcguiresDrinkRecipeSelect';
         sectionId = 'section-mcguiresdrinks';
         showFunc = showMcguiresRecipe;
+        venue = 'mc';
       } else if (isObs) {
-        key = dKey.replace('obs_', '');
+        key = dKey; // Old Bay option values & recipeData use obs_ prefix
         selectId = 'oldBayDrinkRecipeSelect';
         sectionId = 'section-oldbaydrinks';
         showFunc = showOldBayRecipe;
+        venue = 'obs';
       } else {
         key = dKey.replace('cl_', '');
       }
@@ -7626,6 +8388,14 @@ const customBarDatabase = {
         select.value = key;
       }
       showFunc(key);
+      updateCarouselActivePill(venue, key);
+
+      // Deep linking & history state
+      if (pushHistory && window.history && window.history.pushState) {
+        try {
+          history.pushState({ drink: dKey }, '', '#drink=' + dKey);
+        } catch(e) {}
+      }
 
       const targetSection = document.getElementById(sectionId);
       if (targetSection) {
@@ -7639,7 +8409,7 @@ const customBarDatabase = {
         });
 
         // Briefly highlight the recipe display card with a glow
-        const displayId = isBp ? 'recipeDisplayArea' : (isMc ? 'mcguiresRecipeDisplayArea' : 'classicRecipeDisplayArea');
+        const displayId = isBp ? 'recipeDisplayArea' : (isMc ? 'mcguiresRecipeDisplayArea' : (isObs ? 'oldBayRecipeDisplayArea' : 'classicRecipeDisplayArea'));
         const displayArea = document.getElementById(displayId);
         if (displayArea) {
           const card = displayArea.querySelector('.recipe-display-card') || displayArea.querySelector('.recipe-card');
@@ -7648,24 +8418,22 @@ const customBarDatabase = {
             let glowColor = 'rgba(2, 132, 199, 0.35)';
             let borderColor = '#0284c7';
             if (isMc) {
-              borderColor = '#16a34a';
               glowColor = 'rgba(22, 163, 74, 0.35)';
+              borderColor = '#16a34a';
+            } else if (isObs) {
+              glowColor = 'rgba(194, 65, 12, 0.35)';
+              borderColor = '#c2410c';
+            } else if (isBp) {
+              glowColor = 'rgba(249, 115, 22, 0.35)';
+              borderColor = '#f97316';
             }
-            card.style.boxShadow = `0 0 0 4px ${borderColor}, 0 16px 36px ${glowColor}`;
-            card.style.transform = 'translateY(-3px)';
+            card.style.boxShadow = `0 0 0 3px ${borderColor}, 0 10px 25px ${glowColor}`;
             setTimeout(() => {
               card.style.boxShadow = '';
-              card.style.transform = '';
             }, 1800);
           }
         }
       }
-
-      if (typeof closeTocMobile === 'function') closeTocMobile();
-
-      const drinkObj = customBarDatabase.drinks[dKey];
-      const drinkName = drinkObj ? drinkObj.name : 'Recipe';
-      showToast(`📖 Viewing Recipe: ${drinkName}`);
     }
 
     function setCustomDrinkPreset(presetType) {
@@ -7904,7 +8672,7 @@ const customBarDatabase = {
             <div style="font-size: 2.4rem; margin-bottom: 8px;">🍸🍹</div>
             <h4 style="color: var(--text-main); font-size: 1.1rem; margin-bottom: 6px;">No Cocktails Selected Yet</h4>
             <p style="font-size: 0.88rem; max-width: 460px; margin: 0 auto; line-height: 1.5;">
-              Click any of the cocktails above or tap <strong>"Select Top 6 Favorites"</strong> to generate your tailored Beach Liquors shopping list without buying extra liquor!
+              Click any of the cocktails above or tap <strong>"Select Top 6 Favorites"</strong> to generate your tailored Retail Spirits shopping list without buying extra liquor!
             </p>
           </div>
         `;
@@ -7950,8 +8718,8 @@ const customBarDatabase = {
         });
       }
 
-      renderCategory('spirits', 'Spirits & Liqueurs', '🍾', 'Beach Liquors Destin - 1257 Airport Rd', cart.spiritsCost);
-      renderCategory('mixers', 'Mixers & Juices', '🥥', 'Publix / Beach Liquors', cart.mixersCost);
+      renderCategory('spirits', 'Spirits & Liqueurs', '🍾', 'Retail Spirits Store - Local Retail Store', cart.spiritsCost);
+      renderCategory('mixers', 'Mixers & Juices', '🥥', 'Publix / Retail Spirits', cart.mixersCost);
       renderCategory('citrus', 'Fresh Fruit, Citrus & Garnishes', '🍋', 'Publix Fresh Produce', cart.citrusCost);
       renderCategory('supplies', 'Bar Supplies & Ice', '🧊', 'Publix & Resort', cart.suppliesCost);
 
@@ -7984,8 +8752,8 @@ const customBarDatabase = {
 
       const selectedNames = [...customBarSelectedDrinks].map(k => customBarDatabase.drinks[k].name);
 
-      let text = '🍸 SMART CONSOLIDATED BEACH VACATION BAR LIST (Destin 2026)\n';
-      text += `Store: Beach Liquors Destin, 1257 Airport Rd, Destin, FL 32541 | (850) 654-6161\n`;
+      let text = '🍸 SMART CONSOLIDATED BEACH VACATION BAR LIST (Vacation 2026)\n';
+      text += `Store: Retail Spirits Store, Local Retail Store, Beach Vacation 32541 | (850) 654-6161\n`;
       text += `Selected Drinks (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
       text += 'Estimated Total: ~$' + cart.grandTotal.toFixed(2) + ' (Spirits: ~$' + cart.spiritsCost.toFixed(2) + ' | Mixers/Produce/Ice: ~$' + (cart.mixersCost + cart.citrusCost + cart.suppliesCost).toFixed(2) + ')\n';
       text += '32-oz Bucket & Mason Jar Yield: ~' + cart.bucketServings + ' Full 32-oz Vessels (~' + cart.pitchersCount + ' 1-Gallon Condo Pitcher Batches)\n';
@@ -8002,12 +8770,12 @@ const customBarDatabase = {
         text += '\n';
       }
 
-      appendTextCategory('spirits', '🍾 SPIRITS & LIQUEURS (Beach Liquors Destin)');
-      appendTextCategory('mixers', '🥥 MIXERS & JUICES (Publix / Beach Liquors)');
+      appendTextCategory('spirits', '🍾 SPIRITS & LIQUEURS (Retail Spirits Store)');
+      appendTextCategory('mixers', '🥥 MIXERS & JUICES (Publix / Retail Spirits)');
       appendTextCategory('citrus', '🍋 FRESH PRODUCE & GARNISHES (Publix)');
       appendTextCategory('supplies', '🧊 ICE & BARWARE SUPPLIES');
 
-      text += 'Strict Destin Rule: Strictly NO GLASS on Destin beaches or Crab Island boats! Save $500 fine.';
+      text += 'Strict Vacation Rule: Strictly NO GLASS on Vacation beaches or vacation party boats! Save $500 fine.';
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
@@ -8066,15 +8834,26 @@ const customBarDatabase = {
     });
 
 
+    
+    // ==========================================================================
+    
+
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initCustomBar();
+      renderRecipeCarousels();
       showRecipe('beachbucket');
       showMcguiresRecipe('irish_wake');
       showOldBayRecipe('obs_blt');
       showClassicRecipe('classic_mojito');
+      initScrollspyAndFloatingControls();
+      attachSwipeListeners('recipeDisplayArea', 'bp');
+      attachSwipeListeners('mcguiresRecipeDisplayArea', 'mc');
+      attachSwipeListeners('oldBayRecipeDisplayArea', 'obs');
+      attachSwipeListeners('classicRecipeDisplayArea', 'cl');
+      initDeepLinkingAndHotkeys();
       initPwaCapabilities();
-      console.log('Streamlined Recipes & Smart Bar Builder loaded successfully!');
+      console.log('Beach & Vacation Drink Mixology Guide loaded successfully!');
     });
 
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
@@ -8114,7 +8893,7 @@ const customBarDatabase = {
         deferredInstallPrompt = null;
         const btn = document.getElementById('pwaInstallBtn');
         if (btn) btn.style.display = 'none';
-        showToast('🎉 Destin Drinks App Installed Successfully!');
+        showToast('🎉 Vacation Drinks App Installed Successfully!');
       });
     }
 
@@ -8160,25 +8939,25 @@ const customBarDatabase = {
 
   <!-- Mobile Bottom App Bar -->
   <nav class="mobile-bottom-app-bar" aria-label="Quick App Navigation">
-    <a href="#section-custombar" class="mobile-app-tab active">
+    <a href="#section-custombar" class="mobile-app-tab active" data-section="section-custombar">
       <span class="icon">🛒</span>
       <span>Smart Bar</span>
     </a>
-    <a href="#section-beachbar" class="mobile-app-tab">
+    <a href="#section-beachbar" class="mobile-app-tab" data-section="section-beachbar">
       <span class="icon">🌴</span>
-      <span>Back Porch</span>
+      <span>Beach Bar</span>
     </a>
-    <a href="#section-mcguiresdrinks" class="mobile-app-tab">
+    <a href="#section-mcguiresdrinks" class="mobile-app-tab" data-section="section-mcguiresdrinks">
       <span class="icon">🍀</span>
       <span>McGuire's</span>
     </a>
-    <a href="#section-classicdrinks" class="mobile-app-tab">
+    <a href="#section-oldbaydrinks" class="mobile-app-tab" data-section="section-oldbaydrinks">
+      <span class="icon">🦀</span>
+      <span>Old Bay</span>
+    </a>
+    <a href="#section-classicdrinks" class="mobile-app-tab" data-section="section-classicdrinks">
       <span class="icon">🍸</span>
       <span>Classics</span>
-    </a>
-    <a href="javascript:void(0)" onclick="triggerPwaInstall()" class="mobile-app-tab">
-      <span class="icon">📲</span>
-      <span>Install</span>
     </a>
   </nav>
 
@@ -8187,9 +8966,9 @@ const customBarDatabase = {
     <div class="pwa-modal-card" onclick="event.stopPropagation()">
       <button class="pwa-modal-close" onclick="closeIosInstallModal()">&times;</button>
       <div style="font-size: 2.2rem; margin-bottom: 8px;">📲</div>
-      <h3 style="font-size: 1.2rem; margin-bottom: 6px;">Install Destin Drinks on iPhone</h3>
+      <h3 style="font-size: 1.2rem; margin-bottom: 6px;">Install Vacation Drinks on iPhone</h3>
       <p style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 16px;">
-        Add to your home screen to use offline on the beach or Crab Island without address bars!
+        Add to your home screen to use offline on the beach or Sandbar & Boat Day without address bars!
       </p>
       <div class="pwa-step-row">
         <div class="pwa-step-num">1</div>
@@ -8253,7 +9032,7 @@ const customBarDatabase = {
       <button class="pwa-modal-close" onclick="closeSurpriseModal()">&times;</button>
       <div style="font-size: 2.2rem; margin-bottom: 4px;">🎰🍹</div>
       <h3 style="font-size: 1.25rem; margin: 0; color: var(--text-main);">Vacation Drink Randomizer</h3>
-      <p style="font-size: 0.84rem; color: var(--text-muted); margin: 4px 0 14px;">Can't decide what to make? Let the Destin wheel choose for your group!</p>
+      <p style="font-size: 0.84rem; color: var(--text-muted); margin: 4px 0 14px;">Can't decide what to make? Let the Vacation wheel choose for your group!</p>
 
       <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px;">
         <button class="filter-chip active" id="rndMoodAll" onclick="setRandomMood('all')">Any Drink</button>
@@ -8279,5 +9058,16 @@ const customBarDatabase = {
     </div>
   </div>
 
+
+  <!-- Floating Quick Cart Pill -->
+  <div id="floatingQuickCartPill" class="floating-quick-cart" onclick="jumpToBarCart()" title="Jump to Smart Bar Cart">
+    <span class="cart-pill-icon">🛒</span>
+    <span id="quickCartCountText">0 Drinks</span> • <span id="quickCartTotalText">$0</span>
+  </div>
+
+  <!-- Floating Back to Top Button -->
+  <button id="backToTopBtn" class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Back to top" title="Scroll to top">
+    <span>↑</span>
+  </button>
 </body>
 </html>
