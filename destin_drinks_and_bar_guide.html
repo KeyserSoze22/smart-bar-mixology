@@ -4355,6 +4355,398 @@
     .mobile-app-tab.active .icon {
       transform: scale(1.18);
     }
+
+    /* ==========================================================================
+       MASTER FILTER & SORT HUB + BAR VS DIY PRICING MODULE
+       ========================================================================== */
+    
+    /* Master Filter Hub Container */
+    .master-filter-hub {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+    body.dark-mode .master-filter-hub {
+      background: #142238;
+      border-color: #233554;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .master-filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .master-filter-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+    .master-filter-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Style Filter Pills (WHAT it is) */
+    .style-filter-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .style-filter-pills::-webkit-scrollbar {
+      height: 5px;
+    }
+    .style-filter-pills::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: var(--radius-full);
+    }
+    .style-pill-btn {
+      flex-shrink: 0;
+      padding: 7px 15px;
+      border-radius: var(--radius-full);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      border: 1.5px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+      user-select: none;
+      white-space: nowrap;
+    }
+    .style-pill-btn:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .style-pill-btn.active {
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+      color: #ffffff;
+      border-color: #0284c7;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Secondary Controls Row (Spirit, Venue, Sort) */
+    .filter-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .filter-select-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-dropdown {
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition);
+    }
+    body.dark-mode .filter-dropdown {
+      background: #0d1829;
+      border-color: #233554;
+      color: #f8fafc;
+    }
+    .filter-dropdown:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+    }
+    .filter-reset-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .filter-reset-btn:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    /* Filter Stats Banner */
+    .filter-stats-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: var(--surface-subtle);
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      margin-top: 14px;
+      font-size: 0.84rem;
+      border: 1px solid var(--border);
+    }
+    .filter-stats-text {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .filter-savings-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #dcfce7;
+      color: #15803d;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+    body.dark-mode .filter-savings-highlight {
+      background: rgba(22, 163, 74, 0.25);
+      color: #4ade80;
+    }
+
+    /* Interactive Filter Results Gallery */
+    .filter-results-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .filter-results-gallery::-webkit-scrollbar {
+      width: 6px;
+    }
+    .filter-results-gallery::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: var(--radius-full);
+    }
+    .filter-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .filter-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+    body.dark-mode .filter-card {
+      background: #0d1829;
+      border-color: #233554;
+    }
+    .filter-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .filter-card-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-card-venue {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .filter-pricing-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--surface-subtle);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+    }
+    body.dark-mode .filter-pricing-badge-row {
+      background: #142238;
+    }
+    .filter-bar-price {
+      color: #dc2626;
+      font-weight: 700;
+    }
+    .filter-diy-price {
+      color: #16a34a;
+      font-weight: 800;
+    }
+    .filter-card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .filter-jump-btn {
+      flex: 1;
+      padding: 6px 12px;
+      background: var(--primary);
+      color: #ffffff;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .filter-jump-btn:hover {
+      background: var(--primary-dark);
+    }
+    .filter-cart-toggle-btn {
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .filter-cart-toggle-btn.in-cart {
+      background: #16a34a;
+      color: #ffffff;
+      border-color: #16a34a;
+    }
+
+    /* Recipe Card 3-Column Pricing Module */
+    .bar-pricing-card {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.06) 0%, rgba(13, 148, 136, 0.08) 100%);
+      border: 1.5px solid #bae6fd;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin: 14px 0;
+    }
+    body.dark-mode .bar-pricing-card {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.15) 0%, rgba(13, 148, 136, 0.15) 100%);
+      border-color: #0369a1;
+    }
+    @media (max-width: 640px) {
+      .bar-pricing-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+    }
+    .pricing-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .pricing-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .pricing-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+    }
+    .bar-col .pricing-value {
+      color: #dc2626;
+      text-decoration: line-through;
+    }
+    .diy-col .pricing-value {
+      color: #16a34a;
+    }
+    .savings-col .pricing-value {
+      color: #0284c7;
+    }
+    body.dark-mode .savings-col .pricing-value {
+      color: #38bdf8;
+    }
+    .pricing-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Live Bottle & Ingredient Price Tags Box */
+    .ingredient-price-tags-box {
+      background: var(--surface-subtle);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      margin-bottom: 14px;
+    }
+    .ingredient-price-tags-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ingredient-price-tags-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .ingredient-price-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .ingredient-price-tag .tag-price {
+      color: #16a34a;
+      font-weight: 800;
+    }
 </style>
 </head>
 <body>
@@ -4412,19 +4804,91 @@
     </header>
 
     <!-- FLAVOR & SPIRIT 1-TAP FILTER CHIPS -->
-    <div class="filter-chips-container">
-      <div class="filter-chips-bar" id="filterChipsBar">
-        <div class="filter-chip active" onclick="setDrinkFilter('all')"><span>🍹</span> All Drinks (46)</div>
-        <div class="filter-chip" onclick="setDrinkFilter('rum')"><span>🌴</span> Rum (15)</div>
-        <div class="filter-chip" onclick="setDrinkFilter('tequila')"><span>🧂</span> Tequila (7)</div>
-        <div class="filter-chip" onclick="setDrinkFilter('vodka')"><span>🍸</span> Vodka (8)</div>
-        <div class="filter-chip" onclick="setDrinkFilter('whiskey')"><span>🍀</span> Whiskey (4)</div>
-        <div class="filter-chip" onclick="setDrinkFilter('tropical')"><span>🍍</span> Sweet &amp; Tropical</div>
-        <div class="filter-chip" onclick="setDrinkFilter('tart')"><span>🍋</span> Tart &amp; Crisp</div>
-        <div class="filter-chip" onclick="setDrinkFilter('spicy')"><span>🌶️</span> Spicy Kick</div>
-        <div class="filter-chip" onclick="setDrinkFilter('dessert')"><span>🍫</span> Coffee &amp; Dessert</div>
-        <div class="filter-chip" onclick="setDrinkFilter('mocktail')"><span>🧒</span> 0.0% ABV Mocktails</div>
+    <!-- SMART MIXOLOGY MASTER FILTER & SORT HUB -->
+    <div class="master-filter-hub" id="masterFilterHub">
+      <div class="master-filter-header">
+        <div>
+          <h3 class="master-filter-title"><span>🍹</span> Filter &amp; Sort Cocktails by Style &amp; Spirit</h3>
+          <p class="master-filter-sub">
+            Organize all 46 drinks by style (Margaritas, Whiskey Drinks, Punches, Martinis), spirit, or bar venue — compare restaurant bar prices vs. DIY batch cost!
+          </p>
+        </div>
+        <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()">
+          ↺ Reset Filters
+        </button>
       </div>
+
+      <!-- Row 1: Drink Style Filter Pills (WHAT it is) -->
+      <div class="style-filter-pills" id="styleFilterPills">
+        <button type="button" class="style-pill-btn active" onclick="setDrinkStyleFilter('all')"><span>🍹</span> All Drinks (46)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('margarita')"><span>🧂</span> Margaritas (7)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('whiskey')"><span>🥃</span> Whiskey &amp; Bourbon (6)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('punch_bucket')"><span>🪣</span> Beach Buckets &amp; Punches (6)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('tiki_tropical')"><span>🌴</span> Tiki &amp; Tropical (7)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('martini')"><span>🍸</span> Martinis &amp; Sours (5)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('mule_highball')"><span>🧊</span> Mules &amp; Highballs (7)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('creamy_dessert')"><span>🍫</span> Dessert &amp; Mudslides (3)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('bloody_mary')"><span>🌶️</span> Bloody Marys &amp; Savory (3)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('mocktail')"><span>🧒</span> 0.0% Mocktails (4)</button>
+      </div>
+
+      <!-- Row 2: Secondary Dropdown Filters & Sorting -->
+      <div class="filter-controls-row">
+        <div class="filter-select-group">
+          <div>
+            <label style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px;">Spirit Base:</label>
+            <select id="filterSpiritSelect" class="filter-dropdown" onchange="applyMasterFilters()">
+              <option value="all" selected>All Spirits (46)</option>
+              <option value="rum">🌴 Rum (15 Drinks)</option>
+              <option value="tequila">🧂 Tequila (7 Drinks)</option>
+              <option value="vodka">🍸 Vodka (8 Drinks)</option>
+              <option value="whiskey">🥃 Whiskey / Bourbon (5 Drinks)</option>
+              <option value="gin">🌲 Gin (2 Drinks)</option>
+              <option value="none">🧒 Non-Alcoholic (4 Drinks)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px;">Bar / Venue:</label>
+            <select id="filterVenueSelect" class="filter-dropdown" onchange="applyMasterFilters()">
+              <option value="all" selected>All Venues (46)</option>
+              <option value="bp">🌴 The Back Porch Beach Bar (14)</option>
+              <option value="mc">🍀 McGuire's Irish Pub (12)</option>
+              <option value="obs">🦀 Old Bay Steamer Bar (8)</option>
+              <option value="cl">🍸 Vacation &amp; Resort Classics (12)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-select-group">
+          <div>
+            <label style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px;">Sort Drinks By:</label>
+            <select id="filterSortSelect" class="filter-dropdown" onchange="applyMasterFilters()">
+              <option value="featured" selected>⭐ Featured / Curated</option>
+              <option value="savings_desc">💰 Biggest Bar Savings ($$$)</option>
+              <option value="bar_price_desc">🏪 Highest Bar Menu Price</option>
+              <option value="diy_cost_asc">💲 Lowest DIY Batch Cost</option>
+              <option value="name_asc">🔤 Name (A → Z)</option>
+              <option value="potency_desc">⚡ Highest ABV / Potency</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: Filter Stats & Summary Banner -->
+      <div class="filter-stats-banner" id="filterStatsBanner">
+        <div class="filter-stats-text" id="filterStatsText">Showing all 46 cocktails across all venues</div>
+        <div class="filter-savings-highlight" id="filterSavingsHighlight">
+          <span>💰</span> Average Bar Price: ~$16.20 • Average DIY Cost: ~$3.40 (79% Savings)
+        </div>
+      </div>
+
+      <!-- Row 4: Interactive Live Results Gallery -->
+      <div class="filter-results-gallery" id="filterResultsGallery">
+        <!-- Rendered dynamically by applyMasterFilters() -->
+      </div>
+    </div>
+
     </div>
 
     <!-- 7-DAY DESTIN VACATION ITINERARY DRINK PAIRINGS -->
@@ -5141,6 +5605,322 @@
         </div>
       `;
     }
+
+    
+    // ==========================================================================
+    // DRINK PRICING & RESTAURANT MENU COSTS DATABASE (46 COCKTAILS)
+    // ==========================================================================
+    const drinkPricingDatabase = {
+      // The Back Porch Beach Bar (14)
+      bp_ultimate_porchpunch: { type: 'punch_bucket', spirit: 'rum', barPrice: 22.00, diyCost: 3.90, barName: 'The Back Porch Beach Bar', styleLabel: 'Beach Bucket & Punch' },
+      bp_porchpunch: { type: 'punch_bucket', spirit: 'rum', barPrice: 18.00, diyCost: 3.40, barName: 'The Back Porch Beach Bar', styleLabel: 'Beach Bucket & Punch' },
+      bp_pattywacked: { type: 'creamy_dessert', spirit: 'rum', barPrice: 17.00, diyCost: 3.60, barName: 'The Back Porch Beach Bar', styleLabel: 'Dessert & Mudslide' },
+      bp_beachbucket: { type: 'punch_bucket', spirit: 'rum', barPrice: 24.00, diyCost: 4.10, barName: 'The Back Porch Beach Bar', styleLabel: '32-oz Souvenir Beach Bucket' },
+      bp_porchmargarita: { type: 'margarita', spirit: 'tequila', barPrice: 17.50, diyCost: 3.80, barName: 'The Back Porch Beach Bar', styleLabel: 'Craft Margarita' },
+      bp_strawberry_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 16.50, diyCost: 3.50, barName: 'The Back Porch Beach Bar', styleLabel: 'Fruity Margarita' },
+      bp_mango_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 16.50, diyCost: 3.50, barName: 'The Back Porch Beach Bar', styleLabel: 'Tropical Margarita' },
+      bp_spicy_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 16.50, diyCost: 3.50, barName: 'The Back Porch Beach Bar', styleLabel: 'Spicy Margarita' },
+      bp_dragonfruit_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 17.00, diyCost: 3.70, barName: 'The Back Porch Beach Bar', styleLabel: 'Signature Margarita' },
+      bp_bloodymary: { type: 'bloody_mary', spirit: 'vodka', barPrice: 15.00, diyCost: 2.80, barName: 'The Back Porch Beach Bar', styleLabel: 'Savory Bloody Mary' },
+      bp_painkiller: { type: 'tiki_tropical', spirit: 'rum', barPrice: 16.50, diyCost: 3.60, barName: 'The Back Porch Beach Bar', styleLabel: 'Tiki & Tropical Cooler' },
+      bp_rumrunner: { type: 'tiki_tropical', spirit: 'rum', barPrice: 16.00, diyCost: 3.80, barName: 'The Back Porch Beach Bar', styleLabel: 'Tiki & Tropical Cooler' },
+      bp_peachlemonade: { type: 'mule_highball', spirit: 'vodka', barPrice: 14.50, diyCost: 2.60, barName: 'The Back Porch Beach Bar', styleLabel: 'Mule & Highball Cooler' },
+      bp_sunset_punch_kid: { type: 'mocktail', spirit: 'none', barPrice: 7.50, diyCost: 1.20, barName: 'The Back Porch Beach Bar', styleLabel: '0.0% ABV Mocktail' },
+
+      // McGuire's Irish Pub (12)
+      mc_irish_wake: { type: 'punch_bucket', spirit: 'rum', barPrice: 17.50, diyCost: 3.70, barName: "McGuire's Irish Pub", styleLabel: 'Mason Jar Tavern Legend' },
+      mc_emory_chenoweth: { type: 'tiki_tropical', spirit: 'rum', barPrice: 16.50, diyCost: 3.50, barName: "McGuire's Irish Pub", styleLabel: 'Tropical Rum Punch' },
+      mc_iced_irish_coffee: { type: 'whiskey', spirit: 'whiskey', barPrice: 14.50, diyCost: 3.20, barName: "McGuire's Irish Pub", styleLabel: 'Whiskey Coffee Cocktail' },
+      mc_bloody_irish: { type: 'bloody_mary', spirit: 'whiskey', barPrice: 15.50, diyCost: 3.30, barName: "McGuire's Irish Pub", styleLabel: 'Pub Bloody Mary' },
+      mc_dublin_mule: { type: 'mule_highball', spirit: 'whiskey', barPrice: 14.00, diyCost: 2.90, barName: "McGuire's Irish Pub", styleLabel: 'Irish Whiskey Mule' },
+      mc_blueberry_lemon_drop: { type: 'martini', spirit: 'vodka', barPrice: 15.50, diyCost: 2.80, barName: "McGuire's Irish Pub", styleLabel: 'Craft Martini' },
+      mc_strawberry_twist: { type: 'martini', spirit: 'vodka', barPrice: 15.50, diyCost: 2.80, barName: "McGuire's Irish Pub", styleLabel: 'Craft Martini' },
+      mc_chocolate_moose: { type: 'creamy_dessert', spirit: 'vodka', barPrice: 16.50, diyCost: 3.90, barName: "McGuire's Irish Pub", styleLabel: 'Dessert Martini' },
+      mc_james_bond: { type: 'martini', spirit: 'vodka', barPrice: 17.00, diyCost: 3.80, barName: "McGuire's Irish Pub", styleLabel: 'Double Shot Martini' },
+      mc_south_of_the_border: { type: 'margarita', spirit: 'tequila', barPrice: 15.50, diyCost: 3.40, barName: "McGuire's Irish Pub", styleLabel: 'Pub Margarita' },
+      mc_smoked_old_fashioned: { type: 'whiskey', spirit: 'whiskey', barPrice: 16.00, diyCost: 3.10, barName: "McGuire's Irish Pub", styleLabel: 'Tavern Whiskey Classic' },
+      mc_root_beer_float_kid: { type: 'mocktail', spirit: 'none', barPrice: 6.50, diyCost: 1.10, barName: "McGuire's Irish Pub", styleLabel: 'Draft Root Beer Mocktail' },
+
+      // Old Bay Steamer (8)
+      obs_blt: { type: 'whiskey', spirit: 'whiskey', barPrice: 15.50, diyCost: 2.90, barName: 'Old Bay Steamer Bar', styleLabel: 'Whiskey Sweet Tea Cooler' },
+      obs_bahamamama: { type: 'tiki_tropical', spirit: 'rum', barPrice: 16.00, diyCost: 3.40, barName: 'Old Bay Steamer Bar', styleLabel: 'Tiki & Tropical Cooler' },
+      obs_cucumbercooler: { type: 'mule_highball', spirit: 'gin', barPrice: 14.50, diyCost: 2.70, barName: 'Old Bay Steamer Bar', styleLabel: 'Gin Highball Cooler' },
+      obs_strongisland: { type: 'punch_bucket', spirit: 'vodka', barPrice: 19.50, diyCost: 4.20, barName: 'Old Bay Steamer Bar', styleLabel: '5-Spirits Powerhouse' },
+      obs_seafoodbloodymary: { type: 'bloody_mary', spirit: 'vodka', barPrice: 18.50, diyCost: 3.90, barName: 'Old Bay Steamer Bar', styleLabel: 'Loaded Seafood Bloody Mary' },
+      obs_topshelfmargarita: { type: 'margarita', spirit: 'tequila', barPrice: 17.00, diyCost: 3.60, barName: 'Old Bay Steamer Bar', styleLabel: 'Top Shelf Margarita' },
+      obs_bushwacker: { type: 'creamy_dessert', spirit: 'rum', barPrice: 16.50, diyCost: 3.70, barName: 'Old Bay Steamer Bar', styleLabel: 'Creamy Coastal Bushwacker' },
+      obs_little_steamer_kid: { type: 'mocktail', spirit: 'none', barPrice: 6.00, diyCost: 0.90, barName: 'Old Bay Steamer Bar', styleLabel: 'Sweet Tea Lemonade Mocktail' },
+
+      // Vacation Classics (12)
+      cl_classic_mojito: { type: 'mule_highball', spirit: 'rum', barPrice: 15.00, diyCost: 2.60, barName: 'Resort Beach Bar', styleLabel: 'Classic Rum Highball' },
+      cl_classic_pina_colada: { type: 'tiki_tropical', spirit: 'rum', barPrice: 16.50, diyCost: 3.40, barName: 'Resort Beach Bar', styleLabel: 'Tiki & Tropical Classic' },
+      cl_classic_mai_tai: { type: 'tiki_tropical', spirit: 'rum', barPrice: 17.50, diyCost: 3.60, barName: 'Tiki Lounge / Resort Bar', styleLabel: 'Authentic 1944 Tiki' },
+      cl_classic_paloma: { type: 'mule_highball', spirit: 'tequila', barPrice: 15.00, diyCost: 2.70, barName: 'Resort Beach Bar', styleLabel: 'Tequila Highball Cooler' },
+      cl_classic_tequila_sunrise: { type: 'tiki_tropical', spirit: 'tequila', barPrice: 14.50, diyCost: 2.50, barName: 'Resort Beach Bar', styleLabel: 'Tequila Sunset Classic' },
+      cl_classic_moscow_mule: { type: 'mule_highball', spirit: 'vodka', barPrice: 14.00, diyCost: 2.70, barName: 'Cocktail Lounge', styleLabel: 'Copper Mug Mule' },
+      cl_classic_daiquiri: { type: 'martini', spirit: 'rum', barPrice: 14.50, diyCost: 2.40, barName: 'Cocktail Lounge', styleLabel: 'Classic Cuban Sour' },
+      cl_classic_espresso_martini: { type: 'martini', spirit: 'vodka', barPrice: 17.00, diyCost: 3.30, barName: 'Nightclub / Lounge', styleLabel: 'Cold Brew Martini' },
+      cl_classic_long_island: { type: 'punch_bucket', spirit: 'vodka', barPrice: 16.50, diyCost: 3.80, barName: 'Resort Beach Bar', styleLabel: '5-Spirits Powerhouse' },
+      cl_classic_whiskey_sour: { type: 'whiskey', spirit: 'whiskey', barPrice: 15.00, diyCost: 2.90, barName: 'Cocktail Lounge', styleLabel: 'Classic Whiskey Sour' },
+      cl_classic_dark_and_stormy: { type: 'mule_highball', spirit: 'rum', barPrice: 15.50, diyCost: 2.80, barName: 'Resort Beach Bar', styleLabel: 'Dark Rum Highball' },
+      cl_classic_coconut_limeade_kid: { type: 'mocktail', spirit: 'none', barPrice: 7.00, diyCost: 1.20, barName: 'Resort Beach Bar', styleLabel: 'Tropical Cream Mocktail' }
+    };
+
+    function renderPriceComparisonCard(fullKey) {
+      const p = drinkPricingDatabase[fullKey] || { barPrice: 16.00, diyCost: 3.40, barName: 'Beach Bar / Restaurant', styleLabel: 'Vacation Cocktail' };
+      const savings = Math.max(0, p.barPrice - p.diyCost);
+      const savingsPct = Math.round((savings / p.barPrice) * 100);
+
+      // Collect live bottle pricing tags from customBarDatabase.drinks
+      const drinkData = (typeof customBarDatabase !== 'undefined' && customBarDatabase.drinks) ? customBarDatabase.drinks[fullKey] : null;
+      let bottleTagsHtml = '';
+      if (drinkData && Array.isArray(drinkData.items) && typeof customBarDatabase.items !== 'undefined') {
+        const tags = [];
+        drinkData.items.forEach(itemId => {
+          const item = customBarDatabase.items[itemId];
+          if (item && item.price && (item.cat === 'spirits' || item.cat === 'liqueur' || item.cat === 'mixer')) {
+            const shortName = item.name.split('(')[0].trim();
+            const size = item.name.match(/\(([^)]+)\)/)?.[1] || '';
+            tags.push(`<span class="ingredient-price-tag"><span>🍾</span> ${shortName} ${size ? '(' + size + ')' : ''}: <span class="tag-price">$${item.price.toFixed(2)}</span></span>`);
+          }
+        });
+        if (tags.length > 0) {
+          bottleTagsHtml = `
+            <div class="ingredient-price-tags-box">
+              <div class="ingredient-price-tags-title">
+                <span>🏷️</span> Live Retail Bottle &amp; Ingredient Pricing Benchmark:
+              </div>
+              <div class="ingredient-price-tags-grid">
+                ${tags.join('')}
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      return `
+        <div class="bar-pricing-card">
+          <div class="pricing-col bar-col">
+            <div class="pricing-label">🏪 Bar &amp; Restaurant Menu Price</div>
+            <div class="pricing-value">$${p.barPrice.toFixed(2)}</div>
+            <div class="pricing-sub">Typical price at ${p.barName}</div>
+          </div>
+          <div class="pricing-col diy-col">
+            <div class="pricing-label">🍹 DIY Vacation Batch Cost</div>
+            <div class="pricing-value">~$${p.diyCost.toFixed(2)}</div>
+            <div class="pricing-sub">Per 32-oz Souvenir Vessel / Pour</div>
+          </div>
+          <div class="pricing-col savings-col">
+            <div class="pricing-label">💰 Your Group Savings</div>
+            <div class="pricing-value">Save $${savings.toFixed(2)}</div>
+            <div class="pricing-sub">${savingsPct}% savings • $${(savings * 8).toFixed(0)} saved per 8 drinks!</div>
+          </div>
+        </div>
+        ${bottleTagsHtml}
+      `;
+    }
+
+    // ==========================================================================
+    // MASTER FILTER & SORT CONTROLLER
+    // ==========================================================================
+    let currentMasterStyle = 'all';
+
+    function setDrinkStyleFilter(styleKey) {
+      currentMasterStyle = styleKey;
+      document.querySelectorAll('#styleFilterPills .style-pill-btn').forEach(btn => {
+        const isTarget = btn.getAttribute('onclick')?.includes(`'${styleKey}'`);
+        btn.classList.toggle('active', isTarget);
+      });
+      applyMasterFilters();
+    }
+
+    function resetMasterFilters() {
+      currentMasterStyle = 'all';
+      const spiritSel = document.getElementById('filterSpiritSelect');
+      const venueSel = document.getElementById('filterVenueSelect');
+      const sortSel = document.getElementById('filterSortSelect');
+      if (spiritSel) spiritSel.value = 'all';
+      if (venueSel) venueSel.value = 'all';
+      if (sortSel) sortSel.value = 'featured';
+
+      document.querySelectorAll('#styleFilterPills .style-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'all'"));
+      });
+      applyMasterFilters();
+      showToast('↺ Filters reset to all 46 cocktails');
+    }
+
+    function applyMasterFilters() {
+      const spiritVal = document.getElementById('filterSpiritSelect')?.value || 'all';
+      const venueVal = document.getElementById('filterVenueSelect')?.value || 'all';
+      const sortVal = document.getElementById('filterSortSelect')?.value || 'featured';
+
+      const searchIndex = buildSearchIndex();
+      let matches = searchIndex.filter(item => {
+        const pricing = drinkPricingDatabase[item.key] || {};
+        
+        // 1. Style / Type check
+        if (currentMasterStyle !== 'all') {
+          if (currentMasterStyle === 'whiskey') {
+            if (pricing.type !== 'whiskey' && pricing.spirit !== 'whiskey') return false;
+          } else if (pricing.type !== currentMasterStyle) {
+            return false;
+          }
+        }
+
+        // 2. Spirit check
+        if (spiritVal !== 'all') {
+          if (spiritVal === 'none') {
+            if (pricing.spirit !== 'none') return false;
+          } else if (pricing.spirit !== spiritVal && item.spirit !== spiritVal) {
+            return false;
+          }
+        }
+
+        // 3. Venue check
+        if (venueVal !== 'all') {
+          if (item.venue !== venueVal) return false;
+        }
+
+        return true;
+      });
+
+      // Sort matches
+      if (sortVal === 'savings_desc') {
+        matches.sort((a, b) => {
+          const pa = drinkPricingDatabase[a.key] || { barPrice: 0, diyCost: 0 };
+          const pb = drinkPricingDatabase[b.key] || { barPrice: 0, diyCost: 0 };
+          return (pb.barPrice - pb.diyCost) - (pa.barPrice - pa.diyCost);
+        });
+      } else if (sortVal === 'bar_price_desc') {
+        matches.sort((a, b) => {
+          const pa = drinkPricingDatabase[a.key] || { barPrice: 0 };
+          const pb = drinkPricingDatabase[b.key] || { barPrice: 0 };
+          return pb.barPrice - pa.barPrice;
+        });
+      } else if (sortVal === 'diy_cost_asc') {
+        matches.sort((a, b) => {
+          const pa = drinkPricingDatabase[a.key] || { diyCost: 0 };
+          const pb = drinkPricingDatabase[b.key] || { diyCost: 0 };
+          return pa.diyCost - pb.diyCost;
+        });
+      } else if (sortVal === 'name_asc') {
+        matches.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortVal === 'potency_desc') {
+        const potOrder = { high: 3, med: 2, mocktail: 1 };
+        matches.sort((a, b) => (potOrder[b.potency] || 2) - (potOrder[a.potency] || 2));
+      }
+
+      // Update stats banner
+      renderFilterStats(matches);
+
+      // Render interactive cards gallery
+      renderFilterGallery(matches);
+
+      // Also synchronize Smart Bar Builder drink cards below
+      syncSmartBarCardsFilter(matches);
+    }
+
+    function renderFilterStats(matches) {
+      const textEl = document.getElementById('filterStatsText');
+      const highEl = document.getElementById('filterSavingsHighlight');
+      if (!textEl || !highEl) return;
+
+      const count = matches.length;
+      if (count === 0) {
+        textEl.textContent = 'No drinks match the selected filters';
+        highEl.innerHTML = '<span>⚠️</span> Try selecting "All Spirits" or resetting filters';
+        return;
+      }
+
+      let totalBar = 0;
+      let totalDiy = 0;
+      matches.forEach(m => {
+        const p = drinkPricingDatabase[m.key] || { barPrice: 16, diyCost: 3.4 };
+        totalBar += p.barPrice;
+        totalDiy += p.diyCost;
+      });
+
+      const avgBar = totalBar / count;
+      const avgDiy = totalDiy / count;
+      const avgSavings = avgBar - avgDiy;
+      const pct = Math.round((avgSavings / avgBar) * 100);
+
+      textEl.textContent = `Showing ${count} cocktail${count === 1 ? '' : 's'} matching criteria`;
+      highEl.innerHTML = `<span>💰</span> Avg Bar: $${avgBar.toFixed(2)} • Avg DIY: ~$${avgDiy.toFixed(2)} (Save $${avgSavings.toFixed(2)} / ${pct}%)`;
+    }
+
+    function renderFilterGallery(matches) {
+      const gallery = document.getElementById('filterResultsGallery');
+      if (!gallery) return;
+
+      if (matches.length === 0) {
+        gallery.innerHTML = `
+          <div style="grid-column: 1 / -1; padding: 28px; text-align: center; color: var(--text-muted);">
+            No cocktails found. Click <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()" style="display: inline-block; margin-left: 6px;">Reset Filters</button> to view all 46 drinks.
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      matches.forEach(m => {
+        const p = drinkPricingDatabase[m.key] || { barPrice: 16.00, diyCost: 3.40, barName: 'Bar', styleLabel: 'Cocktail' };
+        const savings = Math.max(0, p.barPrice - p.diyCost);
+        const savingsPct = Math.round((savings / p.barPrice) * 100);
+        const inCart = customBarSelectedDrinks && customBarSelectedDrinks.has(m.key);
+        const cleanTitle = m.title.split('(')[0].trim();
+
+        html += `
+          <div class="filter-card" onclick="navigateToRecipe('${m.key}', event, 'Filter &amp; Sort Hub')">
+            <div>
+              <div class="filter-card-top">
+                <div>
+                  <div class="filter-card-title">${cleanTitle}</div>
+                  <div class="filter-card-venue">${m.venueName} • ${p.styleLabel}</div>
+                </div>
+                <span class="deal-badge" style="font-size: 0.7rem; font-weight: 800;">${m.spirit ? m.spirit.toUpperCase() : 'DRINK'}</span>
+              </div>
+            </div>
+
+            <div class="filter-pricing-badge-row">
+              <div>
+                <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Bar Price</span>
+                <span class="filter-bar-price">$${p.barPrice.toFixed(2)}</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Condo DIY</span>
+                <span class="filter-diy-price">~$${p.diyCost.toFixed(2)}</span>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Savings</span>
+                <span style="color: #0284c7; font-weight: 800; font-size: 0.8rem;">Save $${savings.toFixed(2)} (${savingsPct}%)</span>
+              </div>
+            </div>
+
+            <div class="filter-card-actions" onclick="event.stopPropagation()">
+              <button type="button" class="filter-jump-btn" onclick="navigateToRecipe('${m.key}', event, 'Filter &amp; Sort Hub')">
+                📖 View Recipe ➔
+              </button>
+              <button type="button" class="filter-cart-toggle-btn ${inCart ? 'in-cart' : ''}" onclick="toggleCustomDrinkFromRecipe('${m.key}')" title="Add or remove from Bar Cart">
+                ${inCart ? '✓ In Cart' : '+ Cart'}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      gallery.innerHTML = html;
+    }
+
+    function syncSmartBarCardsFilter(matchingList) {
+      const matchingKeys = new Set(matchingList.map(m => m.key));
+      document.querySelectorAll('.drink-card').forEach(card => {
+        const dKey = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1] || '';
+        if (!dKey) return;
+        card.style.display = matchingKeys.has(dKey) ? 'flex' : 'none';
+      });
+    }
+
 
     function renderRecipeCarousels() {
       renderSingleCarousel('bp', 'carousel_bp', recipeData, showRecipe);
@@ -6570,6 +7350,7 @@ const recipeData = {
       displayArea.innerHTML = `
         ${getReturnBreadcrumbHtml()}
         ${getStepperHtml('bp', key, recipeData)}
+        ${renderPriceComparisonCard(fullKey)}
         <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid var(--coral);">
           <div class="recipe-title-bar">
             <div>
@@ -7032,6 +7813,7 @@ const mcguiresRecipeData = {
       displayArea.innerHTML = `
         ${getReturnBreadcrumbHtml()}
         ${getStepperHtml('mc', key, mcguiresRecipeData)}
+        ${renderPriceComparisonCard(fullKey)}
         <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid #16a34a;">
           <div class="recipe-title-bar">
             <div>
@@ -8842,6 +9624,7 @@ const customBarDatabase = {
       initTheme();
       initCustomBar();
       renderRecipeCarousels();
+      applyMasterFilters();
       showRecipe('beachbucket');
       showMcguiresRecipe('irish_wake');
       showOldBayRecipe('obs_blt');
