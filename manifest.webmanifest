@@ -1,0 +1,56 @@
+{
+  "name": "Destin Cocktail Recipes & Smart Bar Builder",
+  "short_name": "Destin Drinks",
+  "description": "Authentic 32-oz beach buckets, McGuire's pub jars, classic vacation cocktails, and interactive shopping list builder.",
+  "start_url": "./destin_drinks_and_bar_guide.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1329",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "lifestyle", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Smart Bar Cart",
+      "short_name": "Bar Cart",
+      "description": "View consolidated shopping list and pacing",
+      "url": "./destin_drinks_and_bar_guide.html#section-custombar",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "The Back Porch (14)",
+      "short_name": "Back Porch",
+      "description": "Back Porch punch and bucket recipes",
+      "url": "./destin_drinks_and_bar_guide.html#section-beachbar",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "McGuire's Irish Pub (12)",
+      "short_name": "McGuire's",
+      "description": "McGuire's pub mason jar recipes",
+      "url": "./destin_drinks_and_bar_guide.html#section-mcguiresdrinks",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Vacation Classics (12)",
+      "short_name": "Classics",
+      "description": "Mojito, Piña Colada, Mai Tai, Paloma, and more",
+      "url": "./destin_drinks_and_bar_guide.html#section-classicdrinks",
+      "icons": [{ "src": "icon-192.svg", "sizes": "192x192" }]
+    }
+  ]
+}
