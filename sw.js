@@ -1,12 +1,16 @@
 // ==========================================================================
-// SERVICE WORKER - DESTIN COCKTAIL GUIDE & SMART BAR BUILDER PWA
-// Provides 100% offline availability for beach, boat, and vacation condo use
+// SERVICE WORKER - SMART BAR MIXOLOGY PWA
+// Provides 100% offline availability for beach, boat, and vacation rental use
 // ==========================================================================
 
-const CACHE_NAME = 'destin-drinks-v1.1';
+const CACHE_NAME = 'smart-bar-mixology-v2.0';
 const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
   './destin_drinks_and_bar_guide.html',
   './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png',
   './icon-192.svg',
   './icon-512.svg'
 ];
@@ -39,13 +43,11 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Event: Network-first with fallback to cache (offline support)
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // If response is valid, clone and save to cache
         if (response && response.status === 200) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -55,14 +57,12 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => {
-        // Offline fallback
         return caches.match(event.request).then((cachedResponse) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Default fallback to main html if navigating
           if (event.request.mode === 'navigate') {
-            return caches.match('./destin_drinks_and_bar_guide.html');
+            return caches.match('./index.html') || caches.match('./destin_drinks_and_bar_guide.html');
           }
         });
       })

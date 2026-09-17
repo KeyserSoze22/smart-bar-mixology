@@ -10,7 +10,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Smart Bar" />
-  <link rel="apple-touch-icon" href="icon-192.svg" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg" />
   <meta name="mobile-web-app-capable" content="yes" />
 
   <!-- Google Fonts -->
@@ -3496,6 +3499,35 @@
     .btn-pwa-install:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+    }
+
+    
+    /* Universal PWA Install Modal Styles */
+    .pwa-tab-btn {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .pwa-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+    }
+    .install-guide-panel {
+      text-align: left;
+      margin: 14px 0 10px;
     }
 
     /* PWA iOS Install Modal */
@@ -9681,39 +9713,86 @@ const customBarDatabase = {
     }
 
     function triggerPwaInstall() {
-      // Check if native prompt is available (Chrome/Edge/Android)
+      // 1. If native prompt is ready (Chrome/Edge/Android), trigger it directly
       if (deferredInstallPrompt) {
         deferredInstallPrompt.prompt();
         deferredInstallPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
             console.log('[PWA] User accepted install prompt');
+            showToast('🎉 Installing Smart Bar Mixology!');
           }
           deferredInstallPrompt = null;
+        }).catch(err => {
+          console.warn('[PWA] Prompt error:', err);
+          openUniversalInstallModal();
         });
         return;
       }
 
-      // Check if iOS Safari
-      const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+      // 2. Check if already installed
       const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-
       if (isStandalone) {
-        showToast('✓ App is already installed and running fullscreen!');
+        showToast('✓ Smart Bar Mixology is already installed and running fullscreen!');
         return;
       }
 
-      if (isIos) {
-        const modal = document.getElementById('iosInstallModal');
-        if (modal) modal.classList.add('show');
-      } else {
-        // Desktop or other browser instructions
-        showToast('ℹ️ Tap your browser menu (⋮ or ⋯) and choose "Install App" or "Add to Home Screen"');
-      }
+      // 3. Open Universal Install Modal tailored to user's current device
+      openUniversalInstallModal();
     }
 
-    function closeIosInstallModal(event) {
-      const modal = document.getElementById('iosInstallModal');
+    function openUniversalInstallModal() {
+      const modal = document.getElementById('universalInstallModal');
+      if (!modal) return;
+
+      const ua = window.navigator.userAgent.toLowerCase();
+      const isIos = /iphone|ipad|ipod/.test(ua);
+      const isAndroid = /android/.test(ua);
+
+      if (isIos) {
+        switchInstallTab('ios');
+      } else if (isAndroid) {
+        switchInstallTab('android');
+      } else {
+        switchInstallTab('desktop');
+      }
+
+      const directBtn = document.getElementById('nativeInstallPromptBtn');
+      if (directBtn) {
+        directBtn.style.display = deferredInstallPrompt ? 'inline-flex' : 'none';
+      }
+
+      modal.classList.add('show');
+    }
+
+    function closeUniversalInstallModal(event) {
+      if (event && event.target && event.target.id !== 'universalInstallModal' && event.target.tagName !== 'BUTTON') {
+        return;
+      }
+      const modal = document.getElementById('universalInstallModal');
       if (modal) modal.classList.remove('show');
+    }
+
+    function switchInstallTab(tabKey) {
+      const tabs = ['ios', 'android', 'desktop'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const panel = document.getElementById('installGuide' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) btn.classList.toggle('active', t === tabKey);
+        if (panel) panel.style.display = (t === tabKey) ? 'block' : 'none';
+      });
+    }
+
+    function tryDirectPrompt() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast('🎉 Installing Smart Bar Mixology!');
+          }
+          deferredInstallPrompt = null;
+          closeUniversalInstallModal();
+        });
+      }
     }
 
 
@@ -9744,33 +9823,84 @@ const customBarDatabase = {
     </a>
   </nav>
 
-  <!-- iOS PWA Install Instructions Modal -->
-  <div id="iosInstallModal" class="pwa-modal-backdrop" onclick="closeIosInstallModal(event)">
+  <!-- Universal PWA Install Instructions Modal -->
+  <div id="universalInstallModal" class="pwa-modal-backdrop" onclick="closeUniversalInstallModal(event)">
     <div class="pwa-modal-card" onclick="event.stopPropagation()">
-      <button class="pwa-modal-close" onclick="closeIosInstallModal()">&times;</button>
-      <div style="font-size: 2.2rem; margin-bottom: 8px;">📲</div>
-      <h3 style="font-size: 1.2rem; margin-bottom: 6px;">Install Smart Bar Mixology on iPhone</h3>
-      <p style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 16px;">
-        Add to your home screen to use offline on the beach or Sandbar & Boat Day without address bars!
-      </p>
-      <div class="pwa-step-row">
-        <div class="pwa-step-num">1</div>
-        <div>Tap the <strong>Share</strong> button <span style="font-size: 1.1rem;">⎋</span> at the bottom of Safari.</div>
+      <button class="pwa-modal-close" onclick="closeUniversalInstallModal()">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px; text-align: left;">
+        <img src="icon-192.png" alt="Smart Bar Mixology" style="width: 54px; height: 54px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); flex-shrink: 0;" />
+        <div>
+          <h3 style="font-size: 1.15rem; margin: 0 0 3px; color: var(--text-main);">Install Smart Bar Mixology</h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">1-tap offline home screen app for beach, boat, &amp; patio!</p>
+        </div>
       </div>
-      <div class="pwa-step-row">
-        <div class="pwa-step-num">2</div>
-        <div>Scroll down and select <strong>Add to Home Screen ➕</strong>.</div>
+
+      <!-- Device Specific Tabs -->
+      <div style="display: flex; gap: 6px; margin: 14px 0 10px;">
+        <button type="button" id="tabIos" class="pwa-tab-btn active" onclick="switchInstallTab('ios')">📱 iPhone / iOS</button>
+        <button type="button" id="tabAndroid" class="pwa-tab-btn" onclick="switchInstallTab('android')">🤖 Android</button>
+        <button type="button" id="tabDesktop" class="pwa-tab-btn" onclick="switchInstallTab('desktop')">💻 PC / Mac</button>
       </div>
-      <div class="pwa-step-row">
-        <div class="pwa-step-num">3</div>
-        <div>Tap <strong>Add</strong> in the top-right corner. The app icon will appear right on your home screen!</div>
+
+      <!-- iOS Instructions -->
+      <div id="installGuideIos" class="install-guide-panel">
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">1</div>
+          <div>In <strong>Safari</strong>, tap the <strong>Share</strong> button (<span>⎋</span> square with arrow pointing up) on the bottom navigation bar.</div>
+        </div>
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">2</div>
+          <div>Scroll down the menu and tap <strong>"Add to Home Screen"</strong> (<span>⊞</span>).</div>
+        </div>
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">3</div>
+          <div>Tap <strong>"Add"</strong> in the top right corner. Smart Bar Mixology will appear right on your home screen!</div>
+        </div>
       </div>
-      <button class="btn btn-secondary" onclick="closeIosInstallModal()" style="margin-top: 14px; width: 100%; padding: 10px; border-radius: var(--radius-full); font-weight: 700; background: var(--primary); color: #fff; border: none; cursor: pointer;">
-        Got It!
-      </button>
+
+      <!-- Android Instructions -->
+      <div id="installGuideAndroid" class="install-guide-panel" style="display: none;">
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">1</div>
+          <div>In <strong>Chrome</strong> or your mobile browser, tap the <strong>Menu</strong> icon (3 vertical dots <span>⋮</span>) in the top right.</div>
+        </div>
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">2</div>
+          <div>Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</div>
+        </div>
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">3</div>
+          <div>Confirm by tapping <strong>"Install"</strong> to launch as a native standalone app!</div>
+        </div>
+      </div>
+
+      <!-- Desktop Instructions -->
+      <div id="installGuideDesktop" class="install-guide-panel" style="display: none;">
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">1</div>
+          <div>Look at the right end of your browser's address bar for the <strong>Install App icon</strong> (monitor with down arrow <span>🖥️ ⬇️</span>) in Chrome, Edge, or Brave.</div>
+        </div>
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">2</div>
+          <div>Or click the browser menu (<strong>⋮</strong> or <strong>⋯</strong>) &rarr; <strong>"Save and share"</strong> &rarr; <strong>"Install Smart Bar Mixology"</strong>.</div>
+        </div>
+        <div class="pwa-step-row">
+          <div class="pwa-step-num">3</div>
+          <div>Click <strong>Install</strong> to open the app in its own dedicated, clean window without browser tabs!</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+        <button type="button" id="nativeInstallPromptBtn" onclick="tryDirectPrompt()" class="btn btn-primary" style="display: none; padding: 8px 16px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700;">
+          📲 Direct 1-Tap Install
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeUniversalInstallModal()" style="margin-left: auto; padding: 8px 20px; border-radius: var(--radius-full); font-weight: 700; background: var(--primary); color: #fff; border: none; cursor: pointer;">
+          Got It!
+        </button>
+      </div>
     </div>
   </div>
-
 
   <!-- FULL-SCREEN KITCHEN / BEACH BARTENDER MODE MODAL -->
   <div id="bartenderModal" class="bartender-modal-backdrop" onclick="closeBartenderModal(event)">
