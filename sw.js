@@ -3,10 +3,14 @@
 // Provides 100% offline availability for beach, boat, and vacation rental use
 // ==========================================================================
 
-const CACHE_NAME = 'smart-bar-mixology-v2.0';
+const CACHE_NAME = 'smart-bar-mixology-v2.1';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './css/styles.css',
+  './js/recipes-data.js',
+  './js/pricing-data.js',
+  './js/app.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
@@ -18,7 +22,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[ServiceWorker] Pre-caching offline app shell');
+      console.log('[ServiceWorker] Pre-caching offline app shell & modules');
       return cache.addAll(ASSETS_TO_CACHE);
     }).then(() => self.skipWaiting())
   );

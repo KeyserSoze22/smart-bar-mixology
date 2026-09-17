@@ -1,0 +1,1917 @@
+// ==========================================================================
+// SMART BAR MIXOLOGY - CORE APPLICATION CONTROLLER
+// UI Interactions, Navigation, Search, Filter Hub, Cart, & PWA Controller
+// ==========================================================================
+
+    let currentRecipeKeys = {
+      bp: 'beachbucket',
+      mc: 'irish_wake',
+      obs: 'obs_blt',
+      cl: 'classic_mojito'
+    };
+
+    let previousNavigationState = null;
+
+    function recordNavigationOrigin(sourceName) {
+      previousNavigationState = {
+        scrollY: window.pageYOffset || document.documentElement.scrollTop,
+        source: sourceName || 'Smart Bar Builder'
+      };
+    }
+
+    function returnToPreviousLocation() {
+      if (previousNavigationState && typeof previousNavigationState.scrollY === 'number') {
+        window.scrollTo({
+          top: previousNavigationState.scrollY,
+          behavior: 'smooth'
+        });
+        showToast(`↩ Returned to ${previousNavigationState.source}`);
+      } else {
+        const bar = document.getElementById('section-custombar');
+        if (bar) bar.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function getReturnBreadcrumbHtml() {
+      if (!previousNavigationState) return '';
+      return `
+        <div class="return-breadcrumb-bar">
+          <button type="button" class="return-breadcrumb-btn" onclick="returnToPreviousLocation()">
+            <span>↩</span> Return to ${previousNavigationState.source}
+          </button>
+        </div>
+      `;
+    }
+
+    
+    // ==========================================================================
+    // DRINK PRICING & RESTAURANT MENU COSTS DATABASE (46 COCKTAILS)
+    // ==========================================================================
+
+    // ==========================================================================
+    // MASTER FILTER & SORT CONTROLLER
+    // ==========================================================================
+    let currentMasterStyle = 'all';
+
+    function setDrinkStyleFilter(styleKey) {
+      currentMasterStyle = styleKey;
+      document.querySelectorAll('#styleFilterPills .style-pill-btn').forEach(btn => {
+        const isTarget = btn.getAttribute('onclick')?.includes(`'${styleKey}'`);
+        btn.classList.toggle('active', isTarget);
+      });
+      applyMasterFilters();
+    }
+
+    function resetMasterFilters() {
+      currentMasterStyle = 'all';
+      const spiritSel = document.getElementById('filterSpiritSelect');
+      const venueSel = document.getElementById('filterVenueSelect');
+      const sortSel = document.getElementById('filterSortSelect');
+      if (spiritSel) spiritSel.value = 'all';
+      if (venueSel) venueSel.value = 'all';
+      if (sortSel) sortSel.value = 'featured';
+
+      document.querySelectorAll('#styleFilterPills .style-pill-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'all'"));
+      });
+      applyMasterFilters();
+      showToast('↺ Filters reset to all 46 cocktails');
+    }
+
+    function handlePricingTierChange(val) {
+      currentPricingTier = val;
+      applyMasterFilters();
+      // Re-render open active recipe cards across all 4 venues
+      const bpVal = document.getElementById('drinkRecipeSelect')?.value || 'ultimate_porchpunch';
+      showRecipe(bpVal);
+      const mcVal = document.getElementById('mcguiresDrinkRecipeSelect')?.value || 'irish_wake';
+      showMcguiresRecipe(mcVal);
+      const obsVal = document.getElementById('oldBayDrinkRecipeSelect')?.value || 'strongisland';
+      showOldBayRecipe(obsVal);
+      const clVal = document.getElementById('classicDrinkRecipeSelect')?.value || 'classic_mai_tai';
+      showClassicRecipe(clVal);
+    }
+
+    function applyMasterFilters() {
+      const spiritVal = document.getElementById('filterSpiritSelect')?.value || 'all';
+      const venueVal = document.getElementById('filterVenueSelect')?.value || 'all';
+      const sortVal = document.getElementById('filterSortSelect')?.value || 'featured';
+
+      const searchIndex = buildSearchIndex();
+      let matches = searchIndex.filter(item => {
+        const pricing = drinkPricingDatabase[item.key] || {};
+        
+        // 1. Style / Type check
+        if (currentMasterStyle !== 'all') {
+          if (currentMasterStyle === 'whiskey') {
+            if (pricing.type !== 'whiskey' && pricing.spirit !== 'whiskey') return false;
+          } else if (pricing.type !== currentMasterStyle) {
+            return false;
+          }
+        }
+
+        // 2. Spirit check
+        if (spiritVal !== 'all') {
+          if (spiritVal === 'none') {
+            if (pricing.spirit !== 'none') return false;
+          } else if (pricing.spirit !== spiritVal && item.spirit !== spiritVal) {
+            return false;
+          }
+        }
+
+        // 3. Venue check
+        if (venueVal !== 'all') {
+          if (item.venue !== venueVal) return false;
+        }
+
+        return true;
+      });
+
+      // Sort matches
+      if (sortVal === 'savings_desc') {
+        matches.sort((a, b) => {
+          const pa = drinkPricingDatabase[a.key] || { barPrice: 0, diyCost: 0 };
+          const pb = drinkPricingDatabase[b.key] || { barPrice: 0, diyCost: 0 };
+          return (pb.barPrice - pb.diyCost) - (pa.barPrice - pa.diyCost);
+        });
+      } else if (sortVal === 'bar_price_desc') {
+        matches.sort((a, b) => {
+          const pa = drinkPricingDatabase[a.key] || { barPrice: 0 };
+          const pb = drinkPricingDatabase[b.key] || { barPrice: 0 };
+          return pb.barPrice - pa.barPrice;
+        });
+      } else if (sortVal === 'diy_cost_asc') {
+        matches.sort((a, b) => {
+          const pa = drinkPricingDatabase[a.key] || { diyCost: 0 };
+          const pb = drinkPricingDatabase[b.key] || { diyCost: 0 };
+          return pa.diyCost - pb.diyCost;
+        });
+      } else if (sortVal === 'name_asc') {
+        matches.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (sortVal === 'potency_desc') {
+        const potOrder = { high: 3, med: 2, mocktail: 1 };
+        matches.sort((a, b) => (potOrder[b.potency] || 2) - (potOrder[a.potency] || 2));
+      }
+
+      // Update stats banner
+      renderFilterStats(matches);
+
+      // Render interactive cards gallery
+      renderFilterGallery(matches);
+
+      // Also synchronize Smart Bar Builder drink cards below
+      syncSmartBarCardsFilter(matches);
+    }
+
+    function renderFilterStats(matches) {
+      const textEl = document.getElementById('filterStatsText');
+      const highEl = document.getElementById('filterSavingsHighlight');
+      if (!textEl || !highEl) return;
+
+      const count = matches.length;
+      if (count === 0) {
+        textEl.textContent = 'No drinks match the selected filters';
+        highEl.innerHTML = '<span>⚠️</span> Try selecting "All Spirits" or resetting filters';
+        return;
+      }
+
+      let totalBar = 0;
+      let totalDiy = 0;
+      matches.forEach(m => {
+        const p = drinkPricingDatabase[m.key] || { barPrice: 18.00, diyCost: 3.00 };
+        const effBar = getEffectiveBarPrice(m.key);
+        totalBar += effBar;
+        totalDiy += p.diyCost;
+      });
+
+      const avgBar = totalBar / count;
+      const avgDiy = totalDiy / count;
+      const avgSavings = avgBar - avgDiy;
+      const pct = Math.round((avgSavings / avgBar) * 100);
+
+      textEl.textContent = `Showing ${count} cocktail${count === 1 ? '' : 's'} matching criteria`;
+      highEl.innerHTML = `<span>💰</span> Avg Bar: $${avgBar.toFixed(2)} • Avg DIY: ~$${avgDiy.toFixed(2)} (Save $${avgSavings.toFixed(2)} / ${pct}%)`;
+    }
+
+    function renderFilterGallery(matches) {
+      const gallery = document.getElementById('filterResultsGallery');
+      if (!gallery) return;
+
+      if (matches.length === 0) {
+        gallery.innerHTML = `
+          <div style="grid-column: 1 / -1; padding: 28px; text-align: center; color: var(--text-muted);">
+            No cocktails found. Click <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()" style="display: inline-block; margin-left: 6px;">Reset Filters</button> to view all 46 drinks.
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      matches.forEach(m => {
+        const p = drinkPricingDatabase[m.key] || { barPrice: 18.00, diyCost: 3.00, barName: 'Bar', styleLabel: 'Cocktail' };
+        const effectiveBarPrice = getEffectiveBarPrice(m.key);
+        const savings = Math.max(0, effectiveBarPrice - p.diyCost);
+        const savingsPct = Math.round((savings / effectiveBarPrice) * 100);
+        const inCart = customBarSelectedDrinks && customBarSelectedDrinks.has(m.key);
+        const cleanTitle = m.title.split('(')[0].trim();
+
+        html += `
+          <div class="filter-card" onclick="navigateToRecipe('${m.key}', event, 'Filter &amp; Sort Hub')">
+            <div>
+              <div class="filter-card-top">
+                <div>
+                  <div class="filter-card-title">${cleanTitle}</div>
+                  <div class="filter-card-venue">${m.venueName} • ${p.styleLabel}</div>
+                </div>
+                <span class="deal-badge" style="font-size: 0.7rem; font-weight: 800;">${m.spirit ? m.spirit.toUpperCase() : 'DRINK'}</span>
+              </div>
+            </div>
+
+            <div class="filter-pricing-badge-row">
+              <div>
+                <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Bar Price</span>
+                <span class="filter-bar-price">$${effectiveBarPrice.toFixed(2)}</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Condo DIY</span>
+                <span class="filter-diy-price">~$${p.diyCost.toFixed(2)}</span>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Savings</span>
+                <span style="color: #0284c7; font-weight: 800; font-size: 0.8rem;">Save $${savings.toFixed(2)} (${savingsPct}%)</span>
+              </div>
+            </div>
+
+            <div class="filter-card-actions" onclick="event.stopPropagation()">
+              <button type="button" class="filter-jump-btn" onclick="navigateToRecipe('${m.key}', event, 'Filter &amp; Sort Hub')">
+                📖 View Recipe ➔
+              </button>
+              <button type="button" class="filter-cart-toggle-btn ${inCart ? 'in-cart' : ''}" onclick="toggleCustomDrinkFromRecipe('${m.key}')" title="Add or remove from Bar Cart">
+                ${inCart ? '✓ In Cart' : '+ Cart'}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      gallery.innerHTML = html;
+    }
+
+    function syncSmartBarCardsFilter(matchingList) {
+      const matchingKeys = new Set(matchingList.map(m => m.key));
+      document.querySelectorAll('.drink-card').forEach(card => {
+        const dKey = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1] || '';
+        if (!dKey) return;
+        card.style.display = matchingKeys.has(dKey) ? 'flex' : 'none';
+      });
+    }
+
+
+    function renderRecipeCarousels() {
+      renderSingleCarousel('bp', 'carousel_bp', recipeData, showRecipe);
+      renderSingleCarousel('mc', 'carousel_mc_strip', mcguiresRecipeData, showMcguiresRecipe);
+      renderSingleCarousel('obs', 'carousel_obs_strip', oldBayRecipeData, showOldBayRecipe);
+      renderSingleCarousel('cl', 'carousel_cl_strip', classicRecipeData, showClassicRecipe);
+    }
+
+    function renderSingleCarousel(venue, containerId, dataset, showFn) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const keys = venueDrinkKeys[venue];
+      let html = '';
+      keys.forEach(k => {
+        const r = dataset[k];
+        if (!r) return;
+        const icon = (r.title.match(/^[^\w\s]+/g) || ['🍹'])[0];
+        const cleanTitle = r.title.replace(/^[^\w]+/, '').split('(')[0].trim();
+        html += `
+          <button type="button" class="recipe-pill-btn" id="pill_${venue}_${k}" onclick="${showFn.name}('${k}')">
+            <span>${icon}</span> <span>${cleanTitle}</span>
+          </button>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function updateCarouselActivePill(venue, key) {
+      currentRecipeKeys[venue] = key;
+      const containerId = venue === 'bp' ? 'carousel_bp' : (venue === 'mc' ? 'carousel_mc_strip' : (venue === 'obs' ? 'carousel_obs_strip' : 'carousel_cl_strip'));
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.querySelectorAll('.recipe-pill-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      const activeBtn = document.getElementById(`pill_${venue}_${key}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+
+    function stepRecipe(venue, delta) {
+      const keys = venueDrinkKeys[venue];
+      const currentKey = currentRecipeKeys[venue] || keys[0];
+      let idx = keys.indexOf(currentKey);
+      if (idx === -1) idx = 0;
+      let nextIdx = (idx + delta + keys.length) % keys.length;
+      const nextKey = keys[nextIdx];
+
+      if (venue === 'bp') showRecipe(nextKey);
+      else if (venue === 'mc') showMcguiresRecipe(nextKey);
+      else if (venue === 'obs') showOldBayRecipe(nextKey);
+      else if (venue === 'cl') showClassicRecipe(nextKey);
+    }
+
+    function getStepperHtml(venue, key, dataset) {
+      const keys = venueDrinkKeys[venue];
+      const idx = keys.indexOf(key);
+      const prevIdx = (idx - 1 + keys.length) % keys.length;
+      const nextIdx = (idx + 1) % keys.length;
+      const prevRaw = dataset[keys[prevIdx]]?.title || 'Previous';
+      const nextRaw = dataset[keys[nextIdx]]?.title || 'Next';
+      const prevTitle = prevRaw.split('(')[0].trim();
+      const nextTitle = nextRaw.split('(')[0].trim();
+
+      return `
+        <div class="recipe-stepper-bar">
+          <button type="button" class="recipe-stepper-btn" onclick="stepRecipe('${venue}', -1)" title="Previous: ${prevTitle}">
+            ◀ <span>${prevTitle}</span>
+          </button>
+          <span class="recipe-stepper-counter">Drink ${idx + 1} of ${keys.length}</span>
+          <button type="button" class="recipe-stepper-btn" onclick="stepRecipe('${venue}', 1)" title="Next: ${nextTitle}">
+            <span>${nextTitle}</span> ▶
+          </button>
+        </div>
+      `;
+    }
+
+    // ==========================================================================
+    // UNIVERSAL LIVE SEARCH & COMMAND PALETTE
+    // ==========================================================================
+    let allDrinksSearchIndex = null;
+
+    function buildSearchIndex() {
+      if (allDrinksSearchIndex) return allDrinksSearchIndex;
+      const list = [];
+
+      Object.keys(recipeData).forEach(k => {
+        const r = recipeData[k];
+        const fullKey = 'bp_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'bp',
+          venueName: '🌴 Beach Bar & Punch',
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'med',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      Object.keys(mcguiresRecipeData).forEach(k => {
+        const r = mcguiresRecipeData[k];
+        const fullKey = 'mc_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'mc',
+          venueName: "🍀 McGuire's Pub",
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'high',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      Object.keys(oldBayRecipeData).forEach(k => {
+        const r = oldBayRecipeData[k];
+        const fullKey = k.startsWith('obs_') ? k : 'obs_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'obs',
+          venueName: '🦀 Old Bay Steamer',
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'med',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      Object.keys(classicRecipeData).forEach(k => {
+        const r = classicRecipeData[k];
+        const fullKey = k.startsWith('cl_') ? k : 'cl_' + k;
+        const meta = drinkMetadata[fullKey] || {};
+        list.push({
+          key: fullKey,
+          recipeKey: k,
+          venue: 'cl',
+          venueName: '🍸 Vacation Classics',
+          title: r.title,
+          tag: r.tag,
+          desc: r.desc,
+          potency: meta.potency || 'med',
+          spirit: meta.spirit || '',
+          ingredients: (r.single || []).join(' ')
+        });
+      });
+
+      allDrinksSearchIndex = list;
+      return list;
+    }
+
+    function handleUniversalSearch(query) {
+      const q = (query || '').trim().toLowerCase();
+      const dropdown = document.getElementById('universalSearchResults');
+      if (!dropdown) return;
+
+      // Also filter Smart Bar cards
+      handleDrinkSearch(query);
+
+      const index = buildSearchIndex();
+      if (!q) {
+        // Quick suggestions
+        let html = '<div style="padding: 6px 12px; font-size: 0.74rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">✨ Quick Picks & Popular Cocktails</div>';
+        index.slice(0, 6).forEach(item => {
+          html += renderSearchResultItem(item);
+        });
+        dropdown.innerHTML = html;
+        dropdown.style.display = 'block';
+        return;
+      }
+
+      const matches = index.filter(item => {
+        return item.title.toLowerCase().includes(q) ||
+               item.tag.toLowerCase().includes(q) ||
+               item.desc.toLowerCase().includes(q) ||
+               item.spirit.toLowerCase().includes(q) ||
+               item.venueName.toLowerCase().includes(q) ||
+               item.ingredients.toLowerCase().includes(q);
+      });
+
+      if (matches.length === 0) {
+        dropdown.innerHTML = `
+          <div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+            No cocktails found matching "<strong>${query}</strong>".<br>Try searching <em>rum, tequila, margarita, punch, mocktail, or cold brew</em>.
+          </div>
+        `;
+        dropdown.style.display = 'block';
+        return;
+      }
+
+      let html = `<div style="padding: 6px 12px; font-size: 0.74rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Found ${matches.length} Drink${matches.length > 1 ? 's' : ''}</div>`;
+      matches.forEach(item => {
+        html += renderSearchResultItem(item);
+      });
+      dropdown.innerHTML = html;
+      dropdown.style.display = 'block';
+    }
+
+    function renderSearchResultItem(item) {
+      const inCart = customBarSelectedDrinks && customBarSelectedDrinks.has(item.key);
+      const cleanTitle = item.title.split('(')[0].trim();
+      return `
+        <div class="search-result-item" onclick="selectSearchResult('${item.key}')">
+          <div>
+            <div class="search-result-title">
+              <span>${cleanTitle}</span>
+              ${inCart ? '<span style="color: #16a34a; font-size: 0.75rem; font-weight: 800;">✓ In Cart</span>' : ''}
+            </div>
+            <div class="search-result-sub">${item.venueName} • ${item.tag}</div>
+          </div>
+          <span class="deal-badge" style="font-size: 0.7rem; background: var(--primary-light); color: var(--primary); font-weight: 800;">
+            ${item.spirit ? item.spirit.toUpperCase() : 'DRINK'}
+          </span>
+        </div>
+      `;
+    }
+
+    function selectSearchResult(key) {
+      hideUniversalSearch();
+      navigateToRecipe(key, null, 'Universal Search');
+    }
+
+    function hideUniversalSearch() {
+      const dropdown = document.getElementById('universalSearchResults');
+      if (dropdown) dropdown.style.display = 'none';
+    }
+
+    document.addEventListener('click', (e) => {
+      const searchWrap = document.querySelector('.universal-search-container');
+      if (searchWrap && !searchWrap.contains(e.target)) {
+        hideUniversalSearch();
+      }
+    });
+
+    // ==========================================================================
+    // SCROLLSPY, FLOATING QUICK-CART & SWIPE GESTURES
+    // ==========================================================================
+    function initScrollspyAndFloatingControls() {
+      const sections = [
+        document.getElementById('section-custombar'),
+        document.getElementById('section-beachbar'),
+        document.getElementById('section-mcguiresdrinks'),
+        document.getElementById('section-oldbaydrinks'),
+        document.getElementById('section-classicdrinks')
+      ].filter(Boolean);
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              document.querySelectorAll('.streamlined-nav-link').forEach(link => {
+                const target = link.getAttribute('data-section') || link.getAttribute('href')?.replace('#', '');
+                if (target === id) link.classList.add('active');
+                else link.classList.remove('active');
+              });
+              document.querySelectorAll('.mobile-app-tab').forEach(tab => {
+                const target = tab.getAttribute('data-section') || tab.getAttribute('href')?.replace('#', '');
+                if (target === id) tab.classList.add('active');
+                else tab.classList.remove('active');
+              });
+            }
+          });
+        }, {
+          threshold: 0.2,
+          rootMargin: '-80px 0px -40% 0px'
+        });
+
+        sections.forEach(sec => observer.observe(sec));
+      }
+
+      window.addEventListener('scroll', () => {
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Back to top button
+        const btt = document.getElementById('backToTopBtn');
+        if (btt) {
+          if (scrollY > 400) btt.classList.add('show');
+          else btt.classList.remove('show');
+        }
+
+        // Floating quick cart pill
+        const cartPill = document.getElementById('floatingQuickCartPill');
+        const customBarSec = document.getElementById('section-custombar');
+        if (cartPill && customBarSec) {
+          const customBarRect = customBarSec.getBoundingClientRect();
+          const hasDrinks = customBarSelectedDrinks && customBarSelectedDrinks.size > 0;
+          if (hasDrinks && customBarRect.bottom < 80) {
+            cartPill.style.display = 'inline-flex';
+          } else {
+            cartPill.style.display = 'none';
+          }
+        }
+      }, { passive: true });
+    }
+
+    function jumpToBarCart() {
+      const bar = document.getElementById('section-custombar');
+      if (bar) {
+        const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar');
+        const navHeight = navBar ? navBar.offsetHeight + 18 : 80;
+        const rect = bar.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        window.scrollTo({
+          top: Math.max(0, rect.top + scrollTop - navHeight),
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    function updateFloatingCartPill() {
+      const countEl = document.getElementById('quickCartCountText');
+      const totalEl = document.getElementById('quickCartTotalText');
+      if (!countEl || !totalEl) return;
+      const cart = calculateCustomCart();
+      countEl.textContent = `${cart.selectedCount} Drink${cart.selectedCount === 1 ? '' : 's'}`;
+      totalEl.textContent = `~$${cart.grandTotal.toFixed(0)}`;
+    }
+
+    function attachSwipeListeners(elementId, venue) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      let startX = 0;
+      let startY = 0;
+
+      el.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      el.addEventListener('touchend', (e) => {
+        if (e.changedTouches.length === 1) {
+          const deltaX = e.changedTouches[0].clientX - startX;
+          const deltaY = e.changedTouches[0].clientY - startY;
+          if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+            if (deltaX < 0) {
+              stepRecipe(venue, 1);
+            } else {
+              stepRecipe(venue, -1);
+            }
+          }
+        }
+      }, { passive: true });
+    }
+
+    function initDeepLinkingAndHotkeys() {
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#drink=')) {
+        const dKey = hash.replace('#drink=', '');
+        if (dKey) {
+          setTimeout(() => navigateToRecipe(dKey, null, 'Shared Link', false), 300);
+        }
+      }
+
+      window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.drink) {
+          navigateToRecipe(e.state.drink, null, null, false);
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        const activeEl = document.activeElement;
+        const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable);
+
+        if (!isInput && (e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'))) {
+          e.preventDefault();
+          const searchInput = document.getElementById('drinkSearchInput');
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+            handleUniversalSearch(searchInput.value);
+          }
+        } else if (e.key === 'Escape') {
+          hideUniversalSearch();
+        }
+      });
+    }
+
+
+    // 1. FLAVOR & SPIRIT FILTER CHIPS
+    let activeFilterCategory = 'all';
+
+    function setDrinkFilter(cat) {
+      activeFilterCategory = cat;
+      document.querySelectorAll('#filterChipsBar .filter-chip').forEach(chip => {
+        const onClickStr = chip.getAttribute('onclick') || '';
+        if (onClickStr.includes(`'${cat}'`)) {
+          chip.classList.add('active');
+        } else {
+          chip.classList.remove('active');
+        }
+      });
+
+      let visibleCount = 0;
+      document.querySelectorAll('.drink-card').forEach(card => {
+        const dKey = card.getAttribute('onclick')?.match(/'([^']+)'/)?.[1] || '';
+        const meta = drinkMetadata[dKey] || {};
+        const drink = customBarDatabase.drinks[dKey];
+
+        let match = false;
+        if (cat === 'all') {
+          match = true;
+        } else if (cat === 'rum') {
+          match = meta.spirit === 'rum';
+        } else if (cat === 'tequila') {
+          match = meta.spirit === 'tequila';
+        } else if (cat === 'vodka') {
+          match = meta.spirit === 'vodka';
+        } else if (cat === 'whiskey') {
+          match = meta.spirit === 'whiskey';
+        } else if (cat === 'tropical') {
+          match = meta.flavor === 'tropical';
+        } else if (cat === 'tart') {
+          match = meta.flavor === 'tart';
+        } else if (cat === 'spicy') {
+          match = meta.flavor === 'spicy';
+        } else if (cat === 'dessert') {
+          match = meta.flavor === 'dessert';
+        } else if (cat === 'mocktail') {
+          match = meta.flavor === 'mocktail' || (drink && drink.liquorOz === 0);
+        }
+
+        if (match) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      showToast(`🔍 Showing ${visibleCount} cocktails matching "${cat.toUpperCase()}"`);
+    }
+
+    // 2. ITINERARY PAIRINGS ACCORDION
+    function toggleItineraryPairings() {
+      const grid = document.getElementById('itineraryPairingsGrid');
+      const icon = document.getElementById('itineraryToggleIcon');
+      if (!grid) return;
+      if (grid.style.display === 'none') {
+        grid.style.display = 'grid';
+        if (icon) icon.textContent = '▼ Collapse';
+      } else {
+        grid.style.display = 'none';
+        if (icon) icon.textContent = '▲ Expand';
+      }
+    }
+
+    // 3. CABINET MODE ("WHAT CAN I MAKE?")
+    let selectedCabinetItems = new Set([
+      'vodka', 'tequila', 'rum_white', 'rum_dark', 'rum_coconut', 'triple_sec',
+      'juice_pineapple', 'juice_orange', 'juice_cranberry', 'produce_limes', 'supplies_ice'
+    ]);
+
+    function switchBarMode(mode) {
+      const tabCart = document.getElementById('tabModeCart');
+      const tabCab = document.getElementById('tabModeCabinet');
+      const cabView = document.getElementById('cabinetModeView');
+      const cartHeader = document.getElementById('cartModeHeader');
+      const brandStrategy = document.querySelector('.brand-strategy-box');
+      const venuesGrid = document.querySelector('.custom-bar-venues-grid');
+      const presets = document.querySelector('.custom-bar-presets');
+      const kpiGrid = document.querySelector('.custom-bar-kpi-grid');
+      const breakdown = document.getElementById('servingsBreakdownBox');
+      const splitter = document.getElementById('expenseSplitterBox');
+      const cartWrap = document.getElementById('customCartItemsWrap');
+
+      if (mode === 'cabinet') {
+        if (tabCart) tabCart.classList.remove('active');
+        if (tabCab) tabCab.classList.add('active');
+        if (cabView) cabView.style.display = 'block';
+
+        if (cartHeader) cartHeader.style.display = 'none';
+        if (brandStrategy) brandStrategy.style.display = 'none';
+        if (venuesGrid) venuesGrid.style.display = 'none';
+        if (presets) presets.style.display = 'none';
+        if (kpiGrid) kpiGrid.style.display = 'none';
+        if (breakdown) breakdown.style.display = 'none';
+        if (splitter) splitter.style.display = 'none';
+        if (cartWrap) cartWrap.style.display = 'none';
+
+        renderCabinetPantry();
+        calculateCabinetMatches();
+      } else {
+        if (tabCart) tabCart.classList.add('active');
+        if (tabCab) tabCab.classList.remove('active');
+        if (cabView) cabView.style.display = 'none';
+
+        if (cartHeader) cartHeader.style.display = 'block';
+        if (brandStrategy) brandStrategy.style.display = 'block';
+        if (venuesGrid) venuesGrid.style.display = 'grid';
+        if (presets) presets.style.display = 'flex';
+        if (kpiGrid) kpiGrid.style.display = 'grid';
+        if (breakdown) breakdown.style.display = 'block';
+        if (splitter) splitter.style.display = 'block';
+        if (cartWrap) cartWrap.style.display = 'block';
+      }
+    }
+
+    function renderCabinetPantry() {
+      const container = document.getElementById('cabinetPantryChips');
+      if (!container) return;
+
+      const keys = Object.keys(customBarDatabase.items);
+      let html = '';
+      keys.forEach(k => {
+        const item = customBarDatabase.items[k];
+        const isChecked = selectedCabinetItems.has(k);
+        html += `
+          <div class="pantry-chip ${isChecked ? 'checked' : ''}" onclick="toggleCabinetPantryItem('${k}')">
+            <span>${isChecked ? '✓' : '➕'}</span>
+            <span>${item.name}</span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function toggleCabinetPantryItem(k) {
+      if (selectedCabinetItems.has(k)) {
+        selectedCabinetItems.delete(k);
+      } else {
+        selectedCabinetItems.add(k);
+      }
+      renderCabinetPantry();
+      calculateCabinetMatches();
+    }
+
+    function selectAllPantry(all) {
+      if (all) {
+        selectedCabinetItems = new Set(Object.keys(customBarDatabase.items));
+      } else {
+        selectedCabinetItems.clear();
+      }
+      renderCabinetPantry();
+      calculateCabinetMatches();
+    }
+
+    function calculateCabinetMatches() {
+      const readyGrid = document.getElementById('readyDrinksGrid');
+      const missingGrid = document.getElementById('missingOneDrinksGrid');
+      const readyCountEl = document.getElementById('readyDrinksCount');
+      const missingCountEl = document.getElementById('missingOneDrinksCount');
+
+      let readyList = [];
+      let missingOneList = [];
+
+      Object.keys(customBarDatabase.drinks).forEach(dKey => {
+        const drink = customBarDatabase.drinks[dKey];
+        const missing = drink.items.filter(id => !selectedCabinetItems.has(id));
+
+        if (missing.length === 0) {
+          readyList.push(drink);
+        } else if (missing.length === 1) {
+          const missingName = customBarDatabase.items[missing[0]]?.name || '1 item';
+          missingOneList.push({ drink, missingName });
+        }
+      });
+
+      if (readyCountEl) readyCountEl.textContent = readyList.length;
+      if (missingCountEl) missingCountEl.textContent = missingOneList.length;
+
+      if (readyGrid) {
+        if (readyList.length === 0) {
+          readyGrid.innerHTML = '<div style="color: var(--text-muted); font-size: 0.88rem; padding: 10px;">Select more bottles/mixers above to see cocktails you can make right now!</div>';
+        } else {
+          readyGrid.innerHTML = readyList.map(d => `
+            <div class="cabinet-card ready">
+              <div>
+                <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-main);">${d.icon} ${d.name}</div>
+                <div style="font-size: 0.76rem; color: #059669; font-weight: 600;">✓ All ingredients in condo!</div>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button class="qol-btn" onclick="navigateToRecipe('${d.key}')" style="font-size: 0.76rem; padding: 4px 10px; background: #10b981; color: #fff;">Recipe ➔</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      if (missingGrid) {
+        if (missingOneList.length === 0) {
+          missingGrid.innerHTML = '<div style="color: var(--text-muted); font-size: 0.88rem; padding: 10px;">No near-matches.</div>';
+        } else {
+          missingGrid.innerHTML = missingOneList.map(item => `
+            <div class="cabinet-card missing-one">
+              <div>
+                <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-main);">${item.drink.icon} ${item.drink.name}</div>
+                <div style="font-size: 0.76rem; color: #b45309; font-weight: 600;">Need: ${item.missingName}</div>
+              </div>
+              <button class="qol-btn" onclick="navigateToRecipe('${item.drink.key}')" style="font-size: 0.76rem; padding: 4px 10px;">View ➔</button>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    // 4. GROUP EXPENSE & VENMO SPLITTER
+    let groupAdultCount = 7;
+
+    function setAdultSplit(count) {
+      groupAdultCount = count;
+      document.querySelectorAll('#adultBtnGroup .adult-btn').forEach(btn => {
+        const onClickStr = btn.getAttribute('onclick') || '';
+        if (onClickStr.includes(`(${count})`)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      updateExpenseSplitterDisplay();
+    }
+
+    function updateExpenseSplitterDisplay() {
+      const cart = calculateCustomCart();
+      const perPerson = groupAdultCount > 0 ? (cart.grandTotal / groupAdultCount) : 0;
+      const perDay = perPerson / 7;
+
+      const ppEl = document.getElementById('splitPerPersonVal');
+      const pdEl = document.getElementById('splitPerDayVal');
+      const savEl = document.getElementById('splitSavingsVal');
+
+      if (ppEl) ppEl.textContent = `~$${perPerson.toFixed(2)}`;
+      if (pdEl) pdEl.textContent = `~$${perDay.toFixed(2)} / day`;
+      if (savEl) savEl.textContent = `Save ~$${cart.estSavings.toLocaleString()}`;
+    }
+
+    function copyVenmoRequestText() {
+      const cart = calculateCustomCart();
+      const perPerson = groupAdultCount > 0 ? (cart.grandTotal / groupAdultCount) : 0;
+      const selectedNames = [...customBarSelectedDrinks].map(k => customBarDatabase.drinks[k]?.name).slice(0, 5).join(', ');
+
+      let text = `🍹 Vacation Bar Split (${groupAdultCount} Adults)
+`;
+      text += `Total Retail Spirits & grocery tab: $${cart.grandTotal.toFixed(2)}
+`;
+      text += `Selected drinks: ${selectedNames}...
+`;
+      text += `Your share for the entire 7-day week of unlimited beach drinks: $${perPerson.toFixed(2)}
+`;
+      text += `(That's only $${(perPerson / 7).toFixed(2)}/day vs $25+ per bucket at beach bars!)
+`;
+      text += `Venmo: [Your Venmo Handle]`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📋 Venmo split text copied to clipboard!');
+        });
+      } else {
+        fallbackCustomCopy(text);
+      }
+    }
+
+    function shareBarCartNative() {
+      const cart = calculateCustomCart();
+      const perPerson = groupAdultCount > 0 ? (cart.grandTotal / groupAdultCount) : 0;
+      const shareData = {
+        title: 'Vacation Bar Cart',
+        text: `🍹 Here is our Vacation Bar Cart! ${cart.selectedCount} cocktails selected, ~$${perPerson.toFixed(2)} per adult for the entire week of unlimited beach drinks.`,
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+      } else {
+        copyCustomBarShoppingList();
+      }
+    }
+
+    // 5. DYNAMIC VESSEL & BATCH SCALER
+    let activeVesselMultiplier = 1.0;
+    let activeVesselName = '32-oz Bucket (1×)';
+
+    function scaleIngredientText(line, multiplier) {
+      return line.replace(/(\d+(\.\d+)?)\s*oz/g, (match, p1) => {
+        const val = parseFloat(p1) * multiplier;
+        const formatted = val % 1 === 0 ? val : val.toFixed(1);
+        return `${formatted} oz`;
+      });
+    }
+
+    function setVesselScale(multiplier, name, recipeKey, containerId) {
+      activeVesselMultiplier = multiplier;
+      activeVesselName = name;
+
+      const card = document.getElementById(containerId);
+      if (card) {
+        card.querySelectorAll('.vessel-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.textContent.includes(name.split(' ')[0]));
+        });
+
+        // Re-render ingredient items
+        let r = recipeData[recipeKey] || mcguiresRecipeData[recipeKey] || classicRecipeData[recipeKey];
+        if (r && r.single) {
+          const list = card.querySelector('.dynamic-scale-list');
+          if (list) {
+            list.innerHTML = r.single.map(i => `<li>${scaleIngredientText(i, multiplier)}</li>`).join('');
+          }
+        }
+      }
+      showToast(`📏 Scaled to: ${name}`);
+    }
+
+    // 6. FULL-SCREEN "BARTENDER MODE" WITH SHAKE TIMER
+    let currentBtRecipe = null;
+    let shakeTimerInterval = null;
+    let shakeTimerSeconds = 20;
+
+    function openBartenderMode(recipeKey) {
+      const r = recipeData[recipeKey] || mcguiresRecipeData[recipeKey] || classicRecipeData[recipeKey];
+      if (!r) return;
+      currentBtRecipe = r;
+
+      const modal = document.getElementById('bartenderModal');
+      const titleEl = document.getElementById('btModalTitle');
+      const vesselEl = document.getElementById('btModalVessel');
+      const ingEl = document.getElementById('btModalIngredients');
+      const stepsEl = document.getElementById('btModalSteps');
+
+      if (titleEl) titleEl.textContent = r.title;
+      if (vesselEl) vesselEl.textContent = `Batching for: ${activeVesselName}`;
+
+      if (ingEl) {
+        ingEl.innerHTML = r.single.map((item, idx) => `
+          <li style="display: flex; align-items: center; gap: 10px; font-size: 1.05rem; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 8px; cursor: pointer;" onclick="this.style.opacity = this.style.opacity === '0.4' ? '1' : '0.4';">
+            <input type="checkbox" style="width: 20px; height: 20px; accent-color: #38bdf8;" />
+            <span>${scaleIngredientText(item, activeVesselMultiplier)}</span>
+          </li>
+        `).join('');
+      }
+
+      if (stepsEl) {
+        stepsEl.innerHTML = r.steps.map(s => `<li>${s}</li>`).join('');
+      }
+
+      resetShakeTimer();
+      if (modal) modal.classList.add('show');
+    }
+
+    function closeBartenderModal(event) {
+      const modal = document.getElementById('bartenderModal');
+      if (modal) modal.classList.remove('show');
+      resetShakeTimer();
+    }
+
+    function toggleShakeTimer() {
+      const btn = document.getElementById('timerStartBtn');
+      if (shakeTimerInterval) {
+        clearInterval(shakeTimerInterval);
+        shakeTimerInterval = null;
+        if (btn) btn.textContent = '▶ Resume';
+      } else {
+        if (shakeTimerSeconds <= 0) shakeTimerSeconds = 20;
+        if (btn) btn.textContent = '⏸ Pause';
+        shakeTimerInterval = setInterval(() => {
+          shakeTimerSeconds--;
+          updateTimerDisplay();
+          if (shakeTimerSeconds <= 0) {
+            clearInterval(shakeTimerInterval);
+            shakeTimerInterval = null;
+            if (btn) btn.textContent = '🎉 Done!';
+            showToast('🧊 Shake Complete! Ice cold and ready to pour!');
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+          }
+        }, 1000);
+      }
+    }
+
+    function resetShakeTimer() {
+      if (shakeTimerInterval) clearInterval(shakeTimerInterval);
+      shakeTimerInterval = null;
+      shakeTimerSeconds = 20;
+      updateTimerDisplay();
+      const btn = document.getElementById('timerStartBtn');
+      if (btn) btn.textContent = '▶ Start 20s';
+    }
+
+    function updateTimerDisplay() {
+      const el = document.getElementById('timerDigits');
+      if (!el) return;
+      const sec = shakeTimerSeconds < 10 ? `0${shakeTimerSeconds}` : shakeTimerSeconds;
+      el.textContent = `00:${sec}`;
+    }
+
+    // 7. SURPRISE ME RANDOMIZER
+    let randomMoodFilter = 'all';
+
+    function openSurpriseModal() {
+      const modal = document.getElementById('surpriseModal');
+      if (modal) modal.classList.add('show');
+    }
+
+    function closeSurpriseModal(event) {
+      const modal = document.getElementById('surpriseModal');
+      if (modal) modal.classList.remove('show');
+    }
+
+    function setRandomMood(mood) {
+      randomMoodFilter = mood;
+      document.querySelectorAll('#surpriseModal .filter-chip').forEach(c => {
+        c.classList.toggle('active', c.getAttribute('onclick')?.includes(`'${mood}'`));
+      });
+    }
+
+    function spinDrinkWheel() {
+      const allKeys = Object.keys(customBarDatabase.drinks);
+      let eligible = allKeys;
+
+      if (randomMoodFilter !== 'all') {
+        eligible = allKeys.filter(k => {
+          const meta = drinkMetadata[k] || {};
+          if (randomMoodFilter === 'mocktail') return meta.flavor === 'mocktail';
+          return meta.spirit === randomMoodFilter;
+        });
+      }
+      if (eligible.length === 0) eligible = allKeys;
+
+      const btn = document.getElementById('spinWheelBtn');
+      const iconEl = document.getElementById('slotDrinkIcon');
+      const nameEl = document.getElementById('slotDrinkName');
+      const actionRow = document.getElementById('slotActionRow');
+      if (btn) btn.disabled = true;
+      if (actionRow) actionRow.style.display = 'none';
+
+      let shuffleCount = 0;
+      const maxShuffles = 18;
+      const interval = setInterval(() => {
+        const randKey = eligible[Math.floor(Math.random() * eligible.length)];
+        const drink = customBarDatabase.drinks[randKey];
+        if (iconEl) iconEl.textContent = drink.icon;
+        if (nameEl) nameEl.textContent = drink.name;
+
+        shuffleCount++;
+        if (shuffleCount >= maxShuffles) {
+          clearInterval(interval);
+          if (btn) btn.disabled = false;
+
+          const chosenKey = eligible[Math.floor(Math.random() * eligible.length)];
+          const chosenDrink = customBarDatabase.drinks[chosenKey];
+          if (iconEl) iconEl.textContent = chosenDrink.icon;
+          if (nameEl) nameEl.innerHTML = `<span style="color: #10b981;">🎉 ${chosenDrink.name}!</span>`;
+
+          const viewBtn = document.getElementById('slotViewRecipeBtn');
+          const addBtn = document.getElementById('slotAddToCartBtn');
+          if (viewBtn) {
+            viewBtn.onclick = () => {
+              closeSurpriseModal();
+              navigateToRecipe(chosenKey);
+            };
+          }
+          if (addBtn) {
+            addBtn.onclick = () => {
+              if (!customBarSelectedDrinks.has(chosenKey)) toggleCustomDrink(chosenKey);
+              showToast(`🛒 Added "${chosenDrink.name}" to cart!`);
+              closeSurpriseModal();
+            };
+          }
+          if (actionRow) actionRow.style.display = 'flex';
+          showToast(`🍹 Winner chosen: ${chosenDrink.name}!`);
+        }
+      }, 70);
+    }
+
+    // 8. URL HASH SYNC
+    function syncUrlHash() {
+      try {
+        if (customBarSelectedDrinks && customBarSelectedDrinks.size > 0) {
+          const arr = [...customBarSelectedDrinks].join(',');
+          window.location.hash = `cart=${arr}`;
+        }
+      } catch(e) {}
+    }
+
+    function loadFromUrlHash() {
+      try {
+        const hash = window.location.hash;
+        if (hash && hash.includes('cart=')) {
+          const raw = hash.replace('#cart=', '');
+          const items = raw.split(',').filter(k => customBarDatabase.drinks[k]);
+          if (items.length > 0) {
+            customBarSelectedDrinks = new Set(items);
+            saveCustomBarState(); syncUrlHash(); updateExpenseSplitterDisplay();
+          }
+        }
+      } catch(e) {}
+    }
+
+    // 1. THEME TOGGLE (DARK / LIGHT MODE)
+    function initTheme() {
+      const savedTheme = localStorage.getItem('destin_theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+      updateThemeButton();
+    }
+
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('destin_theme', isDark ? 'dark' : 'light');
+      updateThemeButton();
+      showToast(isDark ? '🌙 Dark Mode Activated' : '☀️ Light Mode Activated');
+    }
+
+    function updateThemeButton() {
+      const btn = document.getElementById('themeToggleBtn');
+      if (!btn) return;
+      const isDark = document.body.classList.contains('dark-mode');
+      btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+      btn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    }
+
+    // 2. TOAST NOTIFICATION
+    function showToast(message) {
+      let toast = document.getElementById('toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+
+// ==========================================================================
+// THE BACK PORCH SPECIALTY COCKTAIL RECIPES DATA & RENDERER (14 RECIPES)
+// ==========================================================================
+
+    function initCustomBar() {
+      loadFromUrlHash(); loadCustomBarState(); updateExpenseSplitterDisplay();
+      if (!customBarSelectedDrinks || customBarSelectedDrinks.size === 0) {
+        setCustomDrinkPreset('favorites');
+      } else {
+        renderCustomDrinkSelectors();
+        renderCustomBarCart();
+        updatePresetButtons();
+      }
+    }
+
+    function loadCustomBarState() {
+      try {
+        const savedDrinks = localStorage.getItem('destin_custom_bar_drinks');
+        if (savedDrinks) {
+          const parsed = JSON.parse(savedDrinks);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            customBarSelectedDrinks = new Set(parsed);
+          }
+        }
+        const savedPacked = localStorage.getItem('destin_custom_bar_packed');
+        if (savedPacked) {
+          const parsed = JSON.parse(savedPacked);
+          if (Array.isArray(parsed)) {
+            customBarPackedItems = new Set(parsed);
+          }
+        }
+      } catch (e) {
+        console.warn('Error loading custom bar state:', e);
+      }
+      renderCustomDrinkSelectors();
+      renderCustomBarCart();
+      updatePresetButtons();
+    }
+
+    function toggleCustomDrink(drinkKey) {
+      if (customBarSelectedDrinks.has(drinkKey)) {
+        customBarSelectedDrinks.delete(drinkKey);
+      } else {
+        customBarSelectedDrinks.add(drinkKey);
+      }
+      saveCustomBarState(); syncUrlHash(); updateExpenseSplitterDisplay();
+      renderCustomDrinkSelectors();
+      renderCustomBarCart();
+      syncActiveRecipeButtons();
+      updatePresetButtons(null);
+    }
+
+    function toggleCustomDrinkFromRecipe(customKey) {
+      toggleCustomDrink(customKey);
+      const drink = customBarDatabase.drinks[customKey];
+      if (drink) {
+        const inCart = customBarSelectedDrinks.has(customKey);
+        showToast(inCart ? `🛒 Added "${drink.name}" to Combined Bar Cart!` : `Removed "${drink.name}" from Combined Bar Cart.`);
+      }
+    }
+
+    function syncActiveRecipeButtons() {
+      const bpSelect = document.getElementById('drinkRecipeSelect');
+      if (bpSelect) showRecipe(bpSelect.value);
+      const mcSelect = document.getElementById('mcguiresDrinkRecipeSelect');
+      if (mcSelect) showMcguiresRecipe(mcSelect.value);
+      const obsSelect = document.getElementById('oldBayDrinkRecipeSelect');
+      if (obsSelect) showOldBayRecipe(obsSelect.value);
+      const clSelect = document.getElementById('classicDrinkRecipeSelect');
+      if (clSelect) showClassicRecipe(clSelect.value);
+    }
+
+    function navigateToRecipe(dKey, event, sourceName, pushHistory = true) {
+      if (event) event.stopPropagation();
+      recordNavigationOrigin(sourceName || 'Smart Bar Builder');
+
+      const isBp = dKey.startsWith('bp_');
+      const isMc = dKey.startsWith('mc_');
+      const isObs = dKey.startsWith('obs_');
+      let key = dKey;
+      let selectId = 'classicDrinkRecipeSelect';
+      let sectionId = 'section-classicdrinks';
+      let showFunc = showClassicRecipe;
+      let venue = 'cl';
+
+      if (isBp) {
+        key = dKey.replace('bp_', '');
+        selectId = 'drinkRecipeSelect';
+        sectionId = 'section-beachbar';
+        showFunc = showRecipe;
+        venue = 'bp';
+      } else if (isMc) {
+        key = dKey.replace('mc_', '');
+        selectId = 'mcguiresDrinkRecipeSelect';
+        sectionId = 'section-mcguiresdrinks';
+        showFunc = showMcguiresRecipe;
+        venue = 'mc';
+      } else if (isObs) {
+        key = dKey; // Old Bay option values & recipeData use obs_ prefix
+        selectId = 'oldBayDrinkRecipeSelect';
+        sectionId = 'section-oldbaydrinks';
+        showFunc = showOldBayRecipe;
+        venue = 'obs';
+      } else {
+        key = dKey.replace('cl_', '');
+      }
+
+      const select = document.getElementById(selectId);
+      if (select) {
+        select.value = key;
+      }
+      showFunc(key);
+      updateCarouselActivePill(venue, key);
+
+      // Deep linking & history state
+      if (pushHistory && window.history && window.history.pushState) {
+        try {
+          history.pushState({ drink: dKey }, '', '#drink=' + dKey);
+        } catch(e) {}
+      }
+
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar') || document.getElementById('navbar');
+        const navHeight = navBar ? navBar.offsetHeight + 18 : 80;
+        const rect = targetSection.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        window.scrollTo({
+          top: Math.max(0, rect.top + scrollTop - navHeight),
+          behavior: 'smooth'
+        });
+
+        // Briefly highlight the recipe display card with a glow
+        const displayId = isBp ? 'recipeDisplayArea' : (isMc ? 'mcguiresRecipeDisplayArea' : (isObs ? 'oldBayRecipeDisplayArea' : 'classicRecipeDisplayArea'));
+        const displayArea = document.getElementById(displayId);
+        if (displayArea) {
+          const card = displayArea.querySelector('.recipe-display-card') || displayArea.querySelector('.recipe-card');
+          if (card) {
+            card.style.transition = 'box-shadow 0.4s ease, transform 0.4s ease';
+            let glowColor = 'rgba(2, 132, 199, 0.35)';
+            let borderColor = '#0284c7';
+            if (isMc) {
+              glowColor = 'rgba(22, 163, 74, 0.35)';
+              borderColor = '#16a34a';
+            } else if (isObs) {
+              glowColor = 'rgba(194, 65, 12, 0.35)';
+              borderColor = '#c2410c';
+            } else if (isBp) {
+              glowColor = 'rgba(249, 115, 22, 0.35)';
+              borderColor = '#f97316';
+            }
+            card.style.boxShadow = `0 0 0 3px ${borderColor}, 0 10px 25px ${glowColor}`;
+            setTimeout(() => {
+              card.style.boxShadow = '';
+            }, 1800);
+          }
+        }
+      }
+    }
+
+    function setCustomDrinkPreset(presetType) {
+      if (presetType === 'favorites') {
+        customBarSelectedDrinks = new Set([
+          'bp_ultimate_porchpunch',
+          'bp_porchmargarita',
+          'bp_pattywacked',
+          'mc_irish_wake',
+          'mc_iced_irish_coffee',
+          'mc_dublin_mule',
+          'cl_classic_mojito',
+          'cl_classic_pina_colada'
+        ]);
+      } else if (presetType === 'backporch') {
+        customBarSelectedDrinks = new Set(
+          Object.keys(customBarDatabase.drinks).filter(k => k.startsWith('bp_'))
+        );
+      } else if (presetType === 'mcguires') {
+        customBarSelectedDrinks = new Set(
+          Object.keys(customBarDatabase.drinks).filter(k => k.startsWith('mc_'))
+        );
+      } else if (presetType === 'oldbay') {
+        customBarSelectedDrinks = new Set(
+          Object.keys(customBarDatabase.drinks).filter(k => k.startsWith('obs_'))
+        );
+      } else if (presetType === 'classics') {
+        customBarSelectedDrinks = new Set(
+          Object.keys(customBarDatabase.drinks).filter(k => k.startsWith('cl_'))
+        );
+      } else if (presetType === 'all') {
+        customBarSelectedDrinks = new Set(Object.keys(customBarDatabase.drinks));
+      } else if (presetType === 'clear') {
+        customBarSelectedDrinks.clear();
+      }
+      saveCustomBarState(); syncUrlHash(); updateExpenseSplitterDisplay();
+      renderCustomDrinkSelectors();
+      renderCustomBarCart();
+      updatePresetButtons(presetType);
+    }
+
+    function renderCustomDrinkSelectors() {
+      const bpList = document.getElementById('custom-bar-bp-list');
+      const mcList = document.getElementById('custom-bar-mc-list');
+      const obsList = document.getElementById('custom-bar-obs-list');
+      const clList = document.getElementById('custom-bar-cl-list');
+      if (!bpList || !mcList) return;
+
+      let bpHtml = '';
+      let mcHtml = '';
+      let obsHtml = '';
+      let clHtml = '';
+
+      Object.keys(customBarDatabase.drinks).forEach(dKey => {
+        const drink = customBarDatabase.drinks[dKey];
+        const isSelected = customBarSelectedDrinks.has(dKey);
+        const cardHtml = `
+          <div class="drink-card ${isSelected ? 'selected' : ''}" onclick="toggleCustomDrink('${dKey}')">
+            <input type="checkbox" ${isSelected ? 'checked' : ''} style="accent-color: #4f46e5; width: 18px; height: 18px; pointer-events: none;" />
+            <div class="drink-card-info">
+              <div class="drink-card-title">
+                <span>${drink.icon}</span> ${drink.name}
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+                <div class="drink-card-sub">${drink.tag}</div>
+                <span class="view-recipe-link" onclick="navigateToRecipe('${dKey}', event)">📖 View Recipe ➔</span>
+              </div>
+            </div>
+          </div>
+        `;
+        if (dKey.startsWith('bp_')) {
+          bpHtml += cardHtml;
+        } else if (dKey.startsWith('mc_')) {
+          mcHtml += cardHtml;
+        } else if (dKey.startsWith('obs_')) {
+          obsHtml += cardHtml;
+        } else {
+          clHtml += cardHtml;
+        }
+      });
+
+      bpList.innerHTML = bpHtml;
+      mcList.innerHTML = mcHtml;
+      if (obsList) obsList.innerHTML = obsHtml;
+      if (clList) clList.innerHTML = clHtml;
+    }
+
+    function calculateCustomCart() {
+      const neededItemIds = new Set();
+      const itemToDrinks = {};
+
+      customBarSelectedDrinks.forEach(dKey => {
+        const drink = customBarDatabase.drinks[dKey];
+        if (!drink) return;
+        drink.items.forEach(itemId => {
+          neededItemIds.add(itemId);
+          if (!itemToDrinks[itemId]) itemToDrinks[itemId] = [];
+          itemToDrinks[itemId].push({
+            name: drink.name,
+            isBp: dKey.startsWith('bp_'),
+            isMc: dKey.startsWith('mc_'), isObs: dKey.startsWith('obs_')
+          });
+        });
+      });
+
+      let spiritsCost = 0;
+      let mixersCost = 0;
+      let citrusCost = 0;
+      let suppliesCost = 0;
+      let spiritsCount = 0;
+
+      const categorized = { spirits: [], mixers: [], citrus: [], supplies: [] };
+
+      neededItemIds.forEach(itemId => {
+        const item = customBarDatabase.items[itemId];
+        if (!item) return;
+        const entry = {
+          ...item,
+          usedIn: itemToDrinks[itemId] || []
+        };
+        categorized[item.cat].push(entry);
+
+        if (item.cat === 'spirits') {
+          spiritsCost += item.price;
+          spiritsCount++;
+        } else if (item.cat === 'mixers') {
+          mixersCost += item.price;
+        } else if (item.cat === 'citrus') {
+          citrusCost += item.price;
+        } else {
+          suppliesCost += item.price;
+        }
+      });
+
+      const grandTotal = spiritsCost + mixersCost + citrusCost + suppliesCost;
+
+      // Exact Spirit Ounces from Bottle Sizes (Handles = 59.17 oz, 1.0L = 33.81 oz, 750ml = 25.36 oz)
+      let totalSpiritOz = 0;
+      categorized.spirits.forEach(item => {
+        totalSpiritOz += (item.bottleOz || 59.17);
+      });
+
+      const alcoholicKeys = [...customBarSelectedDrinks].filter(k => (customBarDatabase.drinks[k]?.liquorOz || 0) > 0);
+      const avgLiquorOz = alcoholicKeys.length > 0
+        ? alcoholicKeys.reduce((sum, k) => sum + (customBarDatabase.drinks[k]?.liquorOz || 4.5), 0) / alcoholicKeys.length
+        : 4.5;
+
+      // Authentic 32-oz Souvenir Buckets & Mason Jars Yield (~4.0–5.5 oz liquor pour per vessel)
+      const bucketServings = spiritsCount > 0 && avgLiquorOz > 0 ? Math.round(totalSpiritOz / avgLiquorOz) : 0;
+      // 1-Gallon Condo Pitcher Batches (each 1-gallon pitcher fills exactly 4 full 32-oz buckets/jars)
+      const pitchersCount = Math.round(bucketServings / 4);
+
+      // Group Pacing for 6–8 adults (avg 7 adults, 7 days = 49 adult-days)
+      const adultDays = 49;
+      const bucketsPerAdultPerDay = (bucketServings / adultDays).toFixed(1);
+
+      // Cost per Authentic 32-oz Vessel vs $24.00–$28.00 Restaurant Price
+      const costPerBucket = bucketServings > 0 ? (grandTotal / bucketServings).toFixed(2) : "0.00";
+      const estSavings = bucketServings > 0 ? Math.max(0, Math.round((bucketServings * 24.00) - grandTotal)) : 0;
+
+      return {
+        selectedCount: customBarSelectedDrinks.size,
+        spiritsCount,
+        totalItemsCount: neededItemIds.size,
+        spiritsCost,
+        mixersCost,
+        citrusCost,
+        suppliesCost,
+        grandTotal,
+        totalSpiritOz,
+        bucketServings,
+        pitchersCount,
+        bucketsPerAdultPerDay,
+        costPerBucket,
+        estSavings,
+        categorized
+      };
+    }
+
+    function renderCustomBarCart() {
+      const cart = calculateCustomCart();
+
+      // Update KPI Cards
+      const kpiDrinks = document.getElementById('kpi-cocktails-count');
+      const kpiBottles = document.getElementById('kpi-bottles-count');
+      const kpiServings = document.getElementById('kpi-total-servings');
+      const kpiPace = document.getElementById('kpi-daily-pace');
+      const kpiSpirits = document.getElementById('kpi-spirits-cost');
+      const kpiGrand = document.getElementById('kpi-grand-total');
+
+      if (kpiDrinks) kpiDrinks.textContent = cart.selectedCount;
+      if (kpiBottles) kpiBottles.textContent = cart.spiritsCount;
+      if (kpiServings) kpiServings.textContent = '~' + cart.bucketServings;
+      if (kpiPace) kpiPace.textContent = cart.bucketsPerAdultPerDay + ' / day';
+      if (kpiSpirits) kpiSpirits.textContent = '~$' + cart.spiritsCost.toFixed(2);
+      if (kpiGrand) kpiGrand.textContent = '~$' + cart.grandTotal.toFixed(2);
+
+      // Update Servings & Group Consumption Breakdown (32-oz Buckets & Mason Jars)
+      const sCocktails = document.getElementById('servings-total-cocktails');
+      const sPitchers = document.getElementById('servings-pitchers-text');
+      const sPace = document.getElementById('servings-pace-val');
+      const sCost = document.getElementById('servings-cost-per-drink');
+      const sSavings = document.getElementById('servingsSavingsPill');
+
+      if (sCocktails) sCocktails.textContent = '~' + cart.bucketServings + ' Authentic 32-oz Buckets & Mason Jars';
+      if (sPitchers) sPitchers.textContent = 'Fills ~' + cart.bucketServings + ' souvenir buckets, mason jars, or 30–40oz Yeti mugs (or ~' + cart.pitchersCount + ' 1-gal condo pitchers)';
+      if (sPace) sPace.textContent = '~' + cart.bucketsPerAdultPerDay + ' 32-oz Buckets / Adult / Day';
+      if (sCost) sCost.textContent = '~$' + cart.costPerBucket + ' per 32-oz Bucket / Mason Jar';
+      if (sSavings) sSavings.textContent = 'Save ~$' + cart.estSavings.toLocaleString() + ' vs Restaurant Buckets';
+
+      // Update Packed Badge
+      const packedCount = [...customBarPackedItems].filter(id => {
+        return cart.categorized.spirits.some(i => i.id === id) ||
+               cart.categorized.mixers.some(i => i.id === id) ||
+               cart.categorized.citrus.some(i => i.id === id) ||
+               cart.categorized.supplies.some(i => i.id === id);
+      }).length;
+
+      const badge = document.getElementById('custom-cart-progress-badge');
+      if (badge) {
+        if (cart.totalItemsCount > 0 && packedCount === cart.totalItemsCount) {
+          badge.classList.add('all-packed');
+          badge.textContent = '🎉 All Cart Items Packed!';
+        } else {
+          badge.classList.remove('all-packed');
+          badge.textContent = `${packedCount} of ${cart.totalItemsCount} packed`;
+        }
+      }
+
+      const displayArea = document.getElementById('customBarCartDisplayArea');
+      if (!displayArea) return;
+
+      if (cart.selectedCount === 0) {
+        displayArea.innerHTML = `
+          <div class="empty-cart-message">
+            <div style="font-size: 2.4rem; margin-bottom: 8px;">🍸🍹</div>
+            <h4 style="color: var(--text-main); font-size: 1.1rem; margin-bottom: 6px;">No Cocktails Selected Yet</h4>
+            <p style="font-size: 0.88rem; max-width: 460px; margin: 0 auto; line-height: 1.5;">
+              Click any of the cocktails above or tap <strong>"Select Top 6 Favorites"</strong> to generate your tailored Retail Spirits shopping list without buying extra liquor!
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      let htmlContent = '';
+
+      function renderCategory(catKey, catTitle, icon, storeLabel, subtotal) {
+        const items = cart.categorized[catKey];
+        if (!items || items.length === 0) return;
+
+        htmlContent += `
+          <div class="custom-cart-cat-title">
+            <span>${icon} ${catTitle} <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-left: 6px;">(${storeLabel})</span></span>
+            <span class="cat-subtotal">Est. ~$${subtotal.toFixed(2)}</span>
+          </div>
+        `;
+
+        items.forEach(item => {
+          const isPacked = customBarPackedItems.has(item.id);
+          const pillsHtml = item.usedIn.map(d => {
+            const pillClass = d.isBp ? 'bp-pill' : (d.isMc ? 'mc-pill' : (d.isObs ? 'obs-pill' : 'cl-pill'));
+            return `<span class="shared-pill ${pillClass}">${d.name}</span>`;
+          }).join('');
+
+          htmlContent += `
+            <div class="custom-cart-item ${isPacked ? 'packed' : ''}" onclick="toggleCustomCartItem('${item.id}', event)">
+              <input type="checkbox" ${isPacked ? 'checked' : ''} style="accent-color: #4f46e5; width: 18px; height: 18px; margin-top: 3px; pointer-events: none;" />
+              <div class="custom-cart-item-content">
+                <div class="custom-cart-item-name">
+                  <span>${item.brand} ${item.yield ? `<span class="yield-tag">${item.yield}</span>` : ''}</span>
+                  <span class="cost-tag">~$${item.price.toFixed(2)}</span>
+                </div>
+                ${item.note ? `<div class="custom-cart-item-note">${item.note}</div>` : ''}
+                <div class="shared-drinks-pills">
+                  <span class="shared-pill-label">Shared in:</span>
+                  ${pillsHtml}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      renderCategory('spirits', 'Spirits & Liqueurs', '🍾', 'Retail Spirits Store - Local Retail Store', cart.spiritsCost);
+      renderCategory('mixers', 'Mixers & Juices', '🥥', 'Publix / Retail Spirits', cart.mixersCost);
+      renderCategory('citrus', 'Fresh Fruit, Citrus & Garnishes', '🍋', 'Publix Fresh Produce', cart.citrusCost);
+      renderCategory('supplies', 'Bar Supplies & Ice', '🧊', 'Publix & Resort', cart.suppliesCost);
+
+      displayArea.innerHTML = htmlContent;
+    }
+
+    function toggleCustomCartItem(itemId, event) {
+      if (customBarPackedItems.has(itemId)) {
+        customBarPackedItems.delete(itemId);
+      } else {
+        customBarPackedItems.add(itemId);
+      }
+      saveCustomBarState(); syncUrlHash(); updateExpenseSplitterDisplay();
+      renderCustomBarCart();
+    }
+
+    function resetCustomCartChecks() {
+      customBarPackedItems.clear();
+      saveCustomBarState(); syncUrlHash(); updateExpenseSplitterDisplay();
+      renderCustomBarCart();
+      showToast('🔄 Custom bar checklist reset!');
+    }
+
+    function copyCustomBarShoppingList() {
+      const cart = calculateCustomCart();
+      if (cart.selectedCount === 0) {
+        showToast('⚠️ Please select at least 1 cocktail first!');
+        return;
+      }
+
+      const selectedNames = [...customBarSelectedDrinks].map(k => customBarDatabase.drinks[k].name);
+
+      let text = '🍸 SMART CONSOLIDATED BEACH VACATION BAR LIST (Vacation 2026)\n';
+      text += `Store: Retail Spirits Store, Local Retail Store, Beach Vacation 32541 | (850) 654-6161\n`;
+      text += `Selected Drinks (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
+      text += 'Estimated Total: ~$' + cart.grandTotal.toFixed(2) + ' (Spirits: ~$' + cart.spiritsCost.toFixed(2) + ' | Mixers/Produce/Ice: ~$' + (cart.mixersCost + cart.citrusCost + cart.suppliesCost).toFixed(2) + ')\n';
+      text += '32-oz Bucket & Mason Jar Yield: ~' + cart.bucketServings + ' Full 32-oz Vessels (~' + cart.pitchersCount + ' 1-Gallon Condo Pitcher Batches)\n';
+      text += 'Group Vacation Pace: ~' + cart.bucketsPerAdultPerDay + ' 32-oz Buckets/Jars per adult per day (for 6–8 adults over 7 days with heavy ice)\n';
+      text += "Cost per 32-oz Vessel: ~$" + cart.costPerBucket + " (vs $24–$28 at The Back Porch & McGuire's — Saves ~$" + cart.estSavings.toLocaleString() + "!)\n\n";
+
+      function appendTextCategory(catKey, catHeader) {
+        const items = cart.categorized[catKey];
+        if (!items || items.length === 0) return;
+        text += `--- ${catHeader} ---\n`;
+        items.forEach(i => {
+          text += `[ ] ${i.brand} (~${i.price.toFixed(2)}) - Used in: ${i.usedIn.map(u => u.name).join(', ')}\n`;
+        });
+        text += '\n';
+      }
+
+      appendTextCategory('spirits', '🍾 SPIRITS & LIQUEURS (Retail Spirits Store)');
+      appendTextCategory('mixers', '🥥 MIXERS & JUICES (Publix / Retail Spirits)');
+      appendTextCategory('citrus', '🍋 FRESH PRODUCE & GARNISHES (Publix)');
+      appendTextCategory('supplies', '🧊 ICE & BARWARE SUPPLIES');
+
+      text += 'Strict Vacation Rule: Strictly NO GLASS on Vacation beaches or vacation party boats! Save $500 fine.';
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('📋 Consolidated Bar List copied to clipboard!');
+        }).catch(() => {
+          fallbackCustomCopy(text);
+        });
+      } else {
+        fallbackCustomCopy(text);
+      }
+    }
+
+    function fallbackCustomCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('📋 Consolidated Bar List copied to clipboard!');
+      } catch (e) {
+        showToast('⚠️ Could not copy list automatically.');
+      }
+      document.body.removeChild(ta);
+    }
+
+
+    function handleDrinkSearch(query) {
+      const q = query.trim().toLowerCase();
+      
+      // Filter Cocktail Cards in Custom Bar Builder
+      document.querySelectorAll('.drink-card').forEach(card => {
+        const name = (card.querySelector('.drink-card-title') || {}).textContent || '';
+        const tag = (card.querySelector('.drink-card-tag') || {}).textContent || '';
+        if (!q || name.toLowerCase().includes(q) || tag.toLowerCase().includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (q.length >= 3) {
+        showToast('🔍 Filtering drinks for "' + query.trim() + '"');
+      }
+    }
+
+
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      const bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = scrolled + '%';
+    });
+
+
+    
+    // ==========================================================================
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initCustomBar();
+      renderRecipeCarousels();
+      applyMasterFilters();
+      showRecipe('beachbucket');
+      showMcguiresRecipe('irish_wake');
+      showOldBayRecipe('obs_blt');
+      showClassicRecipe('classic_mojito');
+      initScrollspyAndFloatingControls();
+      attachSwipeListeners('recipeDisplayArea', 'bp');
+      attachSwipeListeners('mcguiresRecipeDisplayArea', 'mc');
+      attachSwipeListeners('oldBayRecipeDisplayArea', 'obs');
+      attachSwipeListeners('classicRecipeDisplayArea', 'cl');
+      initDeepLinkingAndHotkeys();
+      initPwaCapabilities();
+      console.log('Smart Bar Mixology loaded successfully!');
+    });
+
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      initCustomBar();
+    }
+
+    // ==========================================================================
+    // PROGRESSIVE WEB APP (PWA) CONTROLLER & OFFLINE SERVICE WORKER
+    // ==========================================================================
+    let deferredInstallPrompt = null;
+
+    function initPwaCapabilities() {
+      // 1. Register Service Worker for offline capability
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => {
+            console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
+          })
+          .catch(err => {
+            console.warn('[PWA] Service Worker registration failed:', err);
+          });
+      }
+
+      // 2. Listen for Chrome/Android install prompt
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        const btn = document.getElementById('pwaInstallBtn');
+        if (btn) {
+          btn.style.display = 'inline-flex';
+          btn.classList.add('pulse');
+        }
+      });
+
+      // 3. Listen for app installed event
+      window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        const btn = document.getElementById('pwaInstallBtn');
+        if (btn) btn.style.display = 'none';
+        showToast('🎉 Smart Bar Mixology App Installed Successfully!');
+      });
+    }
+
+    function triggerPwaInstall() {
+      // 1. If native prompt is ready (Chrome/Edge/Android), trigger it directly
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('[PWA] User accepted install prompt');
+            showToast('🎉 Installing Smart Bar Mixology!');
+          }
+          deferredInstallPrompt = null;
+        }).catch(err => {
+          console.warn('[PWA] Prompt error:', err);
+          openUniversalInstallModal();
+        });
+        return;
+      }
+
+      // 2. Check if already installed
+      const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+      if (isStandalone) {
+        showToast('✓ Smart Bar Mixology is already installed and running fullscreen!');
+        return;
+      }
+
+      // 3. Open Universal Install Modal tailored to user's current device
+      openUniversalInstallModal();
+    }
+
+    function openUniversalInstallModal() {
+      const modal = document.getElementById('universalInstallModal');
+      if (!modal) return;
+
+      const ua = window.navigator.userAgent.toLowerCase();
+      const isIos = /iphone|ipad|ipod/.test(ua);
+      const isAndroid = /android/.test(ua);
+
+      if (isIos) {
+        switchInstallTab('ios');
+      } else if (isAndroid) {
+        switchInstallTab('android');
+      } else {
+        switchInstallTab('desktop');
+      }
+
+      const directBtn = document.getElementById('nativeInstallPromptBtn');
+      if (directBtn) {
+        directBtn.style.display = deferredInstallPrompt ? 'inline-flex' : 'none';
+      }
+
+      modal.classList.add('show');
+    }
+
+    function closeUniversalInstallModal(event) {
+      if (event && event.target && event.target.id !== 'universalInstallModal' && event.target.tagName !== 'BUTTON') {
+        return;
+      }
+      const modal = document.getElementById('universalInstallModal');
+      if (modal) modal.classList.remove('show');
+    }
+
+    function switchInstallTab(tabKey) {
+      const tabs = ['ios', 'android', 'desktop'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const panel = document.getElementById('installGuide' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) btn.classList.toggle('active', t === tabKey);
+        if (panel) panel.style.display = (t === tabKey) ? 'block' : 'none';
+      });
+    }
+
+    function tryDirectPrompt() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast('🎉 Installing Smart Bar Mixology!');
+          }
+          deferredInstallPrompt = null;
+          closeUniversalInstallModal();
+        });
+      }
+    }
