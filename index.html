@@ -4904,6 +4904,14 @@
               <option value="potency_desc">⚡ Highest ABV / Potency</option>
             </select>
           </div>
+          <div>
+            <label style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px;">Bar Pricing Tier:</label>
+            <select id="filterPricingTierSelect" class="filter-dropdown" onchange="handlePricingTierChange(this.value)">
+              <option value="resort_peak" selected>🏖️ Resort &amp; Beach Club ($16–$29)</option>
+              <option value="resort_tax_tip">🧾 With 20% Tip + Tax ($21–$37)</option>
+              <option value="casual_pub">🍺 Casual Tavern / Off-Peak ($13–$23)</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -4911,7 +4919,7 @@
       <div class="filter-stats-banner" id="filterStatsBanner">
         <div class="filter-stats-text" id="filterStatsText">Showing all 46 cocktails across all venues</div>
         <div class="filter-savings-highlight" id="filterSavingsHighlight">
-          <span>💰</span> Average Bar Price: ~$12.69 • Average DIY Cost: ~$2.68 (79% Savings)
+          <span>💰</span> Average Bar Price: ~$18.24 • Average DIY Cost: ~$2.68 (85% Savings)
         </div>
       </div>
 
@@ -5643,65 +5651,84 @@
     // DRINK PRICING & RESTAURANT MENU COSTS DATABASE (46 COCKTAILS)
     // ==========================================================================
     const drinkPricingDatabase = {
-      // The Back Porch Beach Bar (14) - Destin Gulf Coast Beachfront
-      bp_ultimate_porchpunch: { type: 'punch_bucket', spirit: 'rum', barPrice: 20.00, diyCost: 3.60, barName: 'The Back Porch Beach Bar', styleLabel: 'Beach Bucket & Punch' },
-      bp_porchpunch: { type: 'punch_bucket', spirit: 'rum', barPrice: 12.50, diyCost: 2.50, barName: 'The Back Porch Beach Bar', styleLabel: 'Beach Bucket & Punch' },
-      bp_pattywacked: { type: 'creamy_dessert', spirit: 'rum', barPrice: 13.50, diyCost: 3.20, barName: 'The Back Porch Beach Bar', styleLabel: 'Dessert & Mudslide' },
-      bp_beachbucket: { type: 'punch_bucket', spirit: 'rum', barPrice: 22.00, diyCost: 3.90, barName: 'The Back Porch Beach Bar', styleLabel: '32-oz Souvenir Beach Bucket' },
-      bp_porchmargarita: { type: 'margarita', spirit: 'tequila', barPrice: 12.00, diyCost: 2.60, barName: 'The Back Porch Beach Bar', styleLabel: 'Craft Margarita' },
-      bp_strawberry_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 12.50, diyCost: 2.70, barName: 'The Back Porch Beach Bar', styleLabel: 'Fruity Margarita' },
-      bp_mango_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 12.50, diyCost: 2.70, barName: 'The Back Porch Beach Bar', styleLabel: 'Tropical Margarita' },
-      bp_spicy_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 13.00, diyCost: 2.80, barName: 'The Back Porch Beach Bar', styleLabel: 'Spicy Margarita' },
-      bp_dragonfruit_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 13.50, diyCost: 2.90, barName: 'The Back Porch Beach Bar', styleLabel: 'Signature Margarita' },
-      bp_bloodymary: { type: 'bloody_mary', spirit: 'vodka', barPrice: 11.50, diyCost: 2.40, barName: 'The Back Porch Beach Bar', styleLabel: 'Savory Bloody Mary' },
-      bp_painkiller: { type: 'tiki_tropical', spirit: 'rum', barPrice: 13.50, diyCost: 3.10, barName: 'The Back Porch Beach Bar', styleLabel: 'Tiki & Tropical Cooler' },
-      bp_rumrunner: { type: 'tiki_tropical', spirit: 'rum', barPrice: 13.00, diyCost: 2.90, barName: 'The Back Porch Beach Bar', styleLabel: 'Tiki & Tropical Cooler' },
-      bp_peachlemonade: { type: 'mule_highball', spirit: 'vodka', barPrice: 11.50, diyCost: 2.30, barName: 'The Back Porch Beach Bar', styleLabel: 'Mule & Highball Cooler' },
-      bp_sunset_punch_kid: { type: 'mocktail', spirit: 'none', barPrice: 5.50, diyCost: 1.10, barName: 'The Back Porch Beach Bar', styleLabel: '0.0% ABV Mocktail' },
+      // The Back Porch Beach Bar (14) - Gulf Coast Beachfront Resort Pricing
+      bp_ultimate_porchpunch: { type: 'punch_bucket', spirit: 'rum', barPrice: 28.00, diyCost: 3.60, barName: 'Beach Club / Resort Bar', styleLabel: '32-oz Souvenir Beach Bucket' },
+      bp_porchpunch: { type: 'punch_bucket', spirit: 'rum', barPrice: 18.00, diyCost: 2.50, barName: 'Beach Club / Resort Bar', styleLabel: 'Beach Bucket & Punch' },
+      bp_pattywacked: { type: 'creamy_dessert', spirit: 'rum', barPrice: 18.50, diyCost: 3.20, barName: 'Beach Club / Resort Bar', styleLabel: 'Dessert & Mudslide' },
+      bp_beachbucket: { type: 'punch_bucket', spirit: 'rum', barPrice: 29.00, diyCost: 3.90, barName: 'Beach Club / Resort Bar', styleLabel: '32-oz Souvenir Beach Bucket' },
+      bp_porchmargarita: { type: 'margarita', spirit: 'tequila', barPrice: 17.50, diyCost: 2.60, barName: 'Beach Club / Resort Bar', styleLabel: 'Craft Margarita' },
+      bp_strawberry_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 18.00, diyCost: 2.70, barName: 'Beach Club / Resort Bar', styleLabel: 'Fruity Margarita' },
+      bp_mango_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 18.00, diyCost: 2.70, barName: 'Beach Club / Resort Bar', styleLabel: 'Tropical Margarita' },
+      bp_spicy_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 18.50, diyCost: 2.80, barName: 'Beach Club / Resort Bar', styleLabel: 'Spicy Craft Margarita' },
+      bp_dragonfruit_margarita: { type: 'margarita', spirit: 'tequila', barPrice: 19.00, diyCost: 2.90, barName: 'Beach Club / Resort Bar', styleLabel: 'Signature Margarita' },
+      bp_bloodymary: { type: 'bloody_mary', spirit: 'vodka', barPrice: 17.00, diyCost: 2.40, barName: 'Beach Club / Resort Bar', styleLabel: 'Savory Bloody Mary' },
+      bp_painkiller: { type: 'tiki_tropical', spirit: 'rum', barPrice: 18.50, diyCost: 3.10, barName: 'Beach Club / Resort Bar', styleLabel: 'Tiki & Tropical Cooler' },
+      bp_rumrunner: { type: 'tiki_tropical', spirit: 'rum', barPrice: 18.00, diyCost: 2.90, barName: 'Beach Club / Resort Bar', styleLabel: 'Tiki & Tropical Cooler' },
+      bp_peachlemonade: { type: 'mule_highball', spirit: 'vodka', barPrice: 16.50, diyCost: 2.30, barName: 'Beach Club / Resort Bar', styleLabel: 'Mule & Highball Cooler' },
+      bp_sunset_punch_kid: { type: 'mocktail', spirit: 'none', barPrice: 8.50, diyCost: 1.10, barName: 'Beach Club / Resort Bar', styleLabel: '0.0% ABV Mocktail' },
 
-      // McGuire's Irish Pub (12) - Official Menu Prices (Pensacola & Destin)
-      mc_irish_wake: { type: 'punch_bucket', spirit: 'rum', barPrice: 9.99, diyCost: 2.90, barName: "McGuire's Irish Pub", styleLabel: 'Mason Jar Legend ($9.99 Rollback)' },
-      mc_emory_chenoweth: { type: 'tiki_tropical', spirit: 'rum', barPrice: 11.99, diyCost: 3.10, barName: "McGuire's Irish Pub", styleLabel: 'Tropical Rum Punch' },
-      mc_iced_irish_coffee: { type: 'whiskey', spirit: 'whiskey', barPrice: 11.99, diyCost: 2.60, barName: "McGuire's Irish Pub", styleLabel: 'Whiskey Coffee Cocktail' },
-      mc_bloody_irish: { type: 'bloody_mary', spirit: 'whiskey', barPrice: 11.49, diyCost: 2.70, barName: "McGuire's Irish Pub", styleLabel: 'Pub Bloody Mary' },
-      mc_dublin_mule: { type: 'mule_highball', spirit: 'whiskey', barPrice: 11.49, diyCost: 2.50, barName: "McGuire's Irish Pub", styleLabel: 'Irish Whiskey Mule' },
-      mc_blueberry_lemon_drop: { type: 'martini', spirit: 'vodka', barPrice: 11.49, diyCost: 2.60, barName: "McGuire's Irish Pub", styleLabel: 'Craft Martini' },
-      mc_strawberry_twist: { type: 'martini', spirit: 'vodka', barPrice: 11.49, diyCost: 2.60, barName: "McGuire's Irish Pub", styleLabel: 'Craft Martini' },
-      mc_chocolate_moose: { type: 'creamy_dessert', spirit: 'vodka', barPrice: 11.49, diyCost: 3.00, barName: "McGuire's Irish Pub", styleLabel: 'Dessert Martini' },
-      mc_james_bond: { type: 'martini', spirit: 'vodka', barPrice: 12.99, diyCost: 3.20, barName: "McGuire's Irish Pub", styleLabel: 'Double Shot Martini' },
-      mc_south_of_the_border: { type: 'margarita', spirit: 'tequila', barPrice: 11.49, diyCost: 2.60, barName: "McGuire's Irish Pub", styleLabel: 'Pub Margarita' },
-      mc_smoked_old_fashioned: { type: 'whiskey', spirit: 'whiskey', barPrice: 12.49, diyCost: 2.80, barName: "McGuire's Irish Pub", styleLabel: 'Tavern Whiskey Classic' },
-      mc_root_beer_float_kid: { type: 'mocktail', spirit: 'none', barPrice: 5.99, diyCost: 1.10, barName: "McGuire's Irish Pub", styleLabel: 'Draft Root Beer Mocktail' },
+      // Coastal Irish Pub Classics (12) - Tourist Destination & Souvenir Vessels
+      mc_irish_wake: { type: 'punch_bucket', spirit: 'rum', barPrice: 21.00, diyCost: 2.90, barName: 'Tourist Irish Tavern', styleLabel: '32-oz Mason Jar Legend (5 oz Spirits)' },
+      mc_emory_chenoweth: { type: 'tiki_tropical', spirit: 'rum', barPrice: 18.50, diyCost: 3.10, barName: 'Tourist Irish Tavern', styleLabel: 'Tropical Rum Punch' },
+      mc_iced_irish_coffee: { type: 'whiskey', spirit: 'whiskey', barPrice: 17.50, diyCost: 2.60, barName: 'Tourist Irish Tavern', styleLabel: 'Whiskey Coffee Cocktail' },
+      mc_bloody_irish: { type: 'bloody_mary', spirit: 'whiskey', barPrice: 18.00, diyCost: 2.70, barName: 'Tourist Irish Tavern', styleLabel: 'Pub Bloody Mary' },
+      mc_dublin_mule: { type: 'mule_highball', spirit: 'whiskey', barPrice: 17.00, diyCost: 2.50, barName: 'Tourist Irish Tavern', styleLabel: 'Irish Whiskey Mule' },
+      mc_blueberry_lemon_drop: { type: 'martini', spirit: 'vodka', barPrice: 18.00, diyCost: 2.60, barName: 'Tourist Irish Tavern', styleLabel: 'Craft Chilled Martini' },
+      mc_strawberry_twist: { type: 'martini', spirit: 'vodka', barPrice: 18.00, diyCost: 2.60, barName: 'Tourist Irish Tavern', styleLabel: 'Craft Chilled Martini' },
+      mc_chocolate_moose: { type: 'creamy_dessert', spirit: 'vodka', barPrice: 18.50, diyCost: 3.00, barName: 'Tourist Irish Tavern', styleLabel: 'Dessert Martini' },
+      mc_james_bond: { type: 'martini', spirit: 'vodka', barPrice: 22.00, diyCost: 3.20, barName: 'Tourist Irish Tavern', styleLabel: 'Double Shot Martini (5 oz Spirits)' },
+      mc_south_of_the_border: { type: 'margarita', spirit: 'tequila', barPrice: 17.50, diyCost: 2.60, barName: 'Tourist Irish Tavern', styleLabel: 'Pub Margarita' },
+      mc_smoked_old_fashioned: { type: 'whiskey', spirit: 'whiskey', barPrice: 19.50, diyCost: 2.80, barName: 'Tourist Irish Tavern', styleLabel: 'Tavern Whiskey Classic' },
+      mc_root_beer_float_kid: { type: 'mocktail', spirit: 'none', barPrice: 8.00, diyCost: 1.10, barName: 'Tourist Irish Tavern', styleLabel: 'Draft Root Beer Mocktail' },
 
-      // Old Bay Steamer Bar (8) - Fort Walton Beach / Okaloosa Island
-      obs_blt: { type: 'whiskey', spirit: 'whiskey', barPrice: 13.00, diyCost: 2.70, barName: 'Old Bay Steamer Bar', styleLabel: 'Whiskey Sweet Tea Cooler' },
-      obs_bahamamama: { type: 'tiki_tropical', spirit: 'rum', barPrice: 13.50, diyCost: 2.80, barName: 'Old Bay Steamer Bar', styleLabel: 'Tiki & Tropical Cooler' },
-      obs_cucumbercooler: { type: 'mule_highball', spirit: 'gin', barPrice: 13.50, diyCost: 2.60, barName: 'Old Bay Steamer Bar', styleLabel: 'Gin Highball Cooler' },
-      obs_strongisland: { type: 'punch_bucket', spirit: 'vodka', barPrice: 16.50, diyCost: 3.80, barName: 'Old Bay Steamer Bar', styleLabel: '5-Spirits Powerhouse (Limit 1)' },
-      obs_seafoodbloodymary: { type: 'bloody_mary', spirit: 'vodka', barPrice: 16.50, diyCost: 3.50, barName: 'Old Bay Steamer Bar', styleLabel: 'Loaded Seafood Bloody Mary' },
-      obs_topshelfmargarita: { type: 'margarita', spirit: 'tequila', barPrice: 15.00, diyCost: 3.40, barName: 'Old Bay Steamer Bar', styleLabel: 'Top Shelf Margarita' },
-      obs_bushwacker: { type: 'creamy_dessert', spirit: 'rum', barPrice: 13.50, diyCost: 3.10, barName: 'Old Bay Steamer Bar', styleLabel: 'Creamy Coastal Bushwacker' },
-      obs_little_steamer_kid: { type: 'mocktail', spirit: 'none', barPrice: 5.00, diyCost: 0.90, barName: 'Old Bay Steamer Bar', styleLabel: 'Sweet Tea Lemonade Mocktail' },
+      // Coastal Seafood House & Steamer (8) - Destination Seafood Bar
+      obs_blt: { type: 'whiskey', spirit: 'whiskey', barPrice: 17.50, diyCost: 2.70, barName: 'Coastal Seafood House', styleLabel: 'Whiskey Sweet Tea Cooler' },
+      obs_bahamamama: { type: 'tiki_tropical', spirit: 'rum', barPrice: 18.00, diyCost: 2.80, barName: 'Coastal Seafood House', styleLabel: 'Tiki & Tropical Cooler' },
+      obs_cucumbercooler: { type: 'mule_highball', spirit: 'gin', barPrice: 17.50, diyCost: 2.60, barName: 'Coastal Seafood House', styleLabel: 'Gin Highball Cooler' },
+      obs_strongisland: { type: 'punch_bucket', spirit: 'vodka', barPrice: 25.00, diyCost: 3.80, barName: 'Coastal Seafood House', styleLabel: '5-Spirits Powerhouse (Limit 1)' },
+      obs_seafoodbloodymary: { type: 'bloody_mary', spirit: 'vodka', barPrice: 26.00, diyCost: 3.50, barName: 'Coastal Seafood House', styleLabel: 'Loaded Seafood Bloody Mary' },
+      obs_topshelfmargarita: { type: 'margarita', spirit: 'tequila', barPrice: 22.00, diyCost: 3.40, barName: 'Coastal Seafood House', styleLabel: 'Top Shelf Tequila Margarita' },
+      obs_bushwacker: { type: 'creamy_dessert', spirit: 'rum', barPrice: 19.00, diyCost: 3.10, barName: 'Coastal Seafood House', styleLabel: 'Creamy Coastal Bushwacker' },
+      obs_little_steamer_kid: { type: 'mocktail', spirit: 'none', barPrice: 7.50, diyCost: 0.90, barName: 'Coastal Seafood House', styleLabel: 'Sweet Tea Lemonade Mocktail' },
 
-      // Vacation Classics (12) - Coastal Resort Bars & Tiki Lounges
-      cl_classic_mojito: { type: 'mule_highball', spirit: 'rum', barPrice: 13.50, diyCost: 2.40, barName: 'Resort Beach Bar', styleLabel: 'Classic Rum Highball' },
-      cl_classic_pina_colada: { type: 'tiki_tropical', spirit: 'rum', barPrice: 14.00, diyCost: 2.80, barName: 'Resort Beach Bar', styleLabel: 'Tiki & Tropical Classic' },
-      cl_classic_mai_tai: { type: 'tiki_tropical', spirit: 'rum', barPrice: 15.00, diyCost: 3.20, barName: 'Tiki Lounge / Resort Bar', styleLabel: 'Authentic 1944 Tiki' },
-      cl_classic_paloma: { type: 'mule_highball', spirit: 'tequila', barPrice: 13.00, diyCost: 2.40, barName: 'Resort Beach Bar', styleLabel: 'Tequila Highball Cooler' },
-      cl_classic_tequila_sunrise: { type: 'tiki_tropical', spirit: 'tequila', barPrice: 12.50, diyCost: 2.20, barName: 'Resort Beach Bar', styleLabel: 'Tequila Sunset Classic' },
-      cl_classic_moscow_mule: { type: 'mule_highball', spirit: 'vodka', barPrice: 13.00, diyCost: 2.40, barName: 'Cocktail Lounge', styleLabel: 'Copper Mug Mule' },
-      cl_classic_daiquiri: { type: 'martini', spirit: 'rum', barPrice: 13.00, diyCost: 2.20, barName: 'Cocktail Lounge', styleLabel: 'Classic Cuban Sour' },
-      cl_classic_espresso_martini: { type: 'martini', spirit: 'vodka', barPrice: 15.00, diyCost: 3.00, barName: 'Nightclub / Lounge', styleLabel: 'Cold Brew Martini' },
-      cl_classic_long_island: { type: 'punch_bucket', spirit: 'vodka', barPrice: 14.50, diyCost: 3.20, barName: 'Resort Beach Bar', styleLabel: '5-Spirits Powerhouse' },
-      cl_classic_whiskey_sour: { type: 'whiskey', spirit: 'whiskey', barPrice: 13.50, diyCost: 2.50, barName: 'Cocktail Lounge', styleLabel: 'Classic Whiskey Sour' },
-      cl_classic_dark_and_stormy: { type: 'mule_highball', spirit: 'rum', barPrice: 13.50, diyCost: 2.50, barName: 'Resort Beach Bar', styleLabel: 'Dark Rum Highball' },
-      cl_classic_coconut_limeade_kid: { type: 'mocktail', spirit: 'none', barPrice: 6.00, diyCost: 1.10, barName: 'Resort Beach Bar', styleLabel: 'Tropical Cream Mocktail' }
+      // Vacation Classics (12) - Resort Beach Bar & Cocktail Lounge
+      cl_classic_mojito: { type: 'mule_highball', spirit: 'rum', barPrice: 17.50, diyCost: 2.40, barName: 'Resort Beach Bar', styleLabel: 'Classic Rum Highball' },
+      cl_classic_pina_colada: { type: 'tiki_tropical', spirit: 'rum', barPrice: 18.50, diyCost: 2.80, barName: 'Resort Beach Bar', styleLabel: 'Tiki & Tropical Classic' },
+      cl_classic_mai_tai: { type: 'tiki_tropical', spirit: 'rum', barPrice: 20.00, diyCost: 3.20, barName: 'Tiki Lounge / Resort Bar', styleLabel: 'Authentic 1944 Tiki' },
+      cl_classic_paloma: { type: 'mule_highball', spirit: 'tequila', barPrice: 17.50, diyCost: 2.40, barName: 'Resort Beach Bar', styleLabel: 'Tequila Highball Cooler' },
+      cl_classic_tequila_sunrise: { type: 'tiki_tropical', spirit: 'tequila', barPrice: 16.50, diyCost: 2.20, barName: 'Resort Beach Bar', styleLabel: 'Tequila Sunset Classic' },
+      cl_classic_moscow_mule: { type: 'mule_highball', spirit: 'vodka', barPrice: 17.00, diyCost: 2.40, barName: 'Cocktail Lounge', styleLabel: 'Copper Mug Mule' },
+      cl_classic_daiquiri: { type: 'martini', spirit: 'rum', barPrice: 16.50, diyCost: 2.20, barName: 'Cocktail Lounge', styleLabel: 'Classic Cuban Sour' },
+      cl_classic_espresso_martini: { type: 'martini', spirit: 'vodka', barPrice: 20.00, diyCost: 3.00, barName: 'Nightclub / Lounge', styleLabel: 'Cold Brew Martini' },
+      cl_classic_long_island: { type: 'punch_bucket', spirit: 'vodka', barPrice: 22.00, diyCost: 3.20, barName: 'Resort Beach Bar', styleLabel: '5-Spirits Powerhouse' },
+      cl_classic_whiskey_sour: { type: 'whiskey', spirit: 'whiskey', barPrice: 17.50, diyCost: 2.50, barName: 'Cocktail Lounge', styleLabel: 'Classic Whiskey Sour' },
+      cl_classic_dark_and_stormy: { type: 'mule_highball', spirit: 'rum', barPrice: 18.00, diyCost: 2.50, barName: 'Resort Beach Bar', styleLabel: 'Dark Rum Highball' },
+      cl_classic_coconut_limeade_kid: { type: 'mocktail', spirit: 'none', barPrice: 9.00, diyCost: 1.10, barName: 'Resort Beach Bar', styleLabel: 'Tropical Cream Mocktail' }
     };
 
+    let currentPricingTier = 'resort_peak';
+
+    function getEffectiveBarPrice(fullKey) {
+      const p = drinkPricingDatabase[fullKey] || { barPrice: 18.00 };
+      let mult = 1.0;
+      if (currentPricingTier === 'resort_tax_tip') mult = 1.28; // +10% Resort Tax + 20% Tip
+      else if (currentPricingTier === 'casual_pub') mult = 0.78; // Off-beach / Casual Tavern
+      return p.barPrice * mult;
+    }
+
+    function getPricingTierLabel() {
+      if (currentPricingTier === 'resort_tax_tip') return 'Out-of-Pocket Tab (w/ Tip & Tax)';
+      if (currentPricingTier === 'casual_pub') return 'Casual Tavern / Off-Peak Menu';
+      return 'Resort & Beachfront Bar Menu';
+    }
+
     function renderPriceComparisonCard(fullKey) {
-      const p = drinkPricingDatabase[fullKey] || { barPrice: 16.00, diyCost: 3.40, barName: 'Beach Bar / Restaurant', styleLabel: 'Vacation Cocktail' };
-      const savings = Math.max(0, p.barPrice - p.diyCost);
-      const savingsPct = Math.round((savings / p.barPrice) * 100);
+      const p = drinkPricingDatabase[fullKey] || { barPrice: 18.00, diyCost: 3.00, barName: 'Beach Bar / Resort', styleLabel: 'Vacation Cocktail' };
+      const effectiveBarPrice = getEffectiveBarPrice(fullKey);
+      const savings = Math.max(0, effectiveBarPrice - p.diyCost);
+      const savingsPct = Math.round((savings / effectiveBarPrice) * 100);
+      const tierLabel = getPricingTierLabel();
+      const taxTipNote = currentPricingTier === 'resort_tax_tip' ? 'Includes 10% tax + 20% gratuity' : `Typical price at ${p.barName}`;
 
       // Collect live bottle pricing tags from customBarDatabase.drinks
       const drinkData = (typeof customBarDatabase !== 'undefined' && customBarDatabase.drinks) ? customBarDatabase.drinks[fullKey] : null;
@@ -5733,9 +5760,9 @@
       return `
         <div class="bar-pricing-card">
           <div class="pricing-col bar-col">
-            <div class="pricing-label">🏪 Bar &amp; Restaurant Menu Price</div>
-            <div class="pricing-value">$${p.barPrice.toFixed(2)}</div>
-            <div class="pricing-sub">Typical price at ${p.barName}</div>
+            <div class="pricing-label">🏪 ${tierLabel}</div>
+            <div class="pricing-value">$${effectiveBarPrice.toFixed(2)}</div>
+            <div class="pricing-sub">${taxTipNote}</div>
           </div>
           <div class="pricing-col diy-col">
             <div class="pricing-label">🍹 DIY Vacation Batch Cost</div>
@@ -5780,6 +5807,20 @@
       });
       applyMasterFilters();
       showToast('↺ Filters reset to all 46 cocktails');
+    }
+
+    function handlePricingTierChange(val) {
+      currentPricingTier = val;
+      applyMasterFilters();
+      // Re-render open active recipe cards across all 4 venues
+      const bpVal = document.getElementById('drinkRecipeSelect')?.value || 'ultimate_porchpunch';
+      showRecipe(bpVal);
+      const mcVal = document.getElementById('mcguiresDrinkRecipeSelect')?.value || 'irish_wake';
+      showMcguiresRecipe(mcVal);
+      const obsVal = document.getElementById('oldBayDrinkRecipeSelect')?.value || 'strongisland';
+      showOldBayRecipe(obsVal);
+      const clVal = document.getElementById('classicDrinkRecipeSelect')?.value || 'classic_mai_tai';
+      showClassicRecipe(clVal);
     }
 
     function applyMasterFilters() {
@@ -5868,8 +5909,9 @@
       let totalBar = 0;
       let totalDiy = 0;
       matches.forEach(m => {
-        const p = drinkPricingDatabase[m.key] || { barPrice: 16, diyCost: 3.4 };
-        totalBar += p.barPrice;
+        const p = drinkPricingDatabase[m.key] || { barPrice: 18.00, diyCost: 3.00 };
+        const effBar = getEffectiveBarPrice(m.key);
+        totalBar += effBar;
         totalDiy += p.diyCost;
       });
 
@@ -5897,9 +5939,10 @@
 
       let html = '';
       matches.forEach(m => {
-        const p = drinkPricingDatabase[m.key] || { barPrice: 16.00, diyCost: 3.40, barName: 'Bar', styleLabel: 'Cocktail' };
-        const savings = Math.max(0, p.barPrice - p.diyCost);
-        const savingsPct = Math.round((savings / p.barPrice) * 100);
+        const p = drinkPricingDatabase[m.key] || { barPrice: 18.00, diyCost: 3.00, barName: 'Bar', styleLabel: 'Cocktail' };
+        const effectiveBarPrice = getEffectiveBarPrice(m.key);
+        const savings = Math.max(0, effectiveBarPrice - p.diyCost);
+        const savingsPct = Math.round((savings / effectiveBarPrice) * 100);
         const inCart = customBarSelectedDrinks && customBarSelectedDrinks.has(m.key);
         const cleanTitle = m.title.split('(')[0].trim();
 
@@ -5918,7 +5961,7 @@
             <div class="filter-pricing-badge-row">
               <div>
                 <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Bar Price</span>
-                <span class="filter-bar-price">$${p.barPrice.toFixed(2)}</span>
+                <span class="filter-bar-price">$${effectiveBarPrice.toFixed(2)}</span>
               </div>
               <div style="text-align: center;">
                 <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">Condo DIY</span>
