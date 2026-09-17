@@ -1,7 +1,7 @@
 {
-  "name": "Beach & Vacation Drink Mixology Guide",
-  "short_name": "Vacation Drinks",
-  "description": "Authentic 32-oz beach buckets, coastal pub jars, steamer specialties, classic vacation cocktails, and interactive shopping list builder.",
+  "name": "Smart Bar Mixology",
+  "short_name": "Smart Bar",
+  "description": "Intelligent drink mixology, 32-oz vessel recipes, batch cocktails, and interactive shopping list builder.",
   "start_url": "./destin_drinks_and_bar_guide.html",
   "scope": "./",
   "display": "standalone",
