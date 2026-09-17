@@ -1,0 +1,14 @@
+# Temporary & backup files
+*.bak*
+*.tmp
+_temp*
+
+# Scratch & OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Separate documents / unrelated projects
+*.pdf
+fence_crm_setup_checklist.html
+playground/
