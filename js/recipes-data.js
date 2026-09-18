@@ -62,7 +62,6 @@
       cl_classic_espresso_martini: { spirit: 'vodka', flavor: 'dessert', potency: 'high', spiritsOz: 5.5, layers: ['#1c1917', '#d97706'], layerNames: ['Cold Brew Vodka Kahlúa', 'Frothy Crema & Coffee Beans'] },
       cl_classic_long_island: { spirit: 'vodka', flavor: 'tart', potency: 'high', spiritsOz: 5.0, layers: ['#fef08a', '#78350f'], layerNames: ['5-Spirits Sour Mix', 'Coca-Cola Splash'] },
       cl_classic_whiskey_sour: { spirit: 'whiskey', flavor: 'tart', potency: 'med', spiritsOz: 4.0 },
-      cl_classic_dark_and_stormy: { spirit: 'rum', flavor: 'tart', potency: 'med', spiritsOz: 4.0, layers: ['#fed7aa', '#3e2723'], layerNames: ['Spicy Craft Ginger Beer', 'Myers\'s Rum Storm Cloud'] },
       cl_classic_coconut_limeade_kid: { spirit: 'none', flavor: 'mocktail', potency: 'mocktail', spiritsOz: 0.0, layers: ['#ecfdf5', '#86efac'], layerNames: ['Coco López & Lemonade', 'Fresh Lime & Sprite'] }
     };
 
@@ -73,7 +72,7 @@
       bp: ['ultimate_porchpunch', 'porchpunch', 'pattywacked', 'beachbucket', 'porchmargarita', 'strawberry_margarita', 'mango_margarita', 'spicy_margarita', 'dragonfruit_margarita', 'bloodymary', 'painkiller', 'rumrunner', 'peachlemonade', 'sunset_punch_kid'],
       mc: ['irish_wake', 'emory_chenoweth', 'iced_irish_coffee', 'bloody_irish', 'dublin_mule', 'blueberry_lemon_drop', 'strawberry_twist', 'chocolate_moose', 'james_bond', 'south_of_the_border', 'smoked_old_fashioned', 'root_beer_float_kid'],
       obs: ['obs_blt', 'obs_darkandstormy', 'obs_bahamamama', 'obs_cucumbercooler', 'obs_strongisland', 'obs_seafoodbloodymary', 'obs_topshelfmargarita', 'obs_bushwacker', 'obs_little_steamer_kid'],
-      cl: ['classic_mojito', 'classic_pina_colada', 'classic_mai_tai', 'classic_paloma', 'classic_tequila_sunrise', 'classic_moscow_mule', 'classic_daiquiri', 'classic_espresso_martini', 'classic_long_island', 'classic_whiskey_sour', 'classic_dark_and_stormy', 'classic_coconut_limeade_kid']
+      cl: ['classic_mojito', 'classic_pina_colada', 'classic_mai_tai', 'classic_paloma', 'classic_tequila_sunrise', 'classic_moscow_mule', 'classic_daiquiri', 'classic_espresso_martini', 'classic_long_island', 'classic_whiskey_sour', 'classic_coconut_limeade_kid']
     };
 
 
@@ -1654,32 +1653,6 @@ const classicRecipeData = {
       "Pour over ice in 32-oz vessels, splash with club soda, and garnish with citrus wheels and cherries."
     ],
     beachTip: "A splash of club soda over the ice turns a heavy whiskey sour into a refreshing highball cooler that drinks wonderfully in warm Gulf breezes."
-  },
-  classic_dark_and_stormy: {
-    title: "⛈️ The Classic Dark 'n Stormy (Bermuda Rum Punch)",
-    tag: "Myers's Jamaican Dark Rum & Fiery Ginger Beer • 32-oz Vessel",
-    desc: "The legendary Bermuda maritime highball! Fiery craft ginger beer and fresh lime juice poured over ice, crowned with a dense, ominous cloud of rich Myers's Jamaican dark rum floating across the surface.",
-    single: [
-      "4 oz Myers's Original Dark Rum (heavy cloud float)",
-      "10 oz Spicy Craft Ginger Beer (Q or Fever-Tree)",
-      "1.5 oz Fresh Squeezed Lime Juice",
-      "1/2 oz Simple Syrup",
-      "Packed with fresh ice in 32-oz Vessel or Yeti",
-      "Garnish: Lime wheel & Maraschino cherry"
-    ],
-    pitcher: [
-      "16 oz Myers's Dark Rum (for floaters)",
-      "40 oz Spicy Ginger Beer",
-      "6 oz Fresh Lime Juice",
-      "2 oz Simple Syrup",
-      "Serves: 4 Full 32-oz Vessels (1-Gallon Batch)"
-    ],
-    steps: [
-      "In each 32-oz vessel, add lime juice, simple syrup, and fill completely with fresh ice.",
-      "Pour ginger beer over ice until 2 inches from the brim.",
-      "Gently pour 4 oz Myers's dark rum over the back of a spoon to create a thick dark floating cloud layer!"
-    ],
-    beachTip: "Do not stir before serving. The drink gets its name from looking like 'a cloud only a fool or a dead man would sail under.' Sip it through the straw to experience the spicy ginger beer rising into the rich rum!"
   },
   classic_coconut_limeade_kid: {
     title: "🧒 Tropical Coconut Limeade (0.0% ABV Beach Cooler)",

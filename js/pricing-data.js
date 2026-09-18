@@ -56,7 +56,6 @@
       cl_classic_espresso_martini: { type: 'martini', spirit: 'vodka', barPrice: 20.00, diyCost: 3.00, barName: 'Nightclub / Lounge', styleLabel: 'Cold Brew Martini' },
       cl_classic_long_island: { type: 'punch_bucket', spirit: 'vodka', barPrice: 22.00, diyCost: 3.20, barName: 'Resort Beach Bar', styleLabel: '5-Spirits Powerhouse' },
       cl_classic_whiskey_sour: { type: 'whiskey', spirit: 'whiskey', barPrice: 17.50, diyCost: 2.50, barName: 'Cocktail Lounge', styleLabel: 'Classic Whiskey Sour' },
-      cl_classic_dark_and_stormy: { type: 'mule_highball', spirit: 'rum', barPrice: 18.00, diyCost: 2.50, barName: 'Resort Beach Bar', styleLabel: 'Dark Rum Highball' },
       cl_classic_coconut_limeade_kid: { type: 'mocktail', spirit: 'none', barPrice: 9.00, diyCost: 1.10, barName: 'Resort Beach Bar', styleLabel: 'Tropical Cream Mocktail' }
     };
 
@@ -388,10 +387,6 @@ const customBarDatabase = {
         cl_classic_whiskey_sour: {
           key: "cl_classic_whiskey_sour", name: "Classic Whiskey Sour", venue: "Vacation Classics", icon: "🥃", tag: "32-oz Vessel • Bushmills Irish Whiskey, Lemon & Bitters", liquorOz: 4.0,
           items: ["whiskey_irish", "produce_lemons", "syrup_agave", "bitters_angostura", "soda_clubsoda", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
-        },
-        cl_classic_dark_and_stormy: {
-          key: "cl_classic_dark_and_stormy", name: "The Classic Dark 'n Stormy", venue: "Vacation Classics", icon: "⛈️", tag: "32-oz Vessel • Myers's Dark Rum Floating Cloud & Ginger Beer", liquorOz: 4.0,
-          items: ["rum_dark", "soda_gingerbeer", "juice_lime_bottled", "syrup_agave", "produce_limes", "supplies_ice", "supplies_cups"]
         },
         cl_classic_coconut_limeade_kid: {
           key: "cl_classic_coconut_limeade_kid", name: "Tropical Coconut Limeade (Mocktail)", venue: "Vacation Classics", icon: "🧒", tag: "32-oz Bucket • Coco López, Lime, Lemonade & Soda (0.0% ABV)", liquorOz: 0.0,
