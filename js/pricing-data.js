@@ -34,8 +34,9 @@
       mc_smoked_old_fashioned: { type: 'whiskey', spirit: 'whiskey', barPrice: 19.50, diyCost: 2.80, barName: 'Tourist Irish Tavern', styleLabel: 'Tavern Whiskey Classic' },
       mc_root_beer_float_kid: { type: 'mocktail', spirit: 'none', barPrice: 8.00, diyCost: 1.10, barName: 'Tourist Irish Tavern', styleLabel: 'Draft Root Beer Mocktail' },
 
-      // Coastal Seafood House & Steamer (8) - Destination Seafood Bar
+      // Coastal Seafood House & Steamer (9) - Destination Seafood Bar
       obs_blt: { type: 'whiskey', spirit: 'whiskey', barPrice: 17.50, diyCost: 2.70, barName: 'Coastal Seafood House', styleLabel: 'Whiskey Sweet Tea Cooler' },
+      obs_darkandstormy: { type: 'mule_highball', spirit: 'rum', barPrice: 18.00, diyCost: 2.50, barName: 'Coastal Seafood House', styleLabel: 'Dark Rum Highball' },
       obs_bahamamama: { type: 'tiki_tropical', spirit: 'rum', barPrice: 18.00, diyCost: 2.80, barName: 'Coastal Seafood House', styleLabel: 'Tiki & Tropical Cooler' },
       obs_cucumbercooler: { type: 'mule_highball', spirit: 'gin', barPrice: 17.50, diyCost: 2.60, barName: 'Coastal Seafood House', styleLabel: 'Gin Highball Cooler' },
       obs_strongisland: { type: 'punch_bucket', spirit: 'vodka', barPrice: 25.00, diyCost: 3.80, barName: 'Coastal Seafood House', styleLabel: '5-Spirits Powerhouse (Limit 1)' },
@@ -310,10 +311,14 @@ const customBarDatabase = {
           key: "mc_root_beer_float_kid", name: "McGuire's Root Beer Float (Mocktail)", venue: "McGuire's Irish Pub", icon: "🧒", tag: "32-oz Mason Jar • Craft Root Beer & Ice Cream (0.0% ABV)", liquorOz: 0.0,
           items: ["soda_rootbeer", "icecream_vanilla", "produce_cherries", "supplies_cups"]
         },
-        // Old Bay Steamer (8) - Portioned for 32-oz Vessels / Yeti Tumblers
+        // Old Bay Steamer (9) - Portioned for 32-oz Vessels / Yeti Tumblers
         obs_blt: {
           key: "obs_blt", name: "The Steamer \"BLT\"", venue: "Old Bay Steamer", icon: "🥃", tag: "32-oz Vessel • Bourbon/Whiskey, Lemonade & Sweet Tea", liquorOz: 4.0,
           items: ["whiskey_irish", "tea_sweettea", "lemonade", "produce_lemons", "produce_mint", "supplies_ice", "supplies_cups"]
+        },
+        obs_darkandstormy: {
+          key: "obs_darkandstormy", name: "The Steamer Dark 'n Stormy", venue: "Old Bay Steamer", icon: "⛈️", tag: "32-oz Vessel • Myers's Dark Rum Floating Cloud & Ginger Beer", liquorOz: 4.0,
+          items: ["rum_dark", "soda_gingerbeer", "juice_lime_bottled", "syrup_agave", "produce_limes", "supplies_ice", "supplies_cups"]
         },
         obs_bahamamama: {
           key: "obs_bahamamama", name: "The Steamer Bahama Mama", venue: "Old Bay Steamer", icon: "🌴", tag: "32-oz Bucket • Triple Rum, Banana & Dark Rum Float", liquorOz: 5.5,

@@ -45,7 +45,7 @@
 
     
     // ==========================================================================
-    // DRINK PRICING & RESTAURANT MENU COSTS DATABASE (46 COCKTAILS)
+    // DRINK PRICING & RESTAURANT MENU COSTS DATABASE (47 COCKTAILS)
     // ==========================================================================
 
     // ==========================================================================
@@ -75,7 +75,7 @@
         btn.classList.toggle('active', btn.getAttribute('onclick')?.includes("'all'"));
       });
       applyMasterFilters();
-      showToast('↺ Filters reset to all 46 cocktails');
+      showToast('↺ Filters reset to all 47 cocktails');
     }
 
     function handlePricingTierChange(val) {
@@ -200,7 +200,7 @@
       if (matches.length === 0) {
         gallery.innerHTML = `
           <div style="grid-column: 1 / -1; padding: 28px; text-align: center; color: var(--text-muted);">
-            No cocktails found. Click <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()" style="display: inline-block; margin-left: 6px;">Reset Filters</button> to view all 46 drinks.
+            No cocktails found. Click <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()" style="display: inline-block; margin-left: 6px;">Reset Filters</button> to view all 47 drinks.
           </div>
         `;
         return;

@@ -51,14 +51,14 @@
 
       <h1 class="streamlined-title">🍸 Smart Bar Mixology</h1>
       <p class="streamlined-subtitle">
-        Your dedicated manual for <strong>46 authentic beach bar &amp; vacation cocktail recipes</strong> (Beach Bar Coolers &amp; Buckets, Coastal Irish Pub Classics, Steamer Specialties, and All-Time Vacation Favorites) with the interactive <strong>Smart Bar Builder</strong>. Select only the drinks your group wants to calculate a consolidated 1.75L handle shopping list with retail price estimates, 1-gallon vacation pitcher batches, and cost splitters!
+        Your dedicated manual for <strong>47 authentic beach bar &amp; vacation cocktail recipes</strong> (Beach Bar Coolers &amp; Buckets, Coastal Irish Pub Classics, Steamer Specialties, and All-Time Vacation Favorites) with the interactive <strong>Smart Bar Builder</strong>. Select only the drinks your group wants to calculate a consolidated 1.75L handle shopping list with retail price estimates, 1-gallon vacation pitcher batches, and cost splitters!
       </p>
 
       <div class="streamlined-toolbar">
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <div style="position: relative; min-width: 260px; flex: 1; max-width: 360px;" class="universal-search-container">
             <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; color: var(--text-muted); pointer-events: none;">🔍</span>
-            <input type="text" id="drinkSearchInput" placeholder="Search 46 cocktails & spirits (Press /)..." oninput="handleUniversalSearch(this.value)" onfocus="handleUniversalSearch(this.value)" style="width: 100%; padding: 8px 14px 8px 36px; border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: #fff; font-size: 0.88rem; outline: none;" autocomplete="off">
+            <input type="text" id="drinkSearchInput" placeholder="Search 47 cocktails & spirits (Press /)..." oninput="handleUniversalSearch(this.value)" onfocus="handleUniversalSearch(this.value)" style="width: 100%; padding: 8px 14px 8px 36px; border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: #fff; font-size: 0.88rem; outline: none;" autocomplete="off">
             <div id="universalSearchResults" class="universal-search-dropdown"></div>
           </div>
           <button onclick="window.print()" class="btn btn-secondary" style="padding: 8px 18px; border-radius: var(--radius-full); font-weight: 700; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;">
@@ -84,7 +84,7 @@
         <div>
           <h3 class="master-filter-title"><span>🍹</span> Filter &amp; Sort Cocktails by Style &amp; Spirit</h3>
           <p class="master-filter-sub">
-            Organize all 46 drinks by style (Margaritas, Whiskey Drinks, Punches, Martinis), spirit, or bar venue — compare restaurant bar prices vs. DIY batch cost!
+            Organize all 47 drinks by style (Margaritas, Whiskey Drinks, Punches, Martinis), spirit, or bar venue — compare restaurant bar prices vs. DIY batch cost!
           </p>
         </div>
         <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()">
@@ -94,13 +94,13 @@
 
       <!-- Row 1: Drink Style Filter Pills (WHAT it is) -->
       <div class="style-filter-pills" id="styleFilterPills">
-        <button type="button" class="style-pill-btn active" onclick="setDrinkStyleFilter('all')"><span>🍹</span> All Drinks (46)</button>
+        <button type="button" class="style-pill-btn active" onclick="setDrinkStyleFilter('all')"><span>🍹</span> All Drinks (47)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('margarita')"><span>🧂</span> Margaritas (7)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('whiskey')"><span>🥃</span> Whiskey &amp; Bourbon (6)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('punch_bucket')"><span>🪣</span> Beach Buckets &amp; Punches (6)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('tiki_tropical')"><span>🌴</span> Tiki &amp; Tropical (7)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('martini')"><span>🍸</span> Martinis &amp; Sours (5)</button>
-        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('mule_highball')"><span>🧊</span> Mules &amp; Highballs (7)</button>
+        <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('mule_highball')"><span>🧊</span> Mules &amp; Highballs (8)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('creamy_dessert')"><span>🍫</span> Dessert &amp; Mudslides (3)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('bloody_mary')"><span>🌶️</span> Bloody Marys &amp; Savory (3)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('mocktail')"><span>🧒</span> 0.0% Mocktails (4)</button>
@@ -112,8 +112,8 @@
           <div>
             <label style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px;">Spirit Base:</label>
             <select id="filterSpiritSelect" class="filter-dropdown" onchange="applyMasterFilters()">
-              <option value="all" selected>All Spirits (46)</option>
-              <option value="rum">🌴 Rum (15 Drinks)</option>
+              <option value="all" selected>All Spirits (47)</option>
+              <option value="rum">🌴 Rum (16 Drinks)</option>
               <option value="tequila">🧂 Tequila (7 Drinks)</option>
               <option value="vodka">🍸 Vodka (8 Drinks)</option>
               <option value="whiskey">🥃 Whiskey / Bourbon (5 Drinks)</option>
@@ -125,10 +125,10 @@
           <div>
             <label style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 3px;">Bar / Venue:</label>
             <select id="filterVenueSelect" class="filter-dropdown" onchange="applyMasterFilters()">
-              <option value="all" selected>All Venues (46)</option>
+              <option value="all" selected>All Venues (47)</option>
               <option value="bp">🌴 The Back Porch Beach Bar (14)</option>
               <option value="mc">🍀 McGuire's Irish Pub (12)</option>
-              <option value="obs">🦀 Old Bay Steamer Bar (8)</option>
+              <option value="obs">🦀 Old Bay Steamer Bar (9)</option>
               <option value="cl">🍸 Vacation &amp; Resort Classics (12)</option>
             </select>
           </div>
@@ -159,7 +159,7 @@
 
       <!-- Row 3: Filter Stats & Summary Banner -->
       <div class="filter-stats-banner" id="filterStatsBanner">
-        <div class="filter-stats-text" id="filterStatsText">Showing all 46 cocktails across all venues</div>
+        <div class="filter-stats-text" id="filterStatsText">Showing all 47 cocktails across all venues</div>
         <div class="filter-savings-highlight" id="filterSavingsHighlight">
           <span>💰</span> Average Bar Price: ~$18.24 • Average DIY Cost: ~$2.68 (85% Savings)
         </div>
@@ -376,13 +376,13 @@
           <span>🍀</span> All McGuire's (12)
         </button>
         <button type="button" class="preset-btn" onclick="setCustomDrinkPreset('oldbay')">
-          <span>🦀</span> All Old Bay (8)
+          <span>🦀</span> All Old Bay (9)
         </button>
         <button type="button" class="preset-btn" onclick="setCustomDrinkPreset('classics')">
           <span>🍸</span> All Classics (12)
         </button>
         <button type="button" class="preset-btn" onclick="setCustomDrinkPreset('all')">
-          <span>🍹</span> Select All (46)
+          <span>🍹</span> Select All (47)
         </button>
         <button type="button" class="preset-btn" onclick="setCustomDrinkPreset('clear')">
           <span>🔄</span> Clear All (0)
@@ -671,7 +671,7 @@
     </section>
 
 
-    <!-- SECTION 3.5: OLD BAY STEAMER SPECIALTY COCKTAILS (8) -->
+    <!-- SECTION 3.5: OLD BAY STEAMER SPECIALTY COCKTAILS (9) -->
     <section class="recipe-section" id="section-oldbaydrinks" style="border-top: 4px solid #c2410c;">
       <div class="recipe-header">
         <div>
@@ -694,6 +694,7 @@
         <label for="oldBayDrinkRecipeSelect">🦀 Select Any Signature Old Bay Steamer Cocktail to View Recipe &amp; Pitcher Measurements:</label>
         <select id="oldBayDrinkRecipeSelect" class="recipe-select" onchange="showOldBayRecipe(this.value)">
           <option value="obs_blt" selected>🥃 The Steamer "BLT" (Bourbon/Whiskey, Lemonade &amp; Southern Sweet Tea)</option>
+          <option value="obs_darkandstormy">⛈️ The Steamer Dark 'n Stormy (Myers's Dark Rum Storm Cloud &amp; Spicy Ginger Beer)</option>
           <option value="obs_bahamamama">🌴 The Steamer Bahama Mama (Triple Rum, Banana &amp; Dark Rum Float)</option>
           <option value="obs_cucumbercooler">🥒 The Coastal Cucumber Cooler (Beefeater Gin, Muddled Cucumber &amp; Lime)</option>
           <option value="obs_strongisland">⚡ The "Strong Island" (Old Bay Steamer 5-Spirits Legend • Limit of 1)</option>

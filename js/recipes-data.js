@@ -40,8 +40,9 @@
       mc_smoked_old_fashioned: { spirit: 'whiskey', flavor: 'tart', potency: 'med', spiritsOz: 3.5 },
       mc_root_beer_float_kid: { spirit: 'none', flavor: 'mocktail', potency: 'mocktail', spiritsOz: 0.0, layers: ['#451a03', '#fef9c3', '#ffffff'], layerNames: ['Craft Draft Root Beer', 'Vanilla Bean Ice Cream', 'Whipped Cream & Cherry'] },
 
-      // Old Bay Steamer (8)
+      // Old Bay Steamer (9)
       obs_blt: { spirit: 'whiskey', flavor: 'tart', potency: 'med', spiritsOz: 4.0, layers: ['#b45309', '#fef08a'], layerNames: ['Southern Sweet Tea', 'Lemonade & Mint Float'] },
+      obs_darkandstormy: { spirit: 'rum', flavor: 'tart', potency: 'med', spiritsOz: 4.0, layers: ['#fed7aa', '#3e2723'], layerNames: ['Spicy Craft Ginger Beer', 'Myers\'s Rum Storm Cloud'] },
       obs_bahamamama: { spirit: 'rum', flavor: 'tropical', potency: 'high', spiritsOz: 5.5, layers: ['#dc2626', '#f59e0b', '#78350f'], layerNames: ['Grenadine Base', 'Triple Rum Banana Punch', 'Myers\'s Dark Rum Float'] },
       obs_cucumbercooler: { spirit: 'gin', flavor: 'tart', potency: 'med', spiritsOz: 4.0 },
       obs_strongisland: { spirit: 'vodka', flavor: 'tart', potency: 'high', spiritsOz: 6.0, layers: ['#fef08a', '#78350f'], layerNames: ['5-Spirits Sour Base', 'Coca-Cola Splash'] },
@@ -71,7 +72,7 @@
     const venueDrinkKeys = {
       bp: ['ultimate_porchpunch', 'porchpunch', 'pattywacked', 'beachbucket', 'porchmargarita', 'strawberry_margarita', 'mango_margarita', 'spicy_margarita', 'dragonfruit_margarita', 'bloodymary', 'painkiller', 'rumrunner', 'peachlemonade', 'sunset_punch_kid'],
       mc: ['irish_wake', 'emory_chenoweth', 'iced_irish_coffee', 'bloody_irish', 'dublin_mule', 'blueberry_lemon_drop', 'strawberry_twist', 'chocolate_moose', 'james_bond', 'south_of_the_border', 'smoked_old_fashioned', 'root_beer_float_kid'],
-      obs: ['obs_blt', 'obs_bahamamama', 'obs_cucumbercooler', 'obs_strongisland', 'obs_seafoodbloodymary', 'obs_topshelfmargarita', 'obs_bushwacker', 'obs_little_steamer_kid'],
+      obs: ['obs_blt', 'obs_darkandstormy', 'obs_bahamamama', 'obs_cucumbercooler', 'obs_strongisland', 'obs_seafoodbloodymary', 'obs_topshelfmargarita', 'obs_bushwacker', 'obs_little_steamer_kid'],
       cl: ['classic_mojito', 'classic_pina_colada', 'classic_mai_tai', 'classic_paloma', 'classic_tequila_sunrise', 'classic_moscow_mule', 'classic_daiquiri', 'classic_espresso_martini', 'classic_long_island', 'classic_whiskey_sour', 'classic_dark_and_stormy', 'classic_coconut_limeade_kid']
     };
 
@@ -1120,6 +1121,33 @@ const oldBayRecipeData = {
       "Pour over ice, slap fresh mint sprigs between palms, and crown with thick lemon wheels."
     ],
     beachTip: "The sweet tannins from Southern black tea cut through the rich garlic butter of steamed King Crab and Royal Red shrimp like a dream."
+  },
+  obs_darkandstormy: {
+    title: "⛈️ The Steamer Dark 'n Stormy",
+    tag: "Old Bay Steamer Highball • Dark Rum Storm Cloud & Fiery Ginger Beer • 32-oz Vessel",
+    desc: "Old Bay Steamer's legendary coastal highball! Fiery craft ginger beer and fresh lime juice poured over ice, crowned with a dense, ominous storm cloud of rich Myers's Jamaican dark rum floated across the surface with fresh lime wheels. The ultimate spicy-sweet companion to steamed seafood feasts!",
+    single: [
+      "4 oz Myers's Original Dark Rum (heavy surface storm cloud float)",
+      "10 oz Spicy Craft Ginger Beer (Q Mixers or Fever-Tree)",
+      "1.5 oz Fresh Squeezed Lime Juice",
+      "1/2 oz Pure Cane Simple Syrup",
+      "Packed with crushed ice in 32-oz Steamer Mug or Yeti Tumbler",
+      "Garnish: Thick fresh lime wheels & Maraschino cherry"
+    ],
+    pitcher: [
+      "16 oz Myers's Original Dark Rum (for surface floaters)",
+      "40 oz Spicy Craft Ginger Beer",
+      "6 oz Fresh Lime Juice",
+      "2 oz Pure Cane Simple Syrup",
+      "Serves: 4 Full 32-oz Vessels (1-Gallon Batch)"
+    ],
+    steps: [
+      "Fill four 32-oz vessels or Yeti tumblers completely to the brim with fresh crushed ice.",
+      "Add fresh lime juice and simple syrup into each vessel, then pour spicy ginger beer until about 2 inches from the brim.",
+      "Gently pour 4 oz Myers's dark rum over the back of a bar spoon across the surface to create a thick, floating dark storm cloud!",
+      "Slide fresh lime wheels against the glass and serve with a wide straw—sip from the bottom up to taste the fiery ginger blend into the smooth rum!"
+    ],
+    beachTip: "The crisp, spicy bite of craft ginger beer and dark molasses rum cuts right through the rich garlic butter of steamed snow crab legs, King crab, and Royal Red shrimp!"
   },
   obs_bahamamama: {
     title: "🌴 The Steamer Bahama Mama",
