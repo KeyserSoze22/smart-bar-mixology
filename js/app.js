@@ -305,7 +305,9 @@
       const activeBtn = document.getElementById(`pill_${venue}_${key}`);
       if (activeBtn) {
         activeBtn.classList.add('active');
-        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        // Horizontally center pill inside carousel container without scrolling the window
+        const left = activeBtn.offsetLeft - (container.clientWidth / 2) + (activeBtn.clientWidth / 2);
+        container.scrollTo({ left: Math.max(0, left), behavior: 'smooth' });
       }
     }
 
@@ -1273,14 +1275,26 @@
     }
 
     function syncActiveRecipeButtons() {
-      const bpSelect = document.getElementById('drinkRecipeSelect');
-      if (bpSelect) showRecipe(bpSelect.value);
-      const mcSelect = document.getElementById('mcguiresDrinkRecipeSelect');
-      if (mcSelect) showMcguiresRecipe(mcSelect.value);
-      const obsSelect = document.getElementById('oldBayDrinkRecipeSelect');
-      if (obsSelect) showOldBayRecipe(obsSelect.value);
-      const clSelect = document.getElementById('classicDrinkRecipeSelect');
-      if (clSelect) showClassicRecipe(clSelect.value);
+      // Surgically update the cart buttons in any active recipe cards without re-rendering or triggering scroll
+      document.querySelectorAll('[onclick*="toggleCustomDrinkFromRecipe"]').forEach(btn => {
+        const match = btn.getAttribute('onclick')?.match(/toggleCustomDrinkFromRecipe\('([^']+)'\)/);
+        if (!match) return;
+        const key = match[1];
+        const inCart = customBarSelectedDrinks.has(key);
+        const span = btn.querySelector('span');
+        if (span) {
+          span.textContent = inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart';
+        }
+        if (btn.classList.contains('filter-cart-toggle-btn')) {
+          btn.classList.toggle('in-cart', inCart);
+        } else {
+          let defaultBg = 'var(--coral)';
+          if (key.startsWith('mc_')) defaultBg = '#16a34a';
+          else if (key.startsWith('obs_')) defaultBg = '#c2410c';
+          else if (key.startsWith('cl_')) defaultBg = '#0284c7';
+          btn.style.background = inCart ? '#16a34a' : defaultBg;
+        }
+      });
     }
 
     function navigateToRecipe(dKey, event, sourceName, pushHistory = true) {
@@ -1407,6 +1421,7 @@
       saveCustomBarState(); syncUrlHash(); updateExpenseSplitterDisplay();
       renderCustomDrinkSelectors();
       renderCustomBarCart();
+      syncActiveRecipeButtons();
       updatePresetButtons(presetType);
     }
 
