@@ -884,10 +884,19 @@
     let groupAdultCount = 7;
 
     function setAdultSplit(count) {
-      groupAdultCount = count;
+      groupAdultCount = Math.max(1, Math.min(12, count));
+      if (typeof activePeopleCount !== 'undefined') {
+        activePeopleCount = groupAdultCount;
+      }
+
+      const adultSplitSlider = document.getElementById('adultSplitSlider');
+      if (adultSplitSlider) adultSplitSlider.value = groupAdultCount;
+      const adultSplitSliderVal = document.getElementById('adultSplitSliderVal');
+      if (adultSplitSliderVal) adultSplitSliderVal.textContent = `${groupAdultCount} ${groupAdultCount === 1 ? 'Adult' : 'Adults'}`;
+
       document.querySelectorAll('#adultBtnGroup .adult-btn').forEach(btn => {
         const onClickStr = btn.getAttribute('onclick') || '';
-        if (onClickStr.includes(`(${count})`)) {
+        if (onClickStr.includes(`(${groupAdultCount})`)) {
           btn.classList.add('active');
         } else {
           btn.classList.remove('active');
@@ -953,18 +962,14 @@
     }
 
     // 5. DYNAMIC VESSEL & BATCH SCALER
-    let activeVesselMultiplier = 1.0;
-    let activeVesselName = '32-oz Bucket (1×)';
-
-    function scaleIngredientText(line, multiplier) {
-      return line.replace(/(\d+(\.\d+)?)\s*oz/g, (match, p1) => {
-        const val = parseFloat(p1) * multiplier;
-        const formatted = val % 1 === 0 ? val : val.toFixed(1);
-        return `${formatted} oz`;
-      });
-    }
-
     function setVesselScale(multiplier, name, recipeKey, containerId) {
+      if (typeof DRINK_SCALE_STEPS !== 'undefined') {
+        const matchingIdx = DRINK_SCALE_STEPS.findIndex(s => Math.abs(s.multiplier - multiplier) < 0.05);
+        if (matchingIdx !== -1) {
+          setDrinkScaleStep(matchingIdx, recipeKey, containerId);
+          return;
+        }
+      }
       activeVesselMultiplier = multiplier;
       activeVesselName = name;
 
@@ -975,7 +980,10 @@
         });
 
         // Re-render ingredient items
-        let r = recipeData[recipeKey] || mcguiresRecipeData[recipeKey] || classicRecipeData[recipeKey];
+        let r = (typeof recipeData !== 'undefined' && recipeData[recipeKey]) ||
+                (typeof mcguiresRecipeData !== 'undefined' && mcguiresRecipeData[recipeKey]) ||
+                (typeof oldBayRecipeData !== 'undefined' && oldBayRecipeData[recipeKey]) ||
+                (typeof classicRecipeData !== 'undefined' && classicRecipeData[recipeKey]);
         if (r && r.single) {
           const list = card.querySelector('.dynamic-scale-list');
           if (list) {
@@ -992,7 +1000,10 @@
     let shakeTimerSeconds = 20;
 
     function openBartenderMode(recipeKey) {
-      const r = recipeData[recipeKey] || mcguiresRecipeData[recipeKey] || classicRecipeData[recipeKey];
+      const r = (typeof recipeData !== 'undefined' && recipeData[recipeKey]) ||
+                (typeof mcguiresRecipeData !== 'undefined' && mcguiresRecipeData[recipeKey]) ||
+                (typeof oldBayRecipeData !== 'undefined' && oldBayRecipeData[recipeKey]) ||
+                (typeof classicRecipeData !== 'undefined' && classicRecipeData[recipeKey]);
       if (!r) return;
       currentBtRecipe = r;
 
@@ -1003,7 +1014,13 @@
       const stepsEl = document.getElementById('btModalSteps');
 
       if (titleEl) titleEl.textContent = r.title;
-      if (vesselEl) vesselEl.textContent = `Batching for: ${activeVesselName}`;
+      if (vesselEl) {
+        const yieldCalc = (typeof getBatchYieldCalculation === 'function')
+          ? getBatchYieldCalculation(activeDrinkStepIndex, activePeopleCount)
+          : null;
+        const volumeNote = yieldCalc ? ` (${yieldCalc.totalVolumeText} • for ${activePeopleCount} ${activePeopleCount === 1 ? 'person' : 'people'})` : '';
+        vesselEl.textContent = `Batching for: ${activeVesselName}${volumeNote}`;
+      }
 
       if (ingEl) {
         ingEl.innerHTML = r.single.map((item, idx) => `

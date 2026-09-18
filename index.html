@@ -526,8 +526,22 @@
           </div>
         </div>
 
+        <!-- 1 TO 12 PEOPLE SLIDING BAR -->
+        <div style="background: rgba(255, 255, 255, 0.6); padding: 8px 14px; border-radius: var(--radius-md); border: 1px solid rgba(147, 51, 234, 0.2); margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-size: 0.82rem; font-weight: 800; color: #581c87;">👥 Party Size (1 to 12 People):</span>
+            <span id="adultSplitSliderVal" style="font-size: 0.82rem; font-weight: 800; color: #7e22ce; background: rgba(147, 51, 234, 0.15); padding: 2px 10px; border-radius: 999px;">7 Adults</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="range" id="adultSplitSlider" min="1" max="12" step="1" value="7" style="flex: 1; accent-color: #9333ea; cursor: pointer; height: 6px;" oninput="setAdultSplit(parseInt(this.value, 10))" aria-label="People Split Slider">
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.68rem; font-weight: 700; color: #6b21a8; margin-top: 2px;">
+            <span>1p</span><span>2p</span><span>3p</span><span>4p</span><span>6p</span><span>8p</span><span>10p</span><span>12p</span>
+          </div>
+        </div>
+
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
-          <span style="font-size: 0.82rem; font-weight: 700; color: #581c87;">Split among adults in your party:</span>
+          <span style="font-size: 0.82rem; font-weight: 700; color: #581c87;">Quick Presets:</span>
           <div class="adult-btn-group" id="adultBtnGroup">
             <button type="button" class="adult-btn" onclick="setAdultSplit(4)">4 Adults</button>
             <button type="button" class="adult-btn" onclick="setAdultSplit(6)">6 Adults</button>

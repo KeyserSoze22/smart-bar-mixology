@@ -503,7 +503,300 @@ const recipeData = {
       }
     };
 
-        function showRecipe(key) {
+// ==========================================================================
+// DRINK BATCH & PARTY SIZE SCALER CONTROLLER (1-12 PEOPLE, 8OZ TO 5GAL)
+// ==========================================================================
+const DRINK_SCALE_STEPS = [
+  { index: 0, label: '8-oz Rocks Glass (0.25×)', short: '8 oz', multiplier: 0.25, totalOz: 8, icon: '🥃', type: 'single' },
+  { index: 1, label: '16-oz Solo Cup (0.5×)', short: '16 oz', multiplier: 0.5, totalOz: 16, icon: '🥤', type: 'single' },
+  { index: 2, label: '32-oz Bucket (1×)', short: '32 oz', multiplier: 1.0, totalOz: 32, icon: '🪣', type: 'single' },
+  { index: 3, label: 'Half-Gal Pitcher (2×)', short: 'Half Gal', multiplier: 2.0, totalOz: 64, icon: '🫗', type: 'batch' },
+  { index: 4, label: '1-Gal Condo Pitcher (4×)', short: '1 Gal', multiplier: 4.0, totalOz: 128, icon: '🍹', type: 'batch' },
+  { index: 5, label: '1.5-Gal Dispenser (6×)', short: '1.5 Gal', multiplier: 6.0, totalOz: 192, icon: '🧊', type: 'batch' },
+  { index: 6, label: '2-Gal Beach Jug (8×)', short: '2 Gal', multiplier: 8.0, totalOz: 256, icon: '🏖️', type: 'batch' },
+  { index: 7, label: '3-Gal Dispenser (12×)', short: '3 Gal', multiplier: 12.0, totalOz: 384, icon: '🎉', type: 'batch' },
+  { index: 8, label: '5-Gal Cooler (20×)', short: '5 Gal', multiplier: 20.0, totalOz: 640, icon: '🏕️', type: 'batch' }
+];
+
+let activeDrinkStepIndex = 2; // Default to 32-oz Bucket (1×)
+let activeVesselMultiplier = 1.0;
+let activeVesselName = '32-oz Bucket (1×)';
+let activePeopleCount = 4; // Default party size: 4 people
+
+function scaleIngredientText(line, multiplier) {
+  if (!line || typeof line !== 'string') return line;
+  return line.replace(/(?:(\d+)\s+)?(\d+)\/(\d+)\s*oz|(\d+(?:\.\d+)?)\s*oz/gi, (match, whole, num, denom, dec) => {
+    let base = 0;
+    if (dec !== undefined) {
+      base = parseFloat(dec);
+    } else {
+      base = parseFloat(num) / parseFloat(denom);
+      if (whole) base += parseFloat(whole);
+    }
+    const val = base * multiplier;
+    const formatted = val % 1 === 0 ? val : (Math.round(val * 10) / 10);
+    return `${formatted} oz`;
+  });
+}
+
+function getBatchYieldCalculation(stepIndex, people) {
+  const step = DRINK_SCALE_STEPS[stepIndex] || DRINK_SCALE_STEPS[2];
+  const totalOz = step.totalOz;
+  const p = Math.max(1, people || 1);
+  const ozPerPerson = totalOz / p;
+  const drinksPerPerson = ozPerPerson / 8; // standard 8-oz drinks
+  const bucketsPerPerson = ozPerPerson / 32; // 32-oz buckets
+
+  let perPersonText = '';
+  if (p === 1) {
+    perPersonText = `<strong>Solo Batch:</strong> Yields <strong>${totalOz} fl oz</strong> (${step.short})`;
+  } else {
+    const ozFmt = ozPerPerson % 1 === 0 ? ozPerPerson : (Math.round(ozPerPerson * 10) / 10);
+    const drinksFmt = drinksPerPerson % 1 === 0 ? drinksPerPerson : (Math.round(drinksPerPerson * 10) / 10);
+    if (ozPerPerson >= 32) {
+      const bFmt = bucketsPerPerson % 1 === 0 ? bucketsPerPerson : (Math.round(bucketsPerPerson * 10) / 10);
+      perPersonText = `For <strong>${p} people</strong>: <strong>~${ozFmt} oz / person</strong> (~${bFmt} 32-oz buckets or ~${drinksFmt} standard drinks each)`;
+    } else {
+      perPersonText = `For <strong>${p} people</strong>: <strong>~${ozFmt} oz / person</strong> (~${drinksFmt} standard 8-oz drinks each)`;
+    }
+  }
+
+  const galEquiv = totalOz / 128;
+  let totalVolumeText = '';
+  if (totalOz < 64) {
+    totalVolumeText = `${totalOz} fl oz (${(totalOz / 32).toFixed(1).replace('.0', '')}× 32-oz Bucket)`;
+  } else if (galEquiv === 0.5) {
+    totalVolumeText = `Half Gallon (64 fl oz • 2× Buckets)`;
+  } else if (galEquiv % 1 === 0) {
+    totalVolumeText = `${galEquiv} Gallon${galEquiv > 1 ? 's' : ''} (${totalOz} fl oz • ${totalOz / 32}× Buckets)`;
+  } else {
+    totalVolumeText = `${galEquiv.toFixed(1)} Gallons (${totalOz} fl oz • ${(totalOz / 32).toFixed(1)}× Buckets)`;
+  }
+
+  return {
+    step,
+    totalOz,
+    ozPerPerson,
+    drinksPerPerson,
+    perPersonText,
+    totalVolumeText
+  };
+}
+
+function updateScalerSummaryBox(card, containerId, recipeKey) {
+  const calc = getBatchYieldCalculation(activeDrinkStepIndex, activePeopleCount);
+  const sumBox = card.querySelector(`#calcSummary_${containerId}`);
+  if (sumBox) {
+    sumBox.innerHTML = `
+      <div class="scaler-summary-grid">
+        <div class="scaler-summary-item">
+          <span class="scaler-summary-icon">📏</span>
+          <div>
+            <div class="scaler-summary-title">Total Batch Volume</div>
+            <div class="scaler-summary-val">${calc.totalVolumeText}</div>
+          </div>
+        </div>
+        <div class="scaler-summary-item">
+          <span class="scaler-summary-icon">👥</span>
+          <div>
+            <div class="scaler-summary-title">Yield for ${activePeopleCount} ${activePeopleCount === 1 ? 'Person' : 'People'}</div>
+            <div class="scaler-summary-val">${calc.perPersonText}</div>
+          </div>
+        </div>
+      </div>
+      <div class="scaler-shortcuts-row">
+        <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">Auto-Batch for ${activePeopleCount} ${activePeopleCount === 1 ? 'Person' : 'People'}:</span>
+        <button type="button" class="scaler-shortcut-btn" onclick="autoBatchForPeople('drink', '${recipeKey}', '${containerId}')">🎯 1 Drink Each (8 oz)</button>
+        <button type="button" class="scaler-shortcut-btn" onclick="autoBatchForPeople('solo', '${recipeKey}', '${containerId}')">🎯 1 Solo Each (16 oz)</button>
+        <button type="button" class="scaler-shortcut-btn" onclick="autoBatchForPeople('bucket', '${recipeKey}', '${containerId}')">🎯 1 Bucket Each (32 oz)</button>
+      </div>
+    `;
+  }
+}
+
+function setDrinkScaleStep(stepIndex, recipeKey, containerId) {
+  const step = DRINK_SCALE_STEPS[stepIndex];
+  if (!step) return;
+  activeDrinkStepIndex = stepIndex;
+  activeVesselMultiplier = step.multiplier;
+  activeVesselName = step.label;
+
+  const card = document.getElementById(containerId);
+  if (card) {
+    const slider = card.querySelector('.drink-slider');
+    if (slider) slider.value = stepIndex;
+
+    const badge = card.querySelector(`#drinkVal_${containerId}`);
+    if (badge) badge.textContent = step.label;
+
+    card.querySelectorAll('.vessel-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', idx === stepIndex);
+    });
+
+    updateScalerSummaryBox(card, containerId, recipeKey);
+
+    const boxTitle = card.querySelector('.dynamic-box-title');
+    if (boxTitle) {
+      boxTitle.textContent = `Dynamic Measurements (${step.short}):`;
+    }
+
+    const r = (typeof recipeData !== 'undefined' && recipeData[recipeKey]) ||
+              (typeof mcguiresRecipeData !== 'undefined' && mcguiresRecipeData[recipeKey]) ||
+              (typeof oldBayRecipeData !== 'undefined' && oldBayRecipeData[recipeKey]) ||
+              (typeof classicRecipeData !== 'undefined' && classicRecipeData[recipeKey]);
+    if (r && r.single) {
+      const list = card.querySelector('.dynamic-scale-list');
+      if (list) {
+        list.innerHTML = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
+      }
+    }
+  }
+
+  if (typeof showToast === 'function') {
+    showToast(`📏 Scaled to: ${step.short} (${step.totalOz} oz)`);
+  }
+}
+
+function setPeopleCount(count, recipeKey, containerId) {
+  activePeopleCount = Math.max(1, Math.min(12, count));
+
+  const card = document.getElementById(containerId);
+  if (card) {
+    const slider = card.querySelector('.people-slider');
+    if (slider) slider.value = activePeopleCount;
+
+    const badge = card.querySelector(`#peopleVal_${containerId}`);
+    if (badge) badge.textContent = `${activePeopleCount} ${activePeopleCount === 1 ? 'Person' : 'People'}`;
+
+    updateScalerSummaryBox(card, containerId, recipeKey);
+  }
+
+  if (typeof setAdultSplit === 'function') {
+    setAdultSplit(activePeopleCount);
+  }
+}
+
+function adjustPeopleCount(delta, recipeKey, containerId) {
+  setPeopleCount(activePeopleCount + delta, recipeKey, containerId);
+}
+
+function adjustDrinkStep(delta, recipeKey, containerId) {
+  const nextStep = Math.max(0, Math.min(DRINK_SCALE_STEPS.length - 1, activeDrinkStepIndex + delta));
+  setDrinkScaleStep(nextStep, recipeKey, containerId);
+}
+
+function autoBatchForPeople(targetType, recipeKey, containerId) {
+  const ozPerTarget = targetType === 'drink' ? 8 : (targetType === 'solo' ? 16 : 32);
+  const targetTotalOz = activePeopleCount * ozPerTarget;
+
+  let chosenIdx = DRINK_SCALE_STEPS.length - 1;
+  for (let i = 0; i < DRINK_SCALE_STEPS.length; i++) {
+    if (DRINK_SCALE_STEPS[i].totalOz >= targetTotalOz) {
+      chosenIdx = i;
+      break;
+    }
+  }
+
+  setDrinkScaleStep(chosenIdx, recipeKey, containerId);
+  if (typeof showToast === 'function') {
+    const targetName = targetType === 'drink' ? '1 drink each' : (targetType === 'solo' ? '1 solo cup each' : '1 full bucket each');
+    showToast(`🎯 Auto-batched for ${activePeopleCount} people (${targetName})`);
+  }
+}
+
+function renderVesselScalerHtml(recipeKey, containerId) {
+  const step = DRINK_SCALE_STEPS[activeDrinkStepIndex] || DRINK_SCALE_STEPS[2];
+  const calc = getBatchYieldCalculation(activeDrinkStepIndex, activePeopleCount);
+
+  const singleButtonsHtml = DRINK_SCALE_STEPS.slice(0, 3).map(s => `
+    <button type="button" class="vessel-btn ${s.index === activeDrinkStepIndex ? 'active' : ''}" onclick="setDrinkScaleStep(${s.index}, '${recipeKey}', '${containerId}')">${s.short === '32 oz' ? '32-oz Bucket (1×)' : s.label.split(' (')[0]}</button>
+  `).join('');
+
+  const batchButtonsHtml = DRINK_SCALE_STEPS.slice(3).map(s => `
+    <button type="button" class="vessel-btn ${s.index === activeDrinkStepIndex ? 'active' : ''}" onclick="setDrinkScaleStep(${s.index}, '${recipeKey}', '${containerId}')">${s.short} (${s.multiplier}×)</button>
+  `).join('');
+
+  return `
+    <!-- INTERACTIVE DRINK & BATCH CALCULATOR -->
+    <div class="vessel-scaler-container" id="scaler_${containerId}" data-recipe-key="${recipeKey}">
+      <div class="scaler-header-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.15rem;">⚖️</span>
+          <span style="font-size: 0.88rem; font-weight: 800; color: var(--text-main);">Drink Amount &amp; Party Batch Calculator</span>
+        </div>
+        <span style="font-size: 0.74rem; color: var(--text-muted); font-weight: 600;">Ounces recalculate live in real-time</span>
+      </div>
+
+      <!-- SLIDER 1: PEOPLE AMOUNT (1 to 12 PEOPLE) -->
+      <div class="scaler-control-group">
+        <div class="scaler-label-row">
+          <span class="scaler-label">👥 Party Size (People):</span>
+          <span class="scaler-highlight-pill" id="peopleVal_${containerId}">${activePeopleCount} ${activePeopleCount === 1 ? 'Person' : 'People'}</span>
+        </div>
+        <div class="scaler-slider-wrapper">
+          <button type="button" class="scaler-step-btn" onclick="adjustPeopleCount(-1, '${recipeKey}', '${containerId}')" title="Decrease People">−</button>
+          <input type="range" class="scaler-slider people-slider" id="peopleSlider_${containerId}" min="1" max="12" step="1" value="${activePeopleCount}" oninput="setPeopleCount(parseInt(this.value, 10), '${recipeKey}', '${containerId}')" aria-label="People Amount Slider">
+          <button type="button" class="scaler-step-btn" onclick="adjustPeopleCount(1, '${recipeKey}', '${containerId}')" title="Increase People">+</button>
+        </div>
+        <div class="scaler-ticks-row">
+          <span>1p</span><span>2p</span><span>3p</span><span>4p</span><span>6p</span><span>8p</span><span>10p</span><span>12p</span>
+        </div>
+      </div>
+
+      <!-- SLIDER 2: DRINK AMOUNT (8, 16, 32oz, 1/2 gal, 1gal, 1.5gal, 2gal, 3gal, 5gal) -->
+      <div class="scaler-control-group">
+        <div class="scaler-label-row">
+          <span class="scaler-label">🍹 Drink / Batch Amount:</span>
+          <span class="scaler-highlight-pill" id="drinkVal_${containerId}">${step.label}</span>
+        </div>
+        <div class="scaler-slider-wrapper">
+          <button type="button" class="scaler-step-btn" onclick="adjustDrinkStep(-1, '${recipeKey}', '${containerId}')" title="Smaller Batch">−</button>
+          <input type="range" class="scaler-slider drink-slider" id="drinkSlider_${containerId}" min="0" max="8" step="1" value="${activeDrinkStepIndex}" oninput="setDrinkScaleStep(parseInt(this.value, 10), '${recipeKey}', '${containerId}')" aria-label="Drink Amount Slider">
+          <button type="button" class="scaler-step-btn" onclick="adjustDrinkStep(1, '${recipeKey}', '${containerId}')" title="Larger Batch">+</button>
+        </div>
+        <div class="scaler-ticks-row">
+          <span>8oz</span><span>16oz</span><span>32oz</span><span>1/2G</span><span>1G</span><span>1.5G</span><span>2G</span><span>3G</span><span>5G</span>
+        </div>
+      </div>
+
+      <!-- QUICK-SELECT VESSEL BUTTONS -->
+      <div class="vessel-btn-row">
+        <span class="vessel-group-label">Single:</span>
+        ${singleButtonsHtml}
+        <span class="vessel-group-label">Batches:</span>
+        ${batchButtonsHtml}
+      </div>
+
+      <!-- LIVE CALCULATION & SHORTCUTS SUMMARY BOX -->
+      <div class="scaler-calc-summary" id="calcSummary_${containerId}">
+        <div class="scaler-summary-grid">
+          <div class="scaler-summary-item">
+            <span class="scaler-summary-icon">📏</span>
+            <div>
+              <div class="scaler-summary-title">Total Batch Volume</div>
+              <div class="scaler-summary-val">${calc.totalVolumeText}</div>
+            </div>
+          </div>
+          <div class="scaler-summary-item">
+            <span class="scaler-summary-icon">👥</span>
+            <div>
+              <div class="scaler-summary-title">Yield for ${activePeopleCount} ${activePeopleCount === 1 ? 'Person' : 'People'}</div>
+              <div class="scaler-summary-val">${calc.perPersonText}</div>
+            </div>
+          </div>
+        </div>
+        <div class="scaler-shortcuts-row">
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">Auto-Batch for ${activePeopleCount} ${activePeopleCount === 1 ? 'Person' : 'People'}:</span>
+          <button type="button" class="scaler-shortcut-btn" onclick="autoBatchForPeople('drink', '${recipeKey}', '${containerId}')">🎯 1 Drink Each (8 oz)</button>
+          <button type="button" class="scaler-shortcut-btn" onclick="autoBatchForPeople('solo', '${recipeKey}', '${containerId}')">🎯 1 Solo Each (16 oz)</button>
+          <button type="button" class="scaler-shortcut-btn" onclick="autoBatchForPeople('bucket', '${recipeKey}', '${containerId}')">🎯 1 Bucket Each (32 oz)</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+    function showRecipe(key) {
       const r = recipeData[key] || recipeData[Object.keys(recipeData)[0]];
       const fullKey = 'bp_' + key;
       const meta = drinkMetadata[fullKey] || {};
@@ -577,29 +870,11 @@ const recipeData = {
 
           ${layerHtml}
 
-          <!-- INTERACTIVE VESSEL & BATCH SCALER -->
-          <div class="vessel-scaler-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-main);">📏 Select Serving Vessel or Beach Cooler Size:</span>
-              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;">Ounces automatically recalculate in real-time</span>
-            </div>
-            <div class="vessel-btn-row">
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin-right: 4px;">Single:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.5, '16-oz Solo Cup', '${key}', 'recipeCard_${key}')">16-oz Solo</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.94, '30-oz Yeti Tumbler', '${key}', 'recipeCard_${key}')">30-oz Yeti</button>
-              <button type="button" class="vessel-btn active" onclick="setVesselScale(1.0, '32-oz Bucket (1×)', '${key}', 'recipeCard_${key}')">32-oz Bucket (1×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(1.25, '40-oz Stanley Mug', '${key}', 'recipeCard_${key}')">40-oz Stanley</button>
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin: 0 4px 0 8px;">Batches:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(2.0, 'Half-Gallon Pitcher (2×)', '${key}', 'recipeCard_${key}')">Half-Gal (2×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(4.0, '1-Gallon Condo Pitcher (4×)', '${key}', 'recipeCard_${key}')">1-Gal Pitcher (4×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(8.0, '2-Gallon Beach Jug (8×)', '${key}', 'recipeCard_${key}')">2-Gal Beach Jug (8×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(20.0, '5-Gallon Party Cooler (20×)', '${key}', 'recipeCard_${key}')">5-Gal Cooler (20×)</button>
-            </div>
-          </div>
+          ${renderVesselScalerHtml(key, 'recipeCard_' + key)}
 
           <div class="recipe-grid">
             <div class="ingredient-box" style="border-color: var(--coral);">
-              <h4 style="color: var(--coral);"><span>🪣</span> Dynamic Vessel Measurements:</h4>
+              <h4 style="color: var(--coral);"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
               <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
             </div>
             <div class="ingredient-box" style="border-color: var(--primary);">
@@ -1040,29 +1315,11 @@ const mcguiresRecipeData = {
 
           ${layerHtml}
 
-          <!-- INTERACTIVE VESSEL & BATCH SCALER -->
-          <div class="vessel-scaler-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-main);">📏 Select Serving Vessel or Beach Cooler Size:</span>
-              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;">Ounces automatically recalculate in real-time</span>
-            </div>
-            <div class="vessel-btn-row">
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin-right: 4px;">Single:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.5, '16-oz Solo Cup', '${key}', 'recipeCard_${key}')">16-oz Solo</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.94, '30-oz Yeti Tumbler', '${key}', 'recipeCard_${key}')">30-oz Yeti</button>
-              <button type="button" class="vessel-btn active" onclick="setVesselScale(1.0, '32-oz Bucket (1×)', '${key}', 'recipeCard_${key}')">32-oz Bucket (1×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(1.25, '40-oz Stanley Mug', '${key}', 'recipeCard_${key}')">40-oz Stanley</button>
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin: 0 4px 0 8px;">Batches:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(2.0, 'Half-Gallon Pitcher (2×)', '${key}', 'recipeCard_${key}')">Half-Gal (2×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(4.0, '1-Gallon Condo Pitcher (4×)', '${key}', 'recipeCard_${key}')">1-Gal Pitcher (4×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(8.0, '2-Gallon Beach Jug (8×)', '${key}', 'recipeCard_${key}')">2-Gal Beach Jug (8×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(20.0, '5-Gallon Party Cooler (20×)', '${key}', 'recipeCard_${key}')">5-Gal Cooler (20×)</button>
-            </div>
-          </div>
+          ${renderVesselScalerHtml(key, 'recipeCard_' + key)}
 
           <div class="recipe-grid">
             <div class="ingredient-box" style="border-color: #16a34a;">
-              <h4 style="color: #16a34a;"><span>🪣</span> Dynamic Vessel Measurements:</h4>
+              <h4 style="color: #16a34a;"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
               <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
             </div>
             <div class="ingredient-box" style="border-color: var(--primary);">
@@ -1757,29 +2014,11 @@ const classicRecipeData = {
 
           ${layerHtml}
 
-          <!-- INTERACTIVE VESSEL & BATCH SCALER -->
-          <div class="vessel-scaler-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-main);">📏 Select Serving Vessel or Beach Cooler Size:</span>
-              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;">Ounces automatically recalculate in real-time</span>
-            </div>
-            <div class="vessel-btn-row">
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin-right: 4px;">Single:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.5, '16-oz Solo Cup', '${key}', 'recipeCard_${key}')">16-oz Solo</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.94, '30-oz Yeti Tumbler', '${key}', 'recipeCard_${key}')">30-oz Yeti</button>
-              <button type="button" class="vessel-btn active" onclick="setVesselScale(1.0, '32-oz Bucket (1×)', '${key}', 'recipeCard_${key}')">32-oz Bucket (1×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(1.25, '40-oz Stanley Mug', '${key}', 'recipeCard_${key}')">40-oz Stanley</button>
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin: 0 4px 0 8px;">Batches:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(2.0, 'Half-Gallon Pitcher (2×)', '${key}', 'recipeCard_${key}')">Half-Gal (2×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(4.0, '1-Gallon Condo Pitcher (4×)', '${key}', 'recipeCard_${key}')">1-Gal Pitcher (4×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(8.0, '2-Gallon Beach Jug (8×)', '${key}', 'recipeCard_${key}')">2-Gal Beach Jug (8×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(20.0, '5-Gallon Party Cooler (20×)', '${key}', 'recipeCard_${key}')">5-Gal Cooler (20×)</button>
-            </div>
-          </div>
+          ${renderVesselScalerHtml(key, 'recipeCard_' + key)}
 
           <div class="recipe-grid">
             <div class="ingredient-box" style="border-color: #0284c7;">
-              <h4 style="color: #0284c7;"><span>🪣</span> Dynamic Vessel Measurements:</h4>
+              <h4 style="color: #0284c7;"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
               <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
             </div>
             <div class="ingredient-box" style="border-color: var(--primary);">
@@ -1898,29 +2137,11 @@ function copyBarShoppingList() {
 
           ${layerHtml}
 
-          <!-- INTERACTIVE VESSEL & BATCH SCALER -->
-          <div class="vessel-scaler-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-              <span style="font-size: 0.82rem; font-weight: 800; color: var(--text-main);">📏 Select Serving Vessel or Beach Cooler Size:</span>
-              <span style="font-size: 0.76rem; color: var(--text-muted); font-weight: 600;">Ounces automatically recalculate in real-time</span>
-            </div>
-            <div class="vessel-btn-row">
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin-right: 4px;">Single:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.5, '16-oz Solo Cup', '${strippedKey}', 'recipeCard_${strippedKey}')">16-oz Solo</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(0.94, '30-oz Yeti Tumbler', '${strippedKey}', 'recipeCard_${strippedKey}')">30-oz Yeti</button>
-              <button type="button" class="vessel-btn active" onclick="setVesselScale(1.0, '32-oz Bucket (1×)', '${strippedKey}', 'recipeCard_${strippedKey}')">32-oz Bucket (1×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(1.25, '40-oz Stanley Mug', '${strippedKey}', 'recipeCard_${strippedKey}')">40-oz Stanley</button>
-              <span style="font-size: 0.74rem; font-weight: 700; color: var(--text-muted); align-self: center; margin: 0 4px 0 8px;">Batches:</span>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(2.0, 'Half-Gallon Pitcher (2×)', '${strippedKey}', 'recipeCard_${strippedKey}')">Half-Gal (2×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(4.0, '1-Gallon Condo Pitcher (4×)', '${strippedKey}', 'recipeCard_${strippedKey}')">1-Gal Pitcher (4×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(8.0, '2-Gallon Beach Jug (8×)', '${strippedKey}', 'recipeCard_${strippedKey}')">2-Gal Beach Jug (8×)</button>
-              <button type="button" class="vessel-btn" onclick="setVesselScale(20.0, '5-Gallon Party Cooler (20×)', '${strippedKey}', 'recipeCard_${strippedKey}')">5-Gal Cooler (20×)</button>
-            </div>
-          </div>
+          ${renderVesselScalerHtml(strippedKey, 'recipeCard_' + strippedKey)}
 
           <div class="recipe-grid">
             <div class="ingredient-box" style="border-color: #c2410c;">
-              <h4 style="color: #c2410c;"><span>🪣</span> Dynamic Vessel Measurements:</h4>
+              <h4 style="color: #c2410c;"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
               <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
             </div>
             <div class="ingredient-box" style="border-color: var(--primary);">
