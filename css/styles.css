@@ -5043,4 +5043,28 @@
       .drink-card {
         -webkit-tap-highlight-color: transparent;
       }
+      .bartender-modal-card,
+      .surprise-modal-card,
+      .pwa-modal-card {
+        padding: 20px 16px;
+        max-height: calc(100dvh - 32px);
+      }
+      .custom-bar-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .custom-kpi-card {
+        padding: 10px 8px;
+      }
+      .kpi-number {
+        font-size: 1.25rem !important;
+      }
+      .kpi-label {
+        font-size: 0.72rem !important;
+      }
+      .adult-btn {
+        padding: 6px 12px;
+        font-size: 0.78rem;
+        -webkit-tap-highlight-color: transparent;
+      }
     }
