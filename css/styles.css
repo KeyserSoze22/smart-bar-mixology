@@ -3308,11 +3308,11 @@
       justify-content: space-between;
     }
 
-    /* Sticky Navigation Bar */
+    /* Section Navigation Bar (Non-Sticky in-flow navigation below Drink of the Day) */
     .streamlined-nav-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: relative;
+      top: auto;
+      z-index: 10;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
@@ -3320,11 +3320,12 @@
       margin-bottom: 24px;
       box-shadow: var(--shadow-sm);
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
-      flex-wrap: wrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
       gap: 10px;
-      backdrop-filter: blur(12px);
     }
     body.dark-mode .streamlined-nav-bar {
       background: rgba(20, 34, 56, 0.95);
@@ -3332,7 +3333,7 @@
     }
     .streamlined-nav-links {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 8px;
       align-items: center;
     }
@@ -3348,6 +3349,8 @@
       color: var(--text-muted);
       background: var(--surface-subtle);
       border: 1px solid transparent;
+      white-space: nowrap;
+      flex-shrink: 0;
       transition: var(--transition);
     }
     .streamlined-nav-link:hover {

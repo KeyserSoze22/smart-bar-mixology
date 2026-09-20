@@ -521,7 +521,7 @@ const DRINK_SCALE_STEPS = [
 let activeDrinkStepIndex = 2; // Default to 32-oz Bucket (1×)
 let activeVesselMultiplier = 1.0;
 let activeVesselName = '32-oz Bucket (1×)';
-let activePeopleCount = 4; // Default party size: 4 people
+let activePeopleCount = 7; // Default party size: 7 people (aligned with bar cart default)
 
 function scaleIngredientText(line, multiplier) {
   if (!line || typeof line !== 'string') return line;
@@ -739,7 +739,7 @@ function renderVesselScalerHtml(recipeKey, containerId) {
           <button type="button" class="scaler-step-btn" onclick="adjustPeopleCount(1, '${recipeKey}', '${containerId}')" title="Increase People">+</button>
         </div>
         <div class="scaler-ticks-row">
-          <span>1p</span><span>2p</span><span>3p</span><span>4p</span><span>6p</span><span>8p</span><span>10p</span><span>12p</span>
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
         </div>
       </div>
 

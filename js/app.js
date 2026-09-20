@@ -903,7 +903,23 @@
           btn.classList.remove('active');
         }
       });
+
+      // Sync all open recipe card people sliders & badges
+      document.querySelectorAll('.people-slider').forEach(sl => sl.value = groupAdultCount);
+      document.querySelectorAll('.scaler-highlight-pill[id^="peopleVal_"]').forEach(pill => {
+        pill.textContent = `${groupAdultCount} ${groupAdultCount === 1 ? 'Person' : 'People'}`;
+      });
+      document.querySelectorAll('.vessel-scaler-container').forEach(scaler => {
+        const containerId = scaler.id.replace('scaler_', '');
+        const recipeKey = scaler.getAttribute('data-recipe-key');
+        const card = document.getElementById(containerId);
+        if (card && typeof updateScalerSummaryBox === 'function') {
+          updateScalerSummaryBox(card, containerId, recipeKey);
+        }
+      });
+
       updateExpenseSplitterDisplay();
+      renderCustomBarCart();
     }
 
     function updateExpenseSplitterDisplay() {
@@ -1555,8 +1571,9 @@
       // 1-Gallon Condo Pitcher Batches (each 1-gallon pitcher fills exactly 4 full 32-oz buckets/jars)
       const pitchersCount = Math.round(bucketServings / 4);
 
-      // Group Pacing for 6–8 adults (avg 7 adults, 7 days = 49 adult-days)
-      const adultDays = 49;
+      // Group Pacing for party size over 7-day vacation stay
+      const effectiveAdults = typeof groupAdultCount !== 'undefined' ? Math.max(1, groupAdultCount) : 7;
+      const adultDays = effectiveAdults * 7;
       const bucketsPerAdultPerDay = (bucketServings / adultDays).toFixed(1);
 
       // Cost per Authentic 32-oz Vessel vs $24.00–$28.00 Restaurant Price
@@ -1610,6 +1627,11 @@
       if (sCocktails) sCocktails.textContent = '~' + cart.bucketServings + ' Authentic 32-oz Buckets & Mason Jars';
       if (sPitchers) sPitchers.textContent = 'Fills ~' + cart.bucketServings + ' souvenir buckets, mason jars, or 30–40oz Yeti mugs (or ~' + cart.pitchersCount + ' 1-gal condo pitchers)';
       if (sPace) sPace.textContent = '~' + cart.bucketsPerAdultPerDay + ' 32-oz Buckets / Adult / Day';
+      const sPaceSub = document.getElementById('servings-pace-sub');
+      if (sPaceSub) {
+        const adults = typeof groupAdultCount !== 'undefined' ? Math.max(1, groupAdultCount) : 7;
+        sPaceSub.textContent = `Paced for ${adults} ${adults === 1 ? 'adult' : 'adults'} (${adults * 7} adult-days) over 7 days with heavy ice`;
+      }
       if (sCost) sCost.textContent = '~$' + cart.costPerBucket + ' per 32-oz Bucket / Mason Jar';
       if (sSavings) sSavings.textContent = 'Save ~$' + cart.estSavings.toLocaleString() + ' vs Restaurant Buckets';
 
