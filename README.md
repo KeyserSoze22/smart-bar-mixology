@@ -2,7 +2,11 @@
 
 > **Intelligent Batch Cocktail Calculator, Live Liquor Pricing, & 46 Authentic Vacation & Beach Bar Recipes.**
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?style=for-the-badge&logo=github)](https://keysersoze22.github.io/smart-bar-mixology/)
+
 A fast, responsive Progressive Web App (PWA) designed for vacation rentals, beach condos, group parties, and home mixology. Features exact 1-gallon batch pitcher math, 32-oz vessel scaling, live retail bottle inventory pricing, restaurant/bar menu cost comparisons, and instant filtering by cocktail style.
+
+🔗 **Live App:** [https://keysersoze22.github.io/smart-bar-mixology/](https://keysersoze22.github.io/smart-bar-mixology/)
 
 ![Smart Bar Mixology Preview](icon-512.svg)
 
@@ -44,10 +48,10 @@ A fast, responsive Progressive Web App (PWA) designed for vacation rentals, beac
 
 ## 🚀 Live Demo & Deployment
 
-Open `index.html` directly in any web browser, or host on GitHub Pages:
-1. Go to your GitHub repository **Settings** → **Pages**.
-2. Under **Build and deployment** → **Branch**, select `main` and `/ (root)`.
-3. Click **Save**. Your app will be live at `https://<your-username>.github.io/<repo-name>/`.
+The app is published live on GitHub Pages:
+👉 **[https://keysersoze22.github.io/smart-bar-mixology/](https://keysersoze22.github.io/smart-bar-mixology/)**
+
+You can also run it locally by opening `index.html` directly in any web browser or via a local static server.
 
 ---
 
