@@ -582,7 +582,8 @@
       const bar = document.getElementById('section-custombar');
       if (bar) {
         const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar');
-        const navHeight = navBar ? navBar.offsetHeight + 18 : 80;
+        const isNavVisible = navBar && window.getComputedStyle(navBar).display !== 'none';
+        const navHeight = isNavVisible ? navBar.offsetHeight + 18 : 20;
         const rect = bar.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         window.scrollTo({
@@ -1366,7 +1367,8 @@
       const targetSection = document.getElementById(sectionId);
       if (targetSection) {
         const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar') || document.getElementById('navbar');
-        const navHeight = navBar ? navBar.offsetHeight + 18 : 80;
+        const isNavVisible = navBar && window.getComputedStyle(navBar).display !== 'none';
+        const navHeight = isNavVisible ? navBar.offsetHeight + 18 : 20;
         const rect = targetSection.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         window.scrollTo({
