@@ -553,6 +553,31 @@
         sections.forEach(sec => observer.observe(sec));
       }
 
+      // Smooth tab click listener with instant feedback and header offset
+      document.querySelectorAll('.mobile-app-tab, .streamlined-nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const targetId = link.getAttribute('data-section') || link.getAttribute('href')?.replace('#', '');
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            e.preventDefault();
+            document.querySelectorAll('.mobile-app-tab').forEach(t => {
+              const tid = t.getAttribute('data-section') || t.getAttribute('href')?.replace('#', '');
+              t.classList.toggle('active', tid === targetId);
+            });
+            document.querySelectorAll('.streamlined-nav-link').forEach(l => {
+              const lid = l.getAttribute('data-section') || l.getAttribute('href')?.replace('#', '');
+              l.classList.toggle('active', lid === targetId);
+            });
+            const rect = targetEl.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            window.scrollTo({
+              top: Math.max(0, rect.top + scrollTop - 14),
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+
       window.addEventListener('scroll', () => {
         const scrollY = window.pageYOffset || document.documentElement.scrollTop;
 
@@ -1651,6 +1676,17 @@
         } else {
           badge.classList.remove('all-packed');
           badge.textContent = `${packedCount} of ${cart.totalItemsCount} packed`;
+        }
+      }
+
+      // Update Mobile Bottom App Bar Cart Badge
+      const navCartBadge = document.getElementById('mobileNavCartBadge');
+      if (navCartBadge) {
+        if (customBarSelectedDrinks && customBarSelectedDrinks.size > 0) {
+          navCartBadge.textContent = customBarSelectedDrinks.size;
+          navCartBadge.style.display = 'inline-flex';
+        } else {
+          navCartBadge.style.display = 'none';
         }
       }
 
