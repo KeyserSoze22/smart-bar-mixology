@@ -3435,15 +3435,17 @@
       }
       .mobile-bottom-app-bar {
         display: flex;
+        padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
       }
       body {
-        padding-bottom: 74px;
+        padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
       }
     }
     .mobile-app-tab {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 3px;
       text-decoration: none;
       color: var(--text-muted);
@@ -3452,6 +3454,9 @@
       padding: 6px 10px;
       border-radius: var(--radius-sm);
       transition: var(--transition);
+      min-width: 52px;
+      min-height: 44px;
+      -webkit-tap-highlight-color: transparent;
     }
     .mobile-app-tab span.icon {
       font-size: 1.3rem;
@@ -4541,7 +4546,7 @@
     }
     @media (max-width: 768px) {
       .floating-quick-cart {
-        bottom: 82px;
+        bottom: calc(84px + env(safe-area-inset-bottom, 0px));
         left: 14px;
         padding: 8px 14px;
         font-size: 0.82rem;
@@ -4584,7 +4589,7 @@
     }
     @media (max-width: 768px) {
       .back-to-top {
-        bottom: 82px;
+        bottom: calc(84px + env(safe-area-inset-bottom, 0px));
         right: 14px;
         width: 44px;
         height: 44px;
@@ -4995,4 +5000,47 @@
     .ingredient-price-tag .tag-price {
       color: #16a34a;
       font-weight: 800;
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS & TOUCH OPTIMIZATIONS (< 640px)
+       ========================================================================== */
+    @media (max-width: 640px) {
+      .header-print-btn {
+        display: none !important;
+      }
+      .universal-search-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+      }
+      .bar-mode-tab-btn {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 8px 12px;
+        font-size: 0.82rem;
+        justify-content: center;
+      }
+      .recipe-display-card {
+        padding: 16px 12px;
+      }
+      .ingredient-box {
+        padding: 14px 14px;
+      }
+      .recipe-steps-box {
+        padding: 14px 14px;
+      }
+      .recipe-stepper-btn {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .scaler-step-btn {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .drink-card {
+        -webkit-tap-highlight-color: transparent;
+      }
     }
