@@ -1989,7 +1989,7 @@ const classicRecipeData = {
       }
 
       updateCarouselActivePill('cl', key);
-      const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
+      const sel = document.getElementById('classicDrinkRecipeSelect'); if (sel) sel.value = key;
       displayArea.innerHTML = `
         ${getReturnBreadcrumbHtml()}
         ${getStepperHtml('cl', key, classicRecipeData)}
@@ -2065,9 +2065,9 @@ function copyBarShoppingList() {
 }
 
     function showOldBayRecipe(key) {
-      const r = oldBayRecipeData[key] || oldBayRecipeData.obs_blt;
       const fullKey = key.startsWith('obs_') ? key : 'obs_' + key;
       const strippedKey = key.replace('obs_', '');
+      const r = oldBayRecipeData[fullKey] || oldBayRecipeData[key] || oldBayRecipeData.obs_blt;
       const meta = drinkMetadata[fullKey] || {};
 
       const singleItems = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
@@ -2111,13 +2111,13 @@ function copyBarShoppingList() {
         `;
       }
 
-      updateCarouselActivePill('obs', key);
-      const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
+      updateCarouselActivePill('obs', fullKey);
+      const sel = document.getElementById('oldBayDrinkRecipeSelect'); if (sel) sel.value = fullKey;
       displayArea.innerHTML = `
         ${getReturnBreadcrumbHtml()}
-        ${getStepperHtml('obs', key, oldBayRecipeData)}
+        ${getStepperHtml('obs', fullKey, oldBayRecipeData)}
         ${renderPriceComparisonCard(fullKey)}
-        <div class="recipe-display-card" id="recipeCard_${strippedKey}" style="border-left: 4px solid #c2410c;">
+        <div class="recipe-display-card" id="recipeCard_${fullKey}" style="border-left: 4px solid #c2410c;">
           <div class="recipe-title-bar">
             <div>
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
@@ -2129,7 +2129,7 @@ function copyBarShoppingList() {
             <div class="recipe-badge-row">
               <span class="deal-badge" style="background: #ffedd5; color: #c2410c; font-weight: 700;">${r.tag}</span>
               ${cartBtnHtml}
-              <button type="button" class="qol-btn" onclick="openBartenderMode('${strippedKey}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
+              <button type="button" class="qol-btn" onclick="openBartenderMode('${fullKey}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
                 <span>👨‍🍳</span> Bartender Mode
               </button>
             </div>
@@ -2137,7 +2137,7 @@ function copyBarShoppingList() {
 
           ${layerHtml}
 
-          ${renderVesselScalerHtml(strippedKey, 'recipeCard_' + strippedKey)}
+          ${renderVesselScalerHtml(fullKey, 'recipeCard_' + fullKey)}
 
           <div class="recipe-grid">
             <div class="ingredient-box" style="border-color: #c2410c;">
