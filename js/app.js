@@ -1792,49 +1792,10 @@
         return;
       }
 
-      const selectedNames = [...customBarSelectedDrinks].map(k => (customBarDatabase.drinks[k] && customBarDatabase.drinks[k].name) || k);
+      const catShortName = catKey === 'spirits' ? 'Alcohol' : (catKey === 'mixers' ? 'Mixers' : (catKey === 'citrus' ? 'Produce' : 'Supplies'));
+      const text = items.map(i => i.name || i.brand).join('\n');
 
-      const sectionMeta = {
-        spirits: {
-          title: 'ALCOHOL & SPIRITS SHOPPING LIST',
-          icon: '🍾',
-          subtotal: cart.spiritsCost,
-          shortName: 'Alcohol'
-        },
-        mixers: {
-          title: 'MIXERS & JUICES SHOPPING LIST',
-          icon: '🥥',
-          subtotal: cart.mixersCost,
-          shortName: 'Mixers'
-        },
-        citrus: {
-          title: 'PRODUCE & FRESH CITRUS SHOPPING LIST',
-          icon: '🍋',
-          subtotal: cart.citrusCost,
-          shortName: 'Produce'
-        },
-        supplies: {
-          title: 'BAR SUPPLIES & ICE SHOPPING LIST',
-          icon: '🧊',
-          subtotal: cart.suppliesCost,
-          shortName: 'Supplies'
-        }
-      }[catKey] || { title: 'SHOPPING LIST', icon: '📋', subtotal: 0, shortName: 'Section' };
-
-      let text = `${sectionMeta.icon} ${sectionMeta.title}\n`;
-      text += `Selected Cocktails (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
-      text += `Est. ${sectionMeta.shortName} Total: ~$${sectionMeta.subtotal.toFixed(2)} (${items.length} ${items.length === 1 ? 'item' : 'items'})\n\n`;
-
-      items.forEach(i => {
-        const itemTitle = i.brand || i.name;
-        text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})\n`;
-      });
-
-      if (catKey === 'spirits' || catKey === 'supplies') {
-        text += '\nNote: No glass containers on beaches or boats.';
-      }
-
-      copyTextToClipboard(text, `📋 ${sectionMeta.shortName} shopping list copied to clipboard!`);
+      copyTextToClipboard(text, `📋 ${catShortName} list copied to clipboard!`);
     }
 
     function copyCustomBarShoppingList() {
@@ -1844,33 +1805,24 @@
         return;
       }
 
-      const selectedNames = [...customBarSelectedDrinks].map(k => (customBarDatabase.drinks[k] && customBarDatabase.drinks[k].name) || k);
+      const sections = [];
+      const cats = [
+        { key: 'spirits', title: 'ALCOHOL & SPIRITS' },
+        { key: 'mixers', title: 'MIXERS & JUICES' },
+        { key: 'citrus', title: 'PRODUCE & CITRUS' },
+        { key: 'supplies', title: 'SUPPLIES & ICE' }
+      ];
 
-      let text = '🍸 SMART CONSOLIDATED BAR SHOPPING LIST\n';
-      text += `Selected Cocktails (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
-      text += 'Estimated Total: ~$' + cart.grandTotal.toFixed(2) + ' (Alcohol: ~$' + cart.spiritsCost.toFixed(2) + ' | Mixers/Produce/Ice: ~$' + (cart.mixersCost + cart.citrusCost + cart.suppliesCost).toFixed(2) + ')\n';
-      text += 'Vessel Yield: ~' + cart.bucketServings + ' Full 32-oz Vessels (~' + cart.pitchersCount + ' 1-Gallon Condo Pitcher Batches)\n';
-      text += 'Estimated Group Savings: ~$' + cart.estSavings.toLocaleString() + ' vs restaurant prices\n\n';
+      cats.forEach(c => {
+        const items = cart.categorized[c.key];
+        if (items && items.length > 0) {
+          sections.push(`${c.title}:\n` + items.map(i => i.name || i.brand).join('\n'));
+        }
+      });
 
-      function appendTextCategory(catKey, catHeader) {
-        const items = cart.categorized[catKey];
-        if (!items || items.length === 0) return;
-        text += `--- ${catHeader} ---\n`;
-        items.forEach(i => {
-          const itemTitle = i.brand || i.name;
-          text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})\n`;
-        });
-        text += '\n';
-      }
+      const text = sections.join('\n\n');
 
-      appendTextCategory('spirits', '🍾 ALCOHOL & SPIRITS');
-      appendTextCategory('mixers', '🥥 MIXERS & JUICES');
-      appendTextCategory('citrus', '🍋 PRODUCE & FRESH CITRUS');
-      appendTextCategory('supplies', '🧊 BAR SUPPLIES & ICE');
-
-      text += 'Note: No glass containers on beaches or boats.';
-
-      copyTextToClipboard(text, '📋 Consolidated Bar List copied to clipboard!');
+      copyTextToClipboard(text, '📋 Bar shopping list copied to clipboard!');
     }
 
     function copyTextToClipboard(text, successToastMsg) {
