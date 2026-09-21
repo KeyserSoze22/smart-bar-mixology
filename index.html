@@ -25,12 +25,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <!-- Application Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.4" />
+  <link rel="stylesheet" href="css/styles.css?v=3.5" />
   <script>
     if ('caches' in window) {
       caches.keys().then(keys => {
         keys.forEach(k => {
-          if (k !== 'smart-bar-mixology-v3.3') caches.delete(k);
+          if (k !== 'smart-bar-mixology-v3.5') caches.delete(k);
         });
       });
     }
@@ -108,6 +108,7 @@
       <!-- Row 1: Drink Style Filter Pills (WHAT it is) -->
       <div class="style-filter-pills" id="styleFilterPills">
         <button type="button" class="style-pill-btn active" onclick="setDrinkStyleFilter('all')"><span>🍹</span> All Drinks (46)</button>
+        <button type="button" class="style-pill-btn" id="stylePillSelected" onclick="setDrinkStyleFilter('selected')"><span>🛒</span> Selected in Bar (<span id="styleFilterSelectedCount">0</span>)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('margarita')"><span>🧂</span> Margaritas (7)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('whiskey')"><span>🥃</span> Whiskey &amp; Bourbon (6)</button>
         <button type="button" class="style-pill-btn" onclick="setDrinkStyleFilter('punch_bucket')"><span>🪣</span> Beach Buckets &amp; Punches (6)</button>
@@ -581,6 +582,9 @@
             <span id="custom-cart-progress-badge" class="cart-progress-badge">0 of 0 packed</span>
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <button class="qol-btn" onclick="viewSelectedRecipes()" style="font-size: 0.82rem; padding: 7px 14px; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);" title="Jump to recipe view for selected cocktails">
+              <span>📖</span> View Selected Recipes (<span id="cart-selected-recipes-count">0</span>)
+            </button>
             <button class="qol-btn" onclick="copyCustomBarShoppingList()" style="font-size: 0.82rem; padding: 7px 14px; background: #4f46e5; color: #fff; font-weight: 700;" title="Copy entire consolidated shopping list">
               <span>📋</span> Copy All
             </button>
@@ -624,6 +628,7 @@
       <!-- Quick Category Filter Chips for the Recipe Selector -->
       <div class="recipe-category-chips" id="recipeCategoryChips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
         <button type="button" class="filter-chip active" id="rcat_all" onclick="filterRecipeCategory('all')">All Cocktails (46)</button>
+        <button type="button" class="filter-chip" id="rcat_selected" onclick="filterRecipeCategory('selected')"><span>🛒</span> Selected in Bar (<span id="rcat_selected_count">0</span>)</button>
         <button type="button" class="filter-chip" id="rcat_bp" onclick="filterRecipeCategory('bp')">🌴 Beach Bar &amp; Punch (14)</button>
         <button type="button" class="filter-chip" id="rcat_mc" onclick="filterRecipeCategory('mc')">🍀 McGuire's Pub (12)</button>
         <button type="button" class="filter-chip" id="rcat_obs" onclick="filterRecipeCategory('obs')">🦀 Old Bay Steamer (9)</button>
@@ -714,9 +719,9 @@
 
   <!-- Application Script -->
   <!-- Data & Application Scripts -->
-  <script src="js/recipes-data.js?v=3.4"></script>
-  <script src="js/pricing-data.js?v=3.4"></script>
-  <script src="js/app.js?v=3.4"></script>
+  <script src="js/recipes-data.js?v=3.5"></script>
+  <script src="js/pricing-data.js?v=3.5"></script>
+  <script src="js/app.js?v=3.5"></script>
 
   <!-- Mobile Bottom App Bar -->
   <nav class="mobile-bottom-app-bar" aria-label="Quick App Navigation">

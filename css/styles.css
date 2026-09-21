@@ -5299,6 +5299,61 @@
       flex-wrap: wrap;
       margin-bottom: 14px;
     }
+    .filter-chip#rcat_selected {
+      border-color: rgba(79, 70, 229, 0.4);
+      background: rgba(79, 70, 229, 0.08);
+      font-weight: 700;
+    }
+    .filter-chip#rcat_selected:hover {
+      background: rgba(79, 70, 229, 0.16);
+      border-color: #4f46e5;
+    }
+    .filter-chip#rcat_selected.active {
+      background: linear-gradient(135deg, #4f46e5 0%, #0284c7 100%) !important;
+      color: #fff !important;
+      border-color: transparent !important;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+    }
+    .style-pill-btn#stylePillSelected {
+      border-color: rgba(79, 70, 229, 0.35);
+    }
+    .style-pill-btn#stylePillSelected.active {
+      background: linear-gradient(135deg, #4f46e5 0%, #0284c7 100%) !important;
+      color: #fff !important;
+      border-color: transparent !important;
+    }
+    body.dark-mode .filter-chip#rcat_selected {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: rgba(129, 140, 248, 0.4);
+      color: #e0e7ff;
+    }
+    body.dark-mode .filter-chip#rcat_selected:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: #818cf8;
+    }
+    @media (max-width: 768px) {
+      .recipe-category-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+        margin-bottom: 12px;
+        scrollbar-width: none;
+      }
+      .recipe-category-chips::-webkit-scrollbar {
+        display: none;
+      }
+      .recipe-category-chips .filter-chip {
+        flex-shrink: 0;
+        white-space: nowrap;
+        font-size: 0.82rem;
+        padding: 6px 12px;
+      }
+      .recipe-select {
+        font-size: 0.94rem;
+        padding: 10px 12px;
+      }
+    }
     .recipe-stepper-indicator {
       font-size: 0.86rem;
       font-weight: 800;

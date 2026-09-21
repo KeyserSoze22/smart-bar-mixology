@@ -960,12 +960,34 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
   `;
 }
 
+let currentRecipeCategoryFilter = 'all';
+
+function getVisibleUnifiedRecipeKeys() {
+  const sel = document.getElementById('unifiedDrinkRecipeSelect');
+  if (sel) {
+    const opts = Array.from(sel.querySelectorAll('option:not([disabled])')).map(o => o.value).filter(v => v);
+    if (opts.length > 0) return opts;
+  }
+  return ALL_UNIFIED_DRINK_KEYS;
+}
+
 function showUnifiedRecipe(key) {
   const fullKey = normalizeDrinkKey(key);
   currentUnifiedRecipeKey = fullKey;
 
   const sel = document.getElementById('unifiedDrinkRecipeSelect');
-  if (sel) sel.value = fullKey;
+  if (sel) {
+    const opt = sel.querySelector(`option[value="${fullKey}"]`);
+    if (!opt && typeof currentRecipeCategoryFilter !== 'undefined' && currentRecipeCategoryFilter !== 'all') {
+      const selectedSet = (typeof customBarSelectedDrinks !== 'undefined') ? customBarSelectedDrinks : new Set();
+      if (currentRecipeCategoryFilter === 'selected' && !selectedSet.has(fullKey)) {
+        filterRecipeCategory('all');
+      } else if (currentRecipeCategoryFilter !== 'selected') {
+        filterRecipeCategory('all');
+      }
+    }
+    if (sel) sel.value = fullKey;
+  }
 
   const navNameEl = document.getElementById('currentRecipeNavName');
   if (navNameEl) {
@@ -988,7 +1010,7 @@ function showUnifiedRecipe(key) {
 }
 
 function getUnifiedStepperHtml(fullKey) {
-  const keys = ALL_UNIFIED_DRINK_KEYS;
+  const keys = getVisibleUnifiedRecipeKeys();
   const idx = keys.indexOf(fullKey);
   const currentIdx = idx === -1 ? 0 : idx;
   const prevIdx = (currentIdx - 1 + keys.length) % keys.length;
@@ -1012,7 +1034,7 @@ function getUnifiedStepperHtml(fullKey) {
 }
 
 function stepUnifiedRecipe(delta) {
-  const keys = ALL_UNIFIED_DRINK_KEYS;
+  const keys = getVisibleUnifiedRecipeKeys();
   let idx = keys.indexOf(currentUnifiedRecipeKey);
   if (idx === -1) idx = 0;
   const nextIdx = (idx + delta + keys.length) % keys.length;
@@ -1020,7 +1042,8 @@ function stepUnifiedRecipe(delta) {
 }
 
 function filterRecipeCategory(cat) {
-  ['all', 'bp', 'mc', 'obs', 'cl'].forEach(c => {
+  currentRecipeCategoryFilter = cat;
+  ['all', 'selected', 'bp', 'mc', 'obs', 'cl'].forEach(c => {
     const chip = document.getElementById('rcat_' + c);
     if (chip) chip.classList.toggle('active', c === cat);
   });
@@ -1028,24 +1051,82 @@ function filterRecipeCategory(cat) {
   const sel = document.getElementById('unifiedDrinkRecipeSelect');
   if (!sel) return;
 
-  const optgroups = sel.querySelectorAll('optgroup');
-  optgroups.forEach(og => {
-    const ogCat = og.getAttribute('data-cat');
-    if (cat === 'all' || ogCat === cat) {
-      og.style.display = '';
-      og.disabled = false;
-    } else {
-      og.style.display = 'none';
-      og.disabled = true;
-    }
-  });
+  // Cache original optgroups if not already cached
+  if (!sel._originalOptgroups) {
+    sel._originalOptgroups = Array.from(sel.querySelectorAll('optgroup')).map(og => og.cloneNode(true));
+  }
 
-  const currentOption = sel.querySelector(`option[value="${currentUnifiedRecipeKey}"]`);
-  const isCurrentVisible = currentOption && !currentOption.parentElement.disabled;
-  if (!isCurrentVisible) {
-    const firstVisible = sel.querySelector('optgroup:not([disabled]) option');
-    if (firstVisible) {
-      showUnifiedRecipe(firstVisible.value);
+  const selectedSet = (typeof customBarSelectedDrinks !== 'undefined') ? customBarSelectedDrinks : new Set();
+
+  if (cat === 'selected') {
+    sel.innerHTML = '';
+    if (selectedSet.size === 0) {
+      const emptyOpt = document.createElement('option');
+      emptyOpt.value = '';
+      emptyOpt.disabled = true;
+      emptyOpt.selected = true;
+      emptyOpt.textContent = '⚠️ No cocktails selected above yet (Check drinks in Smart Bar Builder)';
+      sel.appendChild(emptyOpt);
+      if (typeof showToast === 'function') {
+        showToast('ℹ️ No cocktails selected in Smart Bar above yet! Check off drinks above to filter here.');
+      }
+      return;
+    }
+
+    let firstFoundKey = null;
+    let currentKeyFound = false;
+
+    sel._originalOptgroups.forEach(origOg => {
+      const matchingOptions = Array.from(origOg.querySelectorAll('option')).filter(opt => {
+        const val = opt.value;
+        const normVal = (typeof normalizeDrinkKey === 'function') ? normalizeDrinkKey(val) : val;
+        return selectedSet.has(val) || selectedSet.has(normVal);
+      });
+
+      if (matchingOptions.length > 0) {
+        const newOg = document.createElement('optgroup');
+        newOg.label = origOg.label;
+        newOg.setAttribute('data-cat', origOg.getAttribute('data-cat') || '');
+        matchingOptions.forEach(opt => {
+          const cloneOpt = opt.cloneNode(true);
+          if (cloneOpt.value === currentUnifiedRecipeKey) {
+            cloneOpt.selected = true;
+            currentKeyFound = true;
+          } else {
+            cloneOpt.selected = false;
+          }
+          if (!firstFoundKey) firstFoundKey = cloneOpt.value;
+          newOg.appendChild(cloneOpt);
+        });
+        sel.appendChild(newOg);
+      }
+    });
+
+    if (currentKeyFound) {
+      sel.value = currentUnifiedRecipeKey;
+    } else if (firstFoundKey) {
+      sel.value = firstFoundKey;
+      showUnifiedRecipe(firstFoundKey);
+    }
+  } else {
+    sel.innerHTML = '';
+    sel._originalOptgroups.forEach(origOg => {
+      const ogCat = origOg.getAttribute('data-cat');
+      if (cat === 'all' || ogCat === cat) {
+        const clonedOg = origOg.cloneNode(true);
+        sel.appendChild(clonedOg);
+      }
+    });
+
+    const currentOption = sel.querySelector(`option[value="${currentUnifiedRecipeKey}"]`);
+    if (currentOption) {
+      sel.value = currentUnifiedRecipeKey;
+    } else {
+      const firstOpt = sel.querySelector('option');
+      if (firstOpt) {
+        sel.value = firstOpt.value;
+        showUnifiedRecipe(firstOpt.value);
+      }
     }
   }
 }

@@ -97,7 +97,11 @@
         
         // 1. Style / Type check
         if (currentMasterStyle !== 'all') {
-          if (currentMasterStyle === 'whiskey') {
+          if (currentMasterStyle === 'selected') {
+            const selected = (typeof customBarSelectedDrinks !== 'undefined') ? customBarSelectedDrinks : new Set();
+            const normKey = (typeof normalizeDrinkKey === 'function') ? normalizeDrinkKey(item.key) : item.key;
+            if (!selected.has(item.key) && !selected.has(normKey)) return false;
+          } else if (currentMasterStyle === 'whiskey') {
             if (pricing.type !== 'whiskey' && pricing.spirit !== 'whiskey') return false;
           } else if (pricing.type !== currentMasterStyle) {
             return false;
@@ -1742,6 +1746,9 @@
         }
       }
 
+      // Sync Selected in Bar recipe filter tab and badges
+      updateRecipeSelectedTabCount();
+
       const displayArea = document.getElementById('customBarCartDisplayArea');
       if (!displayArea) return;
 
@@ -1816,6 +1823,54 @@
       }
       saveCustomBarState(); syncUrlHash(); updateExpenseSplitterDisplay();
       renderCustomBarCart();
+    }
+
+    function updateRecipeSelectedTabCount() {
+      const count = (typeof customBarSelectedDrinks !== 'undefined') ? customBarSelectedDrinks.size : 0;
+
+      // Recipe Category Filter Chip badge
+      const chipCountEl = document.getElementById('rcat_selected_count');
+      if (chipCountEl) chipCountEl.textContent = count;
+
+      // Master Filter Hub Pill badge
+      const masterCountEl = document.getElementById('styleFilterSelectedCount');
+      if (masterCountEl) masterCountEl.textContent = count;
+
+      // Cart Header Button badge
+      const cartBtnCountEl = document.getElementById('cart-selected-recipes-count');
+      if (cartBtnCountEl) cartBtnCountEl.textContent = count;
+
+      // If user currently has the 'selected' recipe category active, refresh dropdown
+      if (typeof currentRecipeCategoryFilter !== 'undefined' && currentRecipeCategoryFilter === 'selected') {
+        if (typeof filterRecipeCategory === 'function') {
+          filterRecipeCategory('selected');
+        }
+      }
+    }
+
+    function viewSelectedRecipes() {
+      const selectedSet = (typeof customBarSelectedDrinks !== 'undefined') ? customBarSelectedDrinks : new Set();
+      if (selectedSet.size === 0) {
+        showToast('⚠️ Please select at least 1 cocktail above in the Smart Bar Builder first!');
+        return;
+      }
+
+      if (typeof filterRecipeCategory === 'function') {
+        filterRecipeCategory('selected');
+      }
+
+      const targetSection = document.getElementById('section-recipes');
+      if (targetSection) {
+        const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar');
+        const isNavVisible = navBar && window.getComputedStyle(navBar).display !== 'none';
+        const navHeight = isNavVisible ? navBar.offsetHeight + 18 : 20;
+        const rect = targetSection.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        window.scrollTo({
+          top: Math.max(0, rect.top + scrollTop - navHeight),
+          behavior: 'smooth'
+        });
+      }
     }
 
     function resetCustomCartChecks() {
