@@ -1741,11 +1741,6 @@
 
         items.forEach(item => {
           const isPacked = customBarPackedItems.has(item.id);
-          const pillsHtml = item.usedIn.map(d => {
-            const pillClass = d.isBp ? 'bp-pill' : (d.isMc ? 'mc-pill' : (d.isObs ? 'obs-pill' : 'cl-pill'));
-            return `<span class="shared-pill ${pillClass}">${d.name}</span>`;
-          }).join('');
-
           const displayTitle = item.brand || item.name;
 
           htmlContent += `
@@ -1757,10 +1752,6 @@
                   <span class="cost-tag">~$${item.price.toFixed(2)}</span>
                 </div>
                 ${item.note ? `<div class="custom-cart-item-note">${item.note}</div>` : ''}
-                <div class="shared-drinks-pills">
-                  <span class="shared-pill-label">Shared in:</span>
-                  ${pillsHtml}
-                </div>
               </div>
             </div>
           `;
@@ -1935,7 +1926,7 @@
     function initPwaCapabilities() {
       // 1. Register Service Worker for offline capability
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('./sw.js?v=3.1', { updateViaCache: 'none' })
           .then(reg => {
             console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
             // Proactively check for service worker updates immediately
