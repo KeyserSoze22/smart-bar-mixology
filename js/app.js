@@ -684,6 +684,8 @@
           }
         } else if (e.key === 'Escape') {
           hideUniversalSearch();
+          closeRecipeQuickView();
+          closeBartenderModal();
         }
       });
     }
@@ -1455,6 +1457,45 @@
       }
     }
 
+    // ==========================================================================
+    // QUICK-VIEW RECIPE MODAL & BOTTOM SHEET CONTROLLER
+    // ==========================================================================
+    function openRecipeQuickView(dKey, event) {
+      if (event && event.stopPropagation) event.stopPropagation();
+      const modal = document.getElementById('recipeQuickViewModal');
+      const content = document.getElementById('recipeQuickViewContent');
+      if (!modal || !content) return;
+
+      const cleanId = 'rqvCard_' + dKey.replace(/[^a-zA-Z0-9_]/g, '');
+      if (typeof renderUnifiedRecipeCardHtml === 'function') {
+        content.innerHTML = renderUnifiedRecipeCardHtml(dKey, cleanId, true);
+      }
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRecipeQuickView(event) {
+      if (event && event.target && event.target.closest('.recipe-quickview-card') && !event.target.classList.contains('recipe-quickview-close-btn')) {
+        return;
+      }
+      const modal = document.getElementById('recipeQuickViewModal');
+      if (modal) modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function toggleCustomDrinkFromQuickView(fullKey, containerId) {
+      toggleCustomDrink(fullKey);
+      const inCart = customBarSelectedDrinks.has(fullKey);
+      const card = document.getElementById(containerId);
+      if (card) {
+        const btn = card.querySelector('.rqv-cart-toggle-btn');
+        if (btn) {
+          btn.innerHTML = inCart ? '<span>✓ In Combined Bar Cart</span>' : '<span>➕ Add to Combined Bar Cart</span>';
+          btn.style.background = inCart ? '#16a34a' : 'var(--coral)';
+        }
+      }
+    }
+
     function setCustomDrinkPreset(presetType) {
       if (presetType === 'favorites') {
         customBarSelectedDrinks = new Set([
@@ -1519,7 +1560,7 @@
               </div>
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
                 <div class="drink-card-sub">${drink.tag}</div>
-                <span class="view-recipe-link" onclick="navigateToRecipe('${dKey}', event)">📖 View Recipe ➔</span>
+                <button type="button" class="view-recipe-link" onclick="openRecipeQuickView('${dKey}', event)" title="Quick-view full recipe &amp; batch scaler">📖 Recipe</button>
               </div>
             </div>
           </div>
@@ -1926,7 +1967,7 @@
     function initPwaCapabilities() {
       // 1. Register Service Worker for offline capability
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=3.1', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('./sw.js?v=3.2', { updateViaCache: 'none' })
           .then(reg => {
             console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
             // Proactively check for service worker updates immediately

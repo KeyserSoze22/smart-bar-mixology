@@ -796,107 +796,168 @@ function renderVesselScalerHtml(recipeKey, containerId) {
   `;
 }
 
-    function showRecipe(key) {
-      const r = recipeData[key] || recipeData[Object.keys(recipeData)[0]];
-      const fullKey = 'bp_' + key;
-      const meta = drinkMetadata[fullKey] || {};
+// ==========================================================================
+// UNIFIED RECIPE DATA ACCESSOR & CARD BUILDER
+// Powers both in-page section views and the Quick-View Modal / Bottom Sheet
+// ==========================================================================
+function getRecipeDataAndMeta(dKey) {
+  let r = null, venue = 'cl', venueName = 'Vacation & Beach Classics', venueIcon = '🍸', venueColor = '#0284c7', fullKey = dKey, rawKey = dKey;
+  if (dKey.startsWith('bp_')) {
+    rawKey = dKey.replace('bp_', '');
+    r = (typeof recipeData !== 'undefined' && (recipeData[rawKey] || recipeData.ultimate_porchpunch));
+    venue = 'bp';
+    venueName = 'The Back Porch Beach Bar';
+    venueIcon = '🌴';
+    venueColor = 'var(--coral)';
+    fullKey = dKey;
+  } else if (dKey.startsWith('mc_')) {
+    rawKey = dKey.replace('mc_', '');
+    r = (typeof mcguiresRecipeData !== 'undefined' && (mcguiresRecipeData[rawKey] || mcguiresRecipeData.irish_wake));
+    venue = 'mc';
+    venueName = "McGuire's Irish Pub";
+    venueIcon = '🍀';
+    venueColor = '#16a34a';
+    fullKey = dKey;
+  } else if (dKey.startsWith('obs_')) {
+    rawKey = dKey.replace('obs_', '');
+    r = (typeof oldBayRecipeData !== 'undefined' && (oldBayRecipeData[dKey] || oldBayRecipeData[rawKey] || oldBayRecipeData.obs_blt));
+    venue = 'obs';
+    venueName = 'Old Bay Steamer';
+    venueIcon = '🦀';
+    venueColor = '#c2410c';
+    fullKey = dKey.startsWith('obs_') ? dKey : 'obs_' + dKey;
+  } else {
+    rawKey = dKey.replace('cl_', '');
+    r = (typeof classicRecipeData !== 'undefined' && (classicRecipeData[rawKey] || classicRecipeData[dKey] || classicRecipeData.classic_margarita));
+    venue = 'cl';
+    venueName = 'Vacation & Beach Classics';
+    venueIcon = '🍸';
+    venueColor = '#0284c7';
+    fullKey = dKey.startsWith('cl_') ? dKey : 'cl_' + dKey;
+  }
+  return { r, venue, venueName, venueIcon, venueColor, fullKey, rawKey };
+}
 
-      const singleItems = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
-      const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
-      const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
+function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
+  const details = getRecipeDataAndMeta(dKey);
+  const { r, venue, venueName, venueIcon, venueColor, fullKey, rawKey } = details;
+  if (!r) return '<div style="padding: 24px; text-align: center; color: var(--text-muted);">Recipe details not found.</div>';
 
-      const displayArea = document.getElementById('recipeDisplayArea');
-      if (!displayArea) return;
+  const meta = (typeof drinkMetadata !== 'undefined' && drinkMetadata[fullKey]) || {};
+  const singleItems = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
+  const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
+  const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
 
-      const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
-      const cartBtnHtml = `
-        <button type="button" class="qol-btn" onclick="toggleCustomDrinkFromRecipe('${fullKey}')" style="background: ${inCart ? '#16a34a' : 'var(--coral)'}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
-          <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
-        </button>
-      `;
+  const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
+  const cartBtnHtml = isModal
+    ? `<button type="button" class="qol-btn rqv-cart-toggle-btn" onclick="toggleCustomDrinkFromQuickView('${fullKey}', '${containerId}')" style="background: ${inCart ? '#16a34a' : venueColor}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
+        <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
+      </button>`
+    : `<button type="button" class="qol-btn" onclick="toggleCustomDrinkFromRecipe('${fullKey}')" style="background: ${inCart ? '#16a34a' : venueColor}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
+        <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
+      </button>`;
 
-      // Potency badge
-      let potencyHtml = '';
-      if (meta.potency === 'mocktail') {
-        potencyHtml = '<span class="potency-badge potency-mocktail">🧒 0.0% ABV • Kid & Driver Mocktail</span>';
-      } else if (meta.potency === 'high') {
-        potencyHtml = `<span class="potency-badge potency-high">⚡ High-Octane (~16% ABV • ${meta.spiritsOz} oz Spirits • Limit 3!)</span>`;
-      } else {
-        potencyHtml = `<span class="potency-badge potency-med">🍹 Standard Beach Pour (~11% ABV • ${meta.spiritsOz} oz Spirits)</span>`;
-      }
+  // Potency badge
+  let potencyHtml = '';
+  if (meta.potency === 'mocktail') {
+    potencyHtml = '<span class="potency-badge potency-mocktail">🧒 0.0% ABV • Kid &amp; Driver Mocktail</span>';
+  } else if (meta.potency === 'high') {
+    potencyHtml = `<span class="potency-badge potency-high">⚡ High-Octane (~16% ABV • ${meta.spiritsOz} oz Spirits • Limit 3!)</span>`;
+  } else {
+    potencyHtml = `<span class="potency-badge potency-med">🍹 Standard Beach Pour (~11% ABV • ${meta.spiritsOz || 3.5} oz Spirits)</span>`;
+  }
 
-      // Layer preview bar if layers exist
-      let layerHtml = '';
-      if (meta.layers && meta.layers.length > 1) {
-        const gradStops = meta.layers.map((col, idx) => `${col} ${(idx / (meta.layers.length - 1)) * 100}%`).join(', ');
-        const legendItems = meta.layers.map((col, idx) => `
-          <span><span class="layer-legend-dot" style="background: ${col};"></span> ${meta.layerNames?.[idx] || 'Layer ' + (idx+1)}</span>
-        `).join('');
-        layerHtml = `
-          <div style="margin: 14px 0 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">
-              <span>🎨 Authentic Visual Layering &amp; Float Guide:</span>
-              <span style="font-size: 0.72rem;">Bottom ➔ Surface Float</span>
-            </div>
-            <div class="layer-preview-bar" style="background: linear-gradient(to right, ${gradStops});"></div>
-            <div class="layer-legend">${legendItems}</div>
-          </div>
-        `;
-      }
-
-      updateCarouselActivePill('bp', key);
-      const sel = document.getElementById('drinkRecipeSelect'); if (sel) sel.value = key;
-      displayArea.innerHTML = `
-        ${getReturnBreadcrumbHtml()}
-        ${getStepperHtml('bp', key, recipeData)}
-        ${renderPriceComparisonCard(fullKey)}
-        <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid var(--coral);">
-          <div class="recipe-title-bar">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-                <h3 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">${r.title}</h3>
-                ${potencyHtml}
-              </div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">${r.desc}</p>
-            </div>
-            <div class="recipe-badge-row">
-              <span class="deal-badge" style="background: var(--primary-light); color: var(--coral); font-weight: 700;">${r.tag}</span>
-              ${cartBtnHtml}
-              <button type="button" class="qol-btn" onclick="openBartenderMode('${key}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
-                <span>👨‍🍳</span> Bartender Mode
-              </button>
-            </div>
-          </div>
-
-          ${layerHtml}
-
-          ${renderVesselScalerHtml(key, 'recipeCard_' + key)}
-
-          <div class="recipe-grid">
-            <div class="ingredient-box" style="border-color: var(--coral);">
-              <h4 style="color: var(--coral);"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
-              <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
-            </div>
-            <div class="ingredient-box" style="border-color: var(--primary);">
-              <h4 style="color: var(--primary);"><span>🍹</span> Standard 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
-              <ul class="ingredient-list">${pitcherItems}</ul>
-            </div>
-          </div>
-
-          <div class="recipe-steps-box" style="border-left: 3px solid var(--coral);">
-            <h4 style="color: var(--coral);"><span>📋</span> Mixing &amp; Pouring Instructions (On The Rocks):</h4>
-            <ol class="recipe-steps-list">${stepsHtml}</ol>
-          </div>
-
-          <div class="insider-tip" style="margin-top: 12px; border-left-color: var(--coral);">
-            💡 <strong>Beach Pro-Tip:</strong> ${r.beachTip || ''}
-            <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
-              ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
-            </div>
-          </div>
+  // Layer preview bar if layers exist
+  let layerHtml = '';
+  if (meta.layers && meta.layers.length > 1) {
+    const gradStops = meta.layers.map((col, idx) => `${col} ${(idx / (meta.layers.length - 1)) * 100}%`).join(', ');
+    const legendItems = meta.layers.map((col, idx) => `
+      <span><span class="layer-legend-dot" style="background: ${col};"></span> ${meta.layerNames?.[idx] || 'Layer ' + (idx + 1)}</span>
+    `).join('');
+    layerHtml = `
+      <div style="margin: 14px 0 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">
+          <span>🎨 Authentic Visual Layering &amp; Float Guide:</span>
+          <span style="font-size: 0.72rem;">Bottom ➔ Surface Float</span>
         </div>
-      `;
-    }
+        <div class="layer-preview-bar" style="background: linear-gradient(to right, ${gradStops});"></div>
+        <div class="layer-legend">${legendItems}</div>
+      </div>
+    `;
+  }
+
+  const jumpSectionHtml = isModal
+    ? `<button type="button" class="qol-btn" onclick="closeRecipeQuickView(); navigateToRecipe('${fullKey}');" style="background: rgba(0,0,0,0.06); color: var(--text-main); border: 1px solid var(--border); font-size: 0.8rem; padding: 6px 12px; font-weight: 700; cursor: pointer;" title="Jump to full recipe catalog section">
+        <span>📍 Full Page Section</span>
+      </button>`
+    : '';
+
+  const priceCardHtml = (typeof renderPriceComparisonCard === 'function') ? renderPriceComparisonCard(fullKey) : '';
+  const scalerHtml = (typeof renderVesselScalerHtml === 'function') ? renderVesselScalerHtml(rawKey, containerId) : '';
+
+  return `
+    ${priceCardHtml}
+    <div class="recipe-display-card" id="${containerId}" style="border-left: 4px solid ${venueColor};">
+      <div class="recipe-title-bar">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+            <span style="font-size: 0.78rem; font-weight: 800; color: ${venueColor}; background: rgba(0,0,0,0.05); padding: 3px 10px; border-radius: 999px;">${venueIcon} ${venueName}</span>
+            <h3 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">${r.title}</h3>
+            ${potencyHtml}
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">${r.desc}</p>
+        </div>
+        <div class="recipe-badge-row">
+          <span class="deal-badge" style="background: var(--primary-light); color: ${venueColor}; font-weight: 700;">${r.tag}</span>
+          ${cartBtnHtml}
+          <button type="button" class="qol-btn" onclick="openBartenderMode('${rawKey}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
+            <span>👨‍🍳</span> Bartender Mode
+          </button>
+          ${jumpSectionHtml}
+        </div>
+      </div>
+
+      ${layerHtml}
+      ${scalerHtml}
+
+      <div class="recipe-grid">
+        <div class="ingredient-box" style="border-color: ${venueColor};">
+          <h4 style="color: ${venueColor};"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex]?.short || '32-oz Bucket'}):</span></h4>
+          <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
+        </div>
+        <div class="ingredient-box" style="border-color: var(--primary);">
+          <h4 style="color: var(--primary);"><span>🍹</span> Standard 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
+          <ul class="ingredient-list">${pitcherItems}</ul>
+        </div>
+      </div>
+
+      <div class="recipe-steps-box" style="border-left: 3px solid ${venueColor};">
+        <h4 style="color: ${venueColor};"><span>📋</span> Mixing &amp; Pouring Instructions (On The Rocks):</h4>
+        <ol class="recipe-steps-list">${stepsHtml}</ol>
+      </div>
+
+      <div class="insider-tip" style="margin-top: 12px; border-left-color: ${venueColor};">
+        💡 <strong>Pro-Tip:</strong> ${r.beachTip || ''}
+        <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
+          ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function showRecipe(key) {
+  const fullKey = 'bp_' + key;
+  updateCarouselActivePill('bp', key);
+  const sel = document.getElementById('drinkRecipeSelect'); if (sel) sel.value = key;
+  const displayArea = document.getElementById('recipeDisplayArea');
+  if (!displayArea) return;
+  displayArea.innerHTML = `
+    ${getReturnBreadcrumbHtml()}
+    ${getStepperHtml('bp', key, recipeData)}
+    ${renderUnifiedRecipeCardHtml(fullKey, 'recipeCard_' + key, false)}
+  `;
+}
 
 // ==========================================================================
 // MCGUIRE'S IRISH PUB SPECIALTY COCKTAILS DATA & RENDERER (12 RECIPES)
@@ -1241,107 +1302,18 @@ const mcguiresRecipeData = {
       }
     };
 
-        function showMcguiresRecipe(key) {
-      const r = mcguiresRecipeData[key] || mcguiresRecipeData[Object.keys(mcguiresRecipeData)[0]];
-      const fullKey = 'mc_' + key;
-      const meta = drinkMetadata[fullKey] || {};
-
-      const singleItems = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
-      const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
-      const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
-
-      const displayArea = document.getElementById('mcguiresRecipeDisplayArea');
-      if (!displayArea) return;
-
-      const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
-      const cartBtnHtml = `
-        <button type="button" class="qol-btn" onclick="toggleCustomDrinkFromRecipe('${fullKey}')" style="background: ${inCart ? '#16a34a' : '#16a34a'}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
-          <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
-        </button>
-      `;
-
-      // Potency badge
-      let potencyHtml = '';
-      if (meta.potency === 'mocktail') {
-        potencyHtml = '<span class="potency-badge potency-mocktail">🧒 0.0% ABV • Kid & Driver Mocktail</span>';
-      } else if (meta.potency === 'high') {
-        potencyHtml = `<span class="potency-badge potency-high">⚡ High-Octane (~16% ABV • ${meta.spiritsOz} oz Spirits • Limit 3!)</span>`;
-      } else {
-        potencyHtml = `<span class="potency-badge potency-med">🍹 Standard Beach Pour (~11% ABV • ${meta.spiritsOz} oz Spirits)</span>`;
-      }
-
-      // Layer preview bar if layers exist
-      let layerHtml = '';
-      if (meta.layers && meta.layers.length > 1) {
-        const gradStops = meta.layers.map((col, idx) => `${col} ${(idx / (meta.layers.length - 1)) * 100}%`).join(', ');
-        const legendItems = meta.layers.map((col, idx) => `
-          <span><span class="layer-legend-dot" style="background: ${col};"></span> ${meta.layerNames?.[idx] || 'Layer ' + (idx+1)}</span>
-        `).join('');
-        layerHtml = `
-          <div style="margin: 14px 0 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">
-              <span>🎨 Authentic Visual Layering &amp; Float Guide:</span>
-              <span style="font-size: 0.72rem;">Bottom ➔ Surface Float</span>
-            </div>
-            <div class="layer-preview-bar" style="background: linear-gradient(to right, ${gradStops});"></div>
-            <div class="layer-legend">${legendItems}</div>
-          </div>
-        `;
-      }
-
-      updateCarouselActivePill('mc', key);
-      const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
-      displayArea.innerHTML = `
-        ${getReturnBreadcrumbHtml()}
-        ${getStepperHtml('mc', key, mcguiresRecipeData)}
-        ${renderPriceComparisonCard(fullKey)}
-        <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid #16a34a;">
-          <div class="recipe-title-bar">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-                <h3 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">${r.title}</h3>
-                ${potencyHtml}
-              </div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">${r.desc}</p>
-            </div>
-            <div class="recipe-badge-row">
-              <span class="deal-badge" style="background: var(--primary-light); color: #16a34a; font-weight: 700;">${r.tag}</span>
-              ${cartBtnHtml}
-              <button type="button" class="qol-btn" onclick="openBartenderMode('${key}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
-                <span>👨‍🍳</span> Bartender Mode
-              </button>
-            </div>
-          </div>
-
-          ${layerHtml}
-
-          ${renderVesselScalerHtml(key, 'recipeCard_' + key)}
-
-          <div class="recipe-grid">
-            <div class="ingredient-box" style="border-color: #16a34a;">
-              <h4 style="color: #16a34a;"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
-              <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
-            </div>
-            <div class="ingredient-box" style="border-color: var(--primary);">
-              <h4 style="color: var(--primary);"><span>🍹</span> Standard 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
-              <ul class="ingredient-list">${pitcherItems}</ul>
-            </div>
-          </div>
-
-          <div class="recipe-steps-box" style="border-left: 3px solid #16a34a;">
-            <h4 style="color: #16a34a;"><span>📋</span> Mixing &amp; Pouring Instructions (On The Rocks):</h4>
-            <ol class="recipe-steps-list">${stepsHtml}</ol>
-          </div>
-
-          <div class="insider-tip" style="margin-top: 12px; border-left-color: #16a34a;">
-            💡 <strong>Beach Pro-Tip:</strong> ${r.beachTip || ''}
-            <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
-              ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
-            </div>
-          </div>
-        </div>
-      `;
-    }
+function showMcguiresRecipe(key) {
+  const fullKey = 'mc_' + key;
+  updateCarouselActivePill('mc', key);
+  const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
+  const displayArea = document.getElementById('mcguiresRecipeDisplayArea');
+  if (!displayArea) return;
+  displayArea.innerHTML = `
+    ${getReturnBreadcrumbHtml()}
+    ${getStepperHtml('mc', key, mcguiresRecipeData)}
+    ${renderUnifiedRecipeCardHtml(fullKey, 'mcguiresRecipeCard_' + key, false)}
+  `;
+}
 
 
 
@@ -1940,107 +1912,18 @@ const classicRecipeData = {
   }
 };
 
-    function showClassicRecipe(key) {
-      const r = classicRecipeData[key] || classicRecipeData[Object.keys(classicRecipeData)[0]];
-      const fullKey = 'cl_' + key;
-      const meta = drinkMetadata[fullKey] || {};
-
-      const singleItems = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
-      const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
-      const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
-
-      const displayArea = document.getElementById('classicRecipeDisplayArea');
-      if (!displayArea) return;
-
-      const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
-      const cartBtnHtml = `
-        <button type="button" class="qol-btn" onclick="toggleCustomDrinkFromRecipe('${fullKey}')" style="background: ${inCart ? '#16a34a' : '#0284c7'}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
-          <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
-        </button>
-      `;
-
-      // Potency badge
-      let potencyHtml = '';
-      if (meta.potency === 'mocktail') {
-        potencyHtml = '<span class="potency-badge potency-mocktail">🧒 0.0% ABV • Kid & Driver Mocktail</span>';
-      } else if (meta.potency === 'high') {
-        potencyHtml = `<span class="potency-badge potency-high">⚡ High-Octane (~16% ABV • ${meta.spiritsOz} oz Spirits • Limit 3!)</span>`;
-      } else {
-        potencyHtml = `<span class="potency-badge potency-med">🍹 Standard Beach Pour (~11% ABV • ${meta.spiritsOz} oz Spirits)</span>`;
-      }
-
-      // Layer preview bar if layers exist
-      let layerHtml = '';
-      if (meta.layers && meta.layers.length > 1) {
-        const gradStops = meta.layers.map((col, idx) => `${col} ${(idx / (meta.layers.length - 1)) * 100}%`).join(', ');
-        const legendItems = meta.layers.map((col, idx) => `
-          <span><span class="layer-legend-dot" style="background: ${col};"></span> ${meta.layerNames?.[idx] || 'Layer ' + (idx+1)}</span>
-        `).join('');
-        layerHtml = `
-          <div style="margin: 14px 0 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">
-              <span>🎨 Authentic Visual Layering &amp; Float Guide:</span>
-              <span style="font-size: 0.72rem;">Bottom ➔ Surface Float</span>
-            </div>
-            <div class="layer-preview-bar" style="background: linear-gradient(to right, ${gradStops});"></div>
-            <div class="layer-legend">${legendItems}</div>
-          </div>
-        `;
-      }
-
-      updateCarouselActivePill('cl', key);
-      const sel = document.getElementById('classicDrinkRecipeSelect'); if (sel) sel.value = key;
-      displayArea.innerHTML = `
-        ${getReturnBreadcrumbHtml()}
-        ${getStepperHtml('cl', key, classicRecipeData)}
-        ${renderPriceComparisonCard(fullKey)}
-        <div class="recipe-display-card" id="recipeCard_${key}" style="border-left: 4px solid #0284c7;">
-          <div class="recipe-title-bar">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-                <h3 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">${r.title}</h3>
-                ${potencyHtml}
-              </div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">${r.desc}</p>
-            </div>
-            <div class="recipe-badge-row">
-              <span class="deal-badge" style="background: var(--primary-light); color: #0284c7; font-weight: 700;">${r.tag}</span>
-              ${cartBtnHtml}
-              <button type="button" class="qol-btn" onclick="openBartenderMode('${key}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
-                <span>👨‍🍳</span> Bartender Mode
-              </button>
-            </div>
-          </div>
-
-          ${layerHtml}
-
-          ${renderVesselScalerHtml(key, 'recipeCard_' + key)}
-
-          <div class="recipe-grid">
-            <div class="ingredient-box" style="border-color: #0284c7;">
-              <h4 style="color: #0284c7;"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
-              <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
-            </div>
-            <div class="ingredient-box" style="border-color: var(--primary);">
-              <h4 style="color: var(--primary);"><span>🍹</span> Standard 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
-              <ul class="ingredient-list">${pitcherItems}</ul>
-            </div>
-          </div>
-
-          <div class="recipe-steps-box" style="border-left: 3px solid #0284c7;">
-            <h4 style="color: #0284c7;"><span>📋</span> Mixing &amp; Pouring Instructions (On The Rocks):</h4>
-            <ol class="recipe-steps-list">${stepsHtml}</ol>
-          </div>
-
-          <div class="insider-tip" style="margin-top: 12px; border-left-color: #0284c7;">
-            💡 <strong>Beach Pro-Tip:</strong> ${r.beachTip || ''}
-            <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
-              ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
-            </div>
-          </div>
-        </div>
-      `;
-    }
+function showClassicRecipe(key) {
+  const fullKey = 'cl_' + key;
+  updateCarouselActivePill('cl', key);
+  const sel = document.getElementById('classicDrinkRecipeSelect'); if (sel) sel.value = key;
+  const displayArea = document.getElementById('classicRecipeDisplayArea');
+  if (!displayArea) return;
+  displayArea.innerHTML = `
+    ${getReturnBreadcrumbHtml()}
+    ${getStepperHtml('cl', key, classicRecipeData)}
+    ${renderUnifiedRecipeCardHtml(fullKey, 'classicRecipeCard_' + key, false)}
+  `;
+}
 
 function copyClassicsBarList() {
   setCustomDrinkPreset('classics');
@@ -2064,106 +1947,19 @@ function copyBarShoppingList() {
   }, 400);
 }
 
-    function showOldBayRecipe(key) {
-      const fullKey = key.startsWith('obs_') ? key : 'obs_' + key;
-      const strippedKey = key.replace('obs_', '');
-      const r = oldBayRecipeData[fullKey] || oldBayRecipeData[key] || oldBayRecipeData.obs_blt;
-      const meta = drinkMetadata[fullKey] || {};
-
-      const singleItems = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
-      const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
-      const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
-
-      const displayArea = document.getElementById('oldBayRecipeDisplayArea');
-      if (!displayArea) return;
-
-      const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
-      const cartBtnHtml = `
-        <button type="button" class="qol-btn" onclick="toggleCustomDrinkFromRecipe('${fullKey}')" style="background: ${inCart ? '#16a34a' : '#c2410c'}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
-          <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
-        </button>
-      `;
-
-      let potencyHtml = '';
-      if (meta.potency === 'mocktail') {
-        potencyHtml = '<span class="potency-badge potency-mocktail">🧒 0.0% ABV • Kid & Driver Mocktail</span>';
-      } else if (meta.potency === 'high') {
-        potencyHtml = `<span class="potency-badge potency-high">⚡ High-Octane (~16% ABV • ${meta.spiritsOz} oz Spirits • Limit 3!)</span>`;
-      } else {
-        potencyHtml = `<span class="potency-badge potency-med">🍹 Standard Beach Pour (~11% ABV • ${meta.spiritsOz} oz Spirits)</span>`;
-      }
-
-      let layerHtml = '';
-      if (meta.layers && meta.layers.length > 1) {
-        const gradStops = meta.layers.map((col, idx) => `${col} ${(idx / (meta.layers.length - 1)) * 100}%`).join(', ');
-        const legendItems = meta.layers.map((col, idx) => `
-          <span><span class="layer-legend-dot" style="background: ${col};"></span> ${meta.layerNames?.[idx] || 'Layer ' + (idx+1)}</span>
-        `).join('');
-        layerHtml = `
-          <div style="margin: 14px 0 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">
-              <span>🎨 Authentic Visual Layering &amp; Float Guide:</span>
-              <span style="font-size: 0.72rem;">Bottom ➔ Surface Float</span>
-            </div>
-            <div class="layer-preview-bar" style="background: linear-gradient(to right, ${gradStops});"></div>
-            <div class="layer-legend">${legendItems}</div>
-          </div>
-        `;
-      }
-
-      updateCarouselActivePill('obs', fullKey);
-      const sel = document.getElementById('oldBayDrinkRecipeSelect'); if (sel) sel.value = fullKey;
-      displayArea.innerHTML = `
-        ${getReturnBreadcrumbHtml()}
-        ${getStepperHtml('obs', fullKey, oldBayRecipeData)}
-        ${renderPriceComparisonCard(fullKey)}
-        <div class="recipe-display-card" id="recipeCard_${fullKey}" style="border-left: 4px solid #c2410c;">
-          <div class="recipe-title-bar">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-                <h3 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">${r.title}</h3>
-                ${potencyHtml}
-              </div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">${r.desc}</p>
-            </div>
-            <div class="recipe-badge-row">
-              <span class="deal-badge" style="background: #ffedd5; color: #c2410c; font-weight: 700;">${r.tag}</span>
-              ${cartBtnHtml}
-              <button type="button" class="qol-btn" onclick="openBartenderMode('${fullKey}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
-                <span>👨‍🍳</span> Bartender Mode
-              </button>
-            </div>
-          </div>
-
-          ${layerHtml}
-
-          ${renderVesselScalerHtml(fullKey, 'recipeCard_' + fullKey)}
-
-          <div class="recipe-grid">
-            <div class="ingredient-box" style="border-color: #c2410c;">
-              <h4 style="color: #c2410c;"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex].short}):</span></h4>
-              <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
-            </div>
-            <div class="ingredient-box" style="border-color: var(--primary);">
-              <h4 style="color: var(--primary);"><span>🍹</span> Standard 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
-              <ul class="ingredient-list">${pitcherItems}</ul>
-            </div>
-          </div>
-
-          <div class="recipe-steps-box" style="border-left: 3px solid #c2410c;">
-            <h4 style="color: #c2410c;"><span>📋</span> Mixing &amp; Pouring Instructions (On The Rocks):</h4>
-            <ol class="recipe-steps-list">${stepsHtml}</ol>
-          </div>
-
-          <div class="insider-tip" style="margin-top: 12px; border-left-color: #c2410c;">
-            💡 <strong>Steamer Pro-Tip:</strong> ${r.beachTip || ''}
-            <div style="font-size: 0.8rem; margin-top: 6px; color: #c2410c; font-weight: 700;">
-              🦀 <strong>Seafood Pairing:</strong> Outstanding palate cleanser with steamed King Crab, Snow Crab &amp; Royal Red Shrimp!
-            </div>
-          </div>
-        </div>
-      `;
-    }
+function showOldBayRecipe(key) {
+  const fullKey = key.startsWith('obs_') ? key : 'obs_' + key;
+  const strippedKey = key.replace('obs_', '');
+  updateCarouselActivePill('obs', strippedKey);
+  const sel = document.getElementById('oldBayDrinkRecipeSelect'); if (sel) sel.value = fullKey;
+  const displayArea = document.getElementById('oldBayRecipeDisplayArea');
+  if (!displayArea) return;
+  displayArea.innerHTML = `
+    ${getReturnBreadcrumbHtml()}
+    ${getStepperHtml('obs', strippedKey, oldBayRecipeData)}
+    ${renderUnifiedRecipeCardHtml(fullKey, 'oldBayRecipeCard_' + strippedKey, false)}
+  `;
+}
 
     function copyOldBayBarList() {
       setCustomDrinkPreset('oldbay');
