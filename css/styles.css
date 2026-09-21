@@ -5390,6 +5390,78 @@
       }
     }
 
+    /* ==========================================================================
+       v3.7–v3.8 MOBILE OVERRIDES (servings slider, step check-off, wake lock, search clear)
+       ========================================================================== */
+
+    /* ── Servings Scaler ── */
+    @media (max-width: 640px) {
+      .servings-scaler-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 12px;
+      }
+      .servings-slider-wrap {
+        width: 100%;
+        min-width: 0;
+      }
+      .servings-slider {
+        min-width: 0;
+        width: 100%;
+      }
+      .servings-slider::-webkit-slider-thumb {
+        width: 26px;
+        height: 26px;
+      }
+      .servings-label {
+        font-size: 0.9rem;
+        min-width: 0;
+      }
+      .servings-num-badge {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* ── Recipe Step Check-Off — larger tap area on mobile ── */
+    @media (max-width: 640px) {
+      .recipe-step-item {
+        padding: 7px 8px;
+        font-size: 0.92rem;
+        border-radius: 8px;
+        -webkit-tap-highlight-color: transparent;
+      }
+    }
+
+    /* ── Wake Lock & Collapse-All — flex-grow on very small screens ── */
+    @media (max-width: 480px) {
+      #wakeLockToggleBtn,
+      #toggleAllSectionsBtn {
+        flex: 1 1 auto;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.8rem;
+        padding: 8px 10px;
+      }
+    }
+    @media (max-width: 400px) {
+      #wakeLockToggleBtn {
+        font-size: 0.76rem;
+        padding: 7px 8px;
+      }
+    }
+
+    /* ── Search Clear Button — larger tap area ── */
+    @media (max-width: 640px) {
+      #searchClearBtn {
+        padding: 4px 10px;
+        font-size: 1.3rem;
+        right: 6px;
+      }
+    }
+
     /* Single Recipe Section & Responsive Anchors */
     .nav-target-anchor {
       position: relative;
