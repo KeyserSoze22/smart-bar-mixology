@@ -1662,6 +1662,33 @@
       padding: 16px 20px;
       margin-bottom: 16px;
     }
+    /* ── Beach Growler Method Callout Box ─────────────────── */
+    .growler-workflow-box {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.06) 0%, rgba(16, 185, 129, 0.06) 100%);
+      border: 1.5px solid rgba(14, 165, 233, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+    .growler-workflow-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: 0.01em;
+    }
+    .growler-workflow-steps {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .growler-workflow-steps li {
+      font-size: 0.88rem;
+      color: var(--text-main);
+      margin-bottom: 7px;
+      line-height: 1.55;
+    }
+    .growler-workflow-steps li strong {
+      color: var(--text-main);
+    }
     .recipe-steps-box h4 {
       font-size: 0.95rem;
       color: var(--primary);
@@ -5391,8 +5418,19 @@
     }
 
     /* ==========================================================================
-       v3.7–v3.8 MOBILE OVERRIDES (servings slider, step check-off, wake lock, search clear)
+       v3.7–v4.1 MOBILE OVERRIDES (servings slider, step check-off, wake lock, search clear, growler box)
        ========================================================================== */
+
+    /* ── Beach Growler Method Box ── */
+    @media (max-width: 640px) {
+      .growler-workflow-box {
+        padding: 12px 14px;
+      }
+      .growler-workflow-steps li {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+      }
+    }
 
     /* ── Servings Scaler ── */
     @media (max-width: 640px) {

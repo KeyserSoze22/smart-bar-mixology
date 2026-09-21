@@ -1,10 +1,10 @@
 // ==========================================================================
 // SERVICE WORKER - SMART BAR MIXOLOGY PWA
 // Provides 100% offline availability for beach, boat, and vacation rental use
-// Cache v4.0 — force-busts all prior versions (v3.6–v3.9 alignment fix)
+// Cache v4.1 — force-busts all prior versions (v3.6–v3.9 alignment fix)
 // ==========================================================================
 
-const CACHE_NAME = 'smart-bar-mixology-v4.0';
+const CACHE_NAME = 'smart-bar-mixology-v4.1';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -23,7 +23,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[ServiceWorker] Pre-caching v4.0 shell & modules');
+      console.log('[ServiceWorker] Pre-caching v4.1 shell & modules');
       return cache.addAll(ASSETS_TO_CACHE);
     }).then(() => self.skipWaiting())
   );

@@ -923,17 +923,39 @@ function updateServingsSlider(sliderEl) {
     listEl.innerHTML = scaled.map(i => `<li>${i}</li>`).join('');
   }
 
-  // Update the label
+  // Update the ingredient box heading based on serving count
+  const boxHeading = card.querySelector('.ingredient-box h4');
+  if (boxHeading) {
+    let headingText = '';
+    if (servings === 1) {
+      headingText = '🧪 Ingredients — 1 Serving (32-oz Vessel):';
+    } else if (servings === 2) {
+      headingText = '🧊 Ingredients — 2 Servings (Fills 1 × 64-oz Growler):';
+    } else if (servings === 4) {
+      headingText = '🍶 Ingredients — 1-Gallon Batch (Fills 2 × 64-oz Growlers):';
+    } else if (servings === 8) {
+      headingText = '🎉 Ingredients — Double Batch (Fills 4 × 64-oz Growlers):';
+    } else {
+      headingText = `🧪 Ingredients — ${servings} Servings:`;
+    }
+    boxHeading.innerHTML = `<span></span> ${headingText}`;
+    boxHeading.style.color = venueColor;
+  }
+
+  // Update the servings label
   const labelEl = card.querySelector('.servings-label');
   if (labelEl) {
-    let labelText = `${servings} Serving${servings > 1 ? 's' : ''}`;
-    if (servings === 4) labelText += ' — 1 Gallon Pitcher Batch';
-    else if (servings === 8) labelText += ' — Double Pitcher / Full Party';
+    let labelText = '';
+    if (servings === 1)      labelText = '1 Serving — 32-oz Vessel';
+    else if (servings === 2) labelText = '2 Servings — 1 × 64-oz Growler';
+    else if (servings === 4) labelText = '4 Servings — 2 × 64-oz Growlers (1 Gallon)';
+    else if (servings === 8) labelText = '8 Servings — 4 × 64-oz Growlers';
+    else                     labelText = `${servings} Servings`;
     labelEl.textContent = labelText;
     labelEl.style.color = venueColor;
   }
 
-  // Update slider track fill color
+  // Update slider track fill
   const pct = ((servings - 1) / 7) * 100;
   sliderEl.style.background = `linear-gradient(to right, ${venueColor} 0%, ${venueColor} ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
 }
@@ -1021,16 +1043,27 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
             aria-label="Number of servings" />
           <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">8</span>
         </div>
-        <span class="servings-label" style="color: ${venueColor}; font-size: 0.85rem; font-weight: 700;">1 Serving</span>
+        <span class="servings-label" style="color: ${venueColor}; font-size: 0.85rem; font-weight: 700;">1 Serving — 32-oz Vessel</span>
       </div>
 
       <div class="ingredient-box" style="border-color: ${venueColor}; margin-bottom: 18px;">
-        <h4 style="color: ${venueColor};"><span>🧪</span> Ingredients (32-oz Souvenir Vessel):</h4>
+        <h4 style="color: ${venueColor};"><span>🧪</span> Ingredients — 1 Serving (32-oz Vessel):</h4>
         <ul class="ingredient-list">${scaledItems}</ul>
       </div>
 
+      <div class="growler-workflow-box">
+        <div class="growler-workflow-title" style="color: ${venueColor};">🧊 Beach Growler Method</div>
+        <ol class="growler-workflow-steps">
+          <li><strong>Mix with ice in the gallon jug</strong> — Combine all ingredients directly in a 1-gallon insulated jug or drink pitcher with a full tray of ice. Stir or shake vigorously until everything is fully integrated and ice-cold.</li>
+          <li><strong>Fill your 64-oz growlers</strong> — Pack both insulated 64-oz growlers tightly with fresh ice. Pour the pre-cooled batch evenly between them (2 servings per growler = 1 gallon fills 2 growlers). Seal tight.</li>
+          <li><strong>Float layers at the jug stage</strong> — Add any dark rum floats, cranberry, or grenadine layers into the jug before sealing — they'll layer naturally when poured into cups at the beach.</li>
+          <li><strong>At the beach</strong> — Pour directly from the growler into 32-oz souvenir cups, Yeti tumblers, or buckets over fresh ice. Garnish and serve.</li>
+        </ol>
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">💡 <em>Slide to 4 servings above for a full 1-gallon batch — the perfect fill for 2 × 64-oz growlers.</em></div>
+      </div>
+
       <div class="recipe-steps-box" style="border-left: 3px solid ${venueColor};">
-        <h4 style="color: ${venueColor};"><span>📋</span> Mixing Instructions (On The Rocks):</h4>
+        <h4 style="color: ${venueColor};"><span>📋</span> Original Mixing Instructions (reference):</h4>
         <ol class="recipe-steps-list">${stepsHtml}</ol>
       </div>
 
