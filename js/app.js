@@ -1712,10 +1712,20 @@
         const items = cart.categorized[catKey];
         if (!items || items.length === 0) return;
 
+        const catShortName = catKey === 'spirits' ? 'Alcohol' : (catKey === 'mixers' ? 'Mixers' : (catKey === 'citrus' ? 'Produce' : 'Supplies'));
+
         htmlContent += `
           <div class="custom-cart-cat-title">
-            <span>${icon} ${catTitle} <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-left: 6px;">(${storeLabel})</span></span>
-            <span class="cat-subtotal">Est. ~$${subtotal.toFixed(2)}</span>
+            <div class="custom-cart-cat-left">
+              <span>${icon} ${catTitle}</span>
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">(${storeLabel})</span>
+            </div>
+            <div class="custom-cart-cat-right">
+              <span class="cat-subtotal">Est. ~$${subtotal.toFixed(2)}</span>
+              <button type="button" class="cat-copy-btn" onclick="copyCustomBarSection('${catKey}', event)" title="Copy ${catShortName} section to clipboard">
+                <span>📋</span> Copy ${catShortName}
+              </button>
+            </div>
           </div>
         `;
 
@@ -1726,12 +1736,14 @@
             return `<span class="shared-pill ${pillClass}">${d.name}</span>`;
           }).join('');
 
+          const displayTitle = item.brand || item.name;
+
           htmlContent += `
             <div class="custom-cart-item ${isPacked ? 'packed' : ''}" onclick="toggleCustomCartItem('${item.id}', event)">
               <input type="checkbox" ${isPacked ? 'checked' : ''} style="accent-color: #4f46e5; width: 18px; height: 18px; margin-top: 3px; pointer-events: none;" />
               <div class="custom-cart-item-content">
                 <div class="custom-cart-item-name">
-                  <span>${item.brand} ${item.yield ? `<span class="yield-tag">${item.yield}</span>` : ''}</span>
+                  <span>${displayTitle} ${item.yield ? `<span class="yield-tag">${item.yield}</span>` : ''}</span>
                   <span class="cost-tag">~$${item.price.toFixed(2)}</span>
                 </div>
                 ${item.note ? `<div class="custom-cart-item-note">${item.note}</div>` : ''}
@@ -1745,9 +1757,9 @@
         });
       }
 
-      renderCategory('spirits', 'Spirits & Liqueurs', '🍾', 'Retail Spirits Store - Local Retail Store', cart.spiritsCost);
+      renderCategory('spirits', 'Alcohol & Spirits', '🍾', 'Retail Spirits Store - Local Retail Store', cart.spiritsCost);
       renderCategory('mixers', 'Mixers & Juices', '🥥', 'Publix / Retail Spirits', cart.mixersCost);
-      renderCategory('citrus', 'Fresh Fruit, Citrus & Garnishes', '🍋', 'Publix Fresh Produce', cart.citrusCost);
+      renderCategory('citrus', 'Produce & Fresh Citrus', '🍋', 'Publix Fresh Produce', cart.citrusCost);
       renderCategory('supplies', 'Bar Supplies & Ice', '🧊', 'Publix & Resort', cart.suppliesCost);
 
       displayArea.innerHTML = htmlContent;
@@ -1770,6 +1782,76 @@
       showToast('🔄 Custom bar checklist reset!');
     }
 
+    function copyCustomBarSection(catKey, event) {
+      if (event && event.stopPropagation) event.stopPropagation();
+      const cart = calculateCustomCart();
+      if (cart.selectedCount === 0) {
+        showToast('⚠️ Please select at least 1 cocktail first!');
+        return;
+      }
+
+      const items = cart.categorized[catKey];
+      if (!items || items.length === 0) {
+        showToast('ℹ️ No items in this section for your selected cocktails.');
+        return;
+      }
+
+      const selectedNames = [...customBarSelectedDrinks].map(k => (customBarDatabase.drinks[k] && customBarDatabase.drinks[k].name) || k);
+
+      const sectionMeta = {
+        spirits: {
+          title: 'ALCOHOL & SPIRITS SHOPPING LIST',
+          icon: '🍾',
+          store: 'Retail Spirits Store, Local Retail Store | (850) 654-6161',
+          subtotal: cart.spiritsCost,
+          shortName: 'Alcohol'
+        },
+        mixers: {
+          title: 'MIXERS & JUICES SHOPPING LIST',
+          icon: '🥥',
+          store: 'Publix / Retail Spirits',
+          subtotal: cart.mixersCost,
+          shortName: 'Mixers'
+        },
+        citrus: {
+          title: 'PRODUCE & FRESH CITRUS SHOPPING LIST',
+          icon: '🍋',
+          store: 'Publix Fresh Produce',
+          subtotal: cart.citrusCost,
+          shortName: 'Produce'
+        },
+        supplies: {
+          title: 'ICE & BAR SUPPLIES SHOPPING LIST',
+          icon: '🧊',
+          store: 'Publix & Resort',
+          subtotal: cart.suppliesCost,
+          shortName: 'Supplies'
+        }
+      }[catKey] || { title: 'SHOPPING LIST', icon: '📋', store: '', subtotal: 0, shortName: 'Section' };
+
+      let text = `${sectionMeta.icon} SMART BAR MIXOLOGY — ${sectionMeta.title}\n`;
+      text += `Store: ${sectionMeta.store}\n`;
+      text += `Selected Cocktails (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
+      text += `Est. ${sectionMeta.shortName} Total: ~$${sectionMeta.subtotal.toFixed(2)} (${items.length} ${items.length === 1 ? 'item' : 'items'})\n`;
+      if (catKey === 'spirits') {
+        text += `Authentic 32-oz Vessel Yield: ~${cart.bucketServings} Buckets/Jars (~${cart.pitchersCount} Condo Pitchers)\n`;
+      }
+      text += '\n';
+
+      items.forEach(i => {
+        const itemTitle = i.brand || i.name;
+        const yieldStr = i.yield ? ` [Yield: ${i.yield}]` : '';
+        const drinksStr = i.usedIn && i.usedIn.length > 0 ? ` — For: ${i.usedIn.map(u => u.name).join(', ')}` : '';
+        text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})${yieldStr}${drinksStr}\n`;
+      });
+
+      if (catKey === 'spirits' || catKey === 'supplies') {
+        text += '\nStrict Vacation Rule: Strictly NO GLASS on beaches or vacation party boats! Save $500 fine.';
+      }
+
+      copyTextToClipboard(text, `📋 ${sectionMeta.shortName} shopping list copied to clipboard!`);
+    }
+
     function copyCustomBarShoppingList() {
       const cart = calculateCustomCart();
       if (cart.selectedCount === 0) {
@@ -1777,12 +1859,12 @@
         return;
       }
 
-      const selectedNames = [...customBarSelectedDrinks].map(k => customBarDatabase.drinks[k].name);
+      const selectedNames = [...customBarSelectedDrinks].map(k => (customBarDatabase.drinks[k] && customBarDatabase.drinks[k].name) || k);
 
       let text = '🍸 SMART CONSOLIDATED BEACH VACATION BAR LIST (Vacation 2026)\n';
       text += `Store: Retail Spirits Store, Local Retail Store, Beach Vacation 32541 | (850) 654-6161\n`;
       text += `Selected Drinks (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
-      text += 'Estimated Total: ~$' + cart.grandTotal.toFixed(2) + ' (Spirits: ~$' + cart.spiritsCost.toFixed(2) + ' | Mixers/Produce/Ice: ~$' + (cart.mixersCost + cart.citrusCost + cart.suppliesCost).toFixed(2) + ')\n';
+      text += 'Estimated Total: ~$' + cart.grandTotal.toFixed(2) + ' (Alcohol: ~$' + cart.spiritsCost.toFixed(2) + ' | Mixers/Produce/Ice: ~$' + (cart.mixersCost + cart.citrusCost + cart.suppliesCost).toFixed(2) + ')\n';
       text += '32-oz Bucket & Mason Jar Yield: ~' + cart.bucketServings + ' Full 32-oz Vessels (~' + cart.pitchersCount + ' 1-Gallon Condo Pitcher Batches)\n';
       text += 'Group Vacation Pace: ~' + cart.bucketsPerAdultPerDay + ' 32-oz Buckets/Jars per adult per day (for 6–8 adults over 7 days with heavy ice)\n';
       text += "Cost per 32-oz Vessel: ~$" + cart.costPerBucket + " (vs $24–$28 at The Back Porch & McGuire's — Saves ~$" + cart.estSavings.toLocaleString() + "!)\n\n";
@@ -1792,30 +1874,37 @@
         if (!items || items.length === 0) return;
         text += `--- ${catHeader} ---\n`;
         items.forEach(i => {
-          text += `[ ] ${i.brand} (~${i.price.toFixed(2)}) - Used in: ${i.usedIn.map(u => u.name).join(', ')}\n`;
+          const itemTitle = i.brand || i.name;
+          const yieldStr = i.yield ? ` [Yield: ${i.yield}]` : '';
+          const drinksStr = i.usedIn && i.usedIn.length > 0 ? ` — For: ${i.usedIn.map(u => u.name).join(', ')}` : '';
+          text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})${yieldStr}${drinksStr}\n`;
         });
         text += '\n';
       }
 
-      appendTextCategory('spirits', '🍾 SPIRITS & LIQUEURS (Retail Spirits Store)');
+      appendTextCategory('spirits', '🍾 ALCOHOL & SPIRITS (Retail Spirits Store)');
       appendTextCategory('mixers', '🥥 MIXERS & JUICES (Publix / Retail Spirits)');
-      appendTextCategory('citrus', '🍋 FRESH PRODUCE & GARNISHES (Publix)');
-      appendTextCategory('supplies', '🧊 ICE & BARWARE SUPPLIES');
+      appendTextCategory('citrus', '🍋 PRODUCE & FRESH CITRUS (Publix Fresh Produce)');
+      appendTextCategory('supplies', '🧊 ICE & BARWARE SUPPLIES (Publix & Resort)');
 
       text += 'Strict Vacation Rule: Strictly NO GLASS on Vacation beaches or vacation party boats! Save $500 fine.';
 
+      copyTextToClipboard(text, '📋 Consolidated Bar List copied to clipboard!');
+    }
+
+    function copyTextToClipboard(text, successToastMsg) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
-          showToast('📋 Consolidated Bar List copied to clipboard!');
+          showToast(successToastMsg || '📋 Copied to clipboard!');
         }).catch(() => {
-          fallbackCustomCopy(text);
+          fallbackCustomCopy(text, successToastMsg);
         });
       } else {
-        fallbackCustomCopy(text);
+        fallbackCustomCopy(text, successToastMsg);
       }
     }
 
-    function fallbackCustomCopy(text) {
+    function fallbackCustomCopy(text, successToastMsg) {
       const ta = document.createElement('textarea');
       ta.value = text;
       ta.style.position = 'fixed';
@@ -1824,7 +1913,7 @@
       ta.select();
       try {
         document.execCommand('copy');
-        showToast('📋 Consolidated Bar List copied to clipboard!');
+        showToast(successToastMsg || '📋 Copied to clipboard!');
       } catch (e) {
         showToast('⚠️ Could not copy list automatically.');
       }

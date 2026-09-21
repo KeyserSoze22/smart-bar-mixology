@@ -579,12 +579,21 @@
             </h3>
             <span id="custom-cart-progress-badge" class="cart-progress-badge">0 of 0 packed</span>
           </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="qol-btn" onclick="copyCustomBarShoppingList()" style="font-size: 0.84rem; padding: 8px 16px; background: #4f46e5; color: #fff; font-weight: 700;">
-              <span>📋</span> Copy Consolidated List
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <button class="qol-btn" onclick="copyCustomBarShoppingList()" style="font-size: 0.82rem; padding: 7px 14px; background: #4f46e5; color: #fff; font-weight: 700;" title="Copy entire consolidated shopping list">
+              <span>📋</span> Copy All
             </button>
-            <button class="qol-btn" onclick="resetCustomCartChecks()" style="font-size: 0.84rem; padding: 8px 16px;">
-              <span>🔄</span> Reset Packed Checks
+            <button class="qol-btn" onclick="copyCustomBarSection('spirits', event)" style="font-size: 0.82rem; padding: 7px 12px; background: #0284c7; color: #fff; font-weight: 700;" title="Copy only Alcohol & Spirits">
+              <span>🍾</span> Copy Alcohol
+            </button>
+            <button class="qol-btn" onclick="copyCustomBarSection('mixers', event)" style="font-size: 0.82rem; padding: 7px 12px; background: #059669; color: #fff; font-weight: 700;" title="Copy only Mixers & Juices">
+              <span>🥥</span> Copy Mixers
+            </button>
+            <button class="qol-btn" onclick="copyCustomBarSection('citrus', event)" style="font-size: 0.82rem; padding: 7px 12px; background: #d97706; color: #fff; font-weight: 700;" title="Copy only Fresh Produce & Citrus">
+              <span>🍋</span> Copy Produce
+            </button>
+            <button class="qol-btn" onclick="resetCustomCartChecks()" style="font-size: 0.82rem; padding: 7px 12px;">
+              <span>🔄</span> Reset Checks
             </button>
           </div>
         </div>
