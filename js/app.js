@@ -2024,7 +2024,7 @@
     function initPwaCapabilities() {
       // 1. Register Service Worker for offline capability
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=3.2', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('./sw.js?v=3.3', { updateViaCache: 'none' })
           .then(reg => {
             console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
             // Proactively check for service worker updates immediately

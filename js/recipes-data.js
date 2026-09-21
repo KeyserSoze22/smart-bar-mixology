@@ -862,7 +862,7 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
   if (meta.potency === 'mocktail') {
     potencyHtml = '<span class="potency-badge potency-mocktail">🧒 0.0% ABV • Kid &amp; Driver Mocktail</span>';
   } else if (meta.potency === 'high') {
-    potencyHtml = `<span class="potency-badge potency-high">⚡ High-Octane (~16% ABV • ${meta.spiritsOz} oz Spirits • Limit 3!)</span>`;
+    potencyHtml = `<span class="potency-badge potency-high">⚡ High-Octane (~16% ABV • ${meta.spiritsOz} oz Spirits)</span>`;
   } else {
     potencyHtml = `<span class="potency-badge potency-med">🍹 Standard Beach Pour (~11% ABV • ${meta.spiritsOz || 3.5} oz Spirits)</span>`;
   }
@@ -965,7 +965,7 @@ function showRecipe(key) {
 const mcguiresRecipeData = {
       irish_wake: {
         title: "🍀 The Famous \"Irish Wake\"",
-        tag: "McGuire's #1 32-oz Mason Jar Legend • Strict Limit of 3",
+        tag: "McGuire's #1 32-oz Mason Jar Legend",
         desc: "The legendary, emerald-green powerhouse served at McGuire's Irish Pub! Bacardi Superior and high-octane 151 overproof rum shaken with Blue Curaçao, triple sec, and fresh Florida orange juice. Turns a vibrant shamrock green and packs an unforgettable pub punch!",
         single: [
           "2 oz Bacardi Superior White or Gold Rum",
@@ -990,7 +990,7 @@ const mcguiresRecipeData = {
           "Combine Bacardi rum, 151 rum, Blue Curaçao, triple sec, orange juice, and fresh lime juice in a 1-gallon pitcher. Watch the mixture turn its trademark glowing emerald green!",
           "Pack 32-oz mason jar mugs (or 30–40oz Yeti tumblers) completely full of fresh ice.",
           "Pour green pub punch over the rocks.",
-          "Garnish with orange wheels, cherries, and observe McGuire's house rule: 'Limit 3 per wake'!"
+          "Garnish with orange wheels and cherries!"
         ]
       },
       emory_chenoweth: {
