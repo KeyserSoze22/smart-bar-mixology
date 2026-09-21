@@ -413,19 +413,9 @@ const customBarDatabase = {
     }
 
     function updatePresetButtons(activeType) {
-      const isFav = customBarSelectedDrinks && customBarSelectedDrinks.size === 6 &&
-        customBarSelectedDrinks.has('bp_ultimate_porchpunch') &&
-        customBarSelectedDrinks.has('bp_porchmargarita') &&
-        customBarSelectedDrinks.has('bp_pattywacked') &&
-        customBarSelectedDrinks.has('mc_irish_wake') &&
-        customBarSelectedDrinks.has('mc_iced_irish_coffee') &&
-        customBarSelectedDrinks.has('mc_dublin_mule');
-
       document.querySelectorAll('.preset-btn').forEach(btn => {
         const onclickAttr = btn.getAttribute('onclick') || '';
         if (activeType && onclickAttr.includes(`'${activeType}'`)) {
-          btn.classList.add('active');
-        } else if (!activeType && isFav && onclickAttr.includes("'favorites'")) {
           btn.classList.add('active');
         } else {
           btn.classList.remove('active');

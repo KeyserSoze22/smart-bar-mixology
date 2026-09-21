@@ -1278,13 +1278,9 @@
 
     function initCustomBar() {
       loadFromUrlHash(); loadCustomBarState(); updateExpenseSplitterDisplay();
-      if (!customBarSelectedDrinks || customBarSelectedDrinks.size === 0) {
-        setCustomDrinkPreset('favorites');
-      } else {
-        renderCustomDrinkSelectors();
-        renderCustomBarCart();
-        updatePresetButtons();
-      }
+      renderCustomDrinkSelectors();
+      renderCustomBarCart();
+      updatePresetButtons();
     }
 
     function loadCustomBarState() {
@@ -1699,7 +1695,7 @@
             <div style="font-size: 2.4rem; margin-bottom: 8px;">🍸🍹</div>
             <h4 style="color: var(--text-main); font-size: 1.1rem; margin-bottom: 6px;">No Cocktails Selected Yet</h4>
             <p style="font-size: 0.88rem; max-width: 460px; margin: 0 auto; line-height: 1.5;">
-              Click any of the cocktails above or tap <strong>"Select Top 6 Favorites"</strong> to generate your tailored Retail Spirits shopping list without buying extra liquor!
+              Click any of the cocktails above to build your custom bar shopping list and batch calculations!
             </p>
           </div>
         `;
