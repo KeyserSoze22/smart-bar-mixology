@@ -1355,7 +1355,7 @@ const oldBayRecipeData = {
     desc: "Old Bay Steamer's signature cocktail legend! Smooth whiskey shaken with chilled Southern sweet tea and tart fresh lemonade over crushed ice with fresh slapped mint and lemon wheels. The quintessential seafood feast companion!",
     single: [
       "4 oz Bushmills Irish Whiskey (or Bourbon)",
-      "8 oz Chilled Southern Sweet Tea (Publix Deli)",
+      "8 oz Chilled Southern Sweet Tea",
       "6 oz Simply Lemonade (or fresh lemon sour)",
       "Juice of 1/2 fresh lemon",
       "Fresh slapped mint sprig & lemon wheels",
@@ -1595,7 +1595,7 @@ const oldBayRecipeData = {
     tag: "Southern Sweet Tea & Tart Lemonade • 32-oz Bucket for Kids!",
     desc: "A southern classic for the kids and drivers! Authentic Southern sweet tea blended 50/50 with tart Simply Lemonade over crushed ice with fresh lemon wheels and mint—100% alcohol-free!",
     single: [
-      "8 oz Chilled Southern Sweet Tea (Publix Deli)",
+      "8 oz Chilled Southern Sweet Tea",
       "8 oz Chilled Simply Lemonade",
       "Juice of 1/2 fresh lemon",
       "Packed with crushed ice in 32-oz Souvenir Bucket",
