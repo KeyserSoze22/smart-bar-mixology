@@ -882,7 +882,7 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
   const meta = (typeof drinkMetadata !== 'undefined' && drinkMetadata[fullKey]) || {};
   const singleItems = r.single.map(i => `<li>${i}</li>`).join('');
   const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
-  const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
+  const stepsHtml = r.steps.map((s, idx) => `<li class="recipe-step-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off step">${s}</li>`).join('');
 
   const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
   const cartBtnHtml = isModal
@@ -1040,6 +1040,17 @@ function stepUnifiedRecipe(delta) {
   const nextIdx = (idx + delta + keys.length) % keys.length;
   showUnifiedRecipe(keys[nextIdx]);
 }
+
+/**
+ * Toggle completed state for an individual recipe step
+ * Allows mixologists to tap/click instructions to cross them off
+ * @param {HTMLElement} el
+ */
+function toggleRecipeStepCheck(el) {
+  if (!el) return;
+  el.classList.toggle('step-done');
+}
+
 
 function filterRecipeCategory(cat) {
   currentRecipeCategoryFilter = cat;

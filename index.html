@@ -25,12 +25,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <!-- Application Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.6" />
+  <link rel="stylesheet" href="css/styles.css?v=3.7" />
   <script>
     if ('caches' in window) {
       caches.keys().then(keys => {
         keys.forEach(k => {
-          if (k !== 'smart-bar-mixology-v3.6') caches.delete(k);
+          if (k !== 'smart-bar-mixology-v3.7') caches.delete(k);
         });
       });
     }
@@ -71,11 +71,15 @@
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <div style="position: relative; min-width: 260px; flex: 1; max-width: 360px;" class="universal-search-container">
             <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; color: var(--text-muted); pointer-events: none;">🔍</span>
-            <input type="text" id="drinkSearchInput" placeholder="Search 46 cocktails & spirits (Press /)..." oninput="handleUniversalSearch(this.value)" onfocus="handleUniversalSearch(this.value)" style="width: 100%; padding: 8px 14px 8px 36px; border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: #fff; font-size: 0.88rem; outline: none;" autocomplete="off">
+            <input type="text" id="drinkSearchInput" placeholder="Search 46 cocktails & spirits (Press /)..." oninput="handleUniversalSearch(this.value)" onfocus="handleUniversalSearch(this.value)" style="width: 100%; padding: 8px 34px 8px 36px; border-radius: var(--radius-full); border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: #fff; font-size: 0.88rem; outline: none;" autocomplete="off">
+            <button type="button" id="searchClearBtn" onclick="clearUniversalSearch()" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #fff; opacity: 0.8; font-size: 1.1rem; cursor: pointer; padding: 2px 6px; line-height: 1;" title="Clear search (Esc)">&times;</button>
             <div id="universalSearchResults" class="universal-search-dropdown"></div>
           </div>
           <button onclick="window.print()" class="btn btn-secondary header-print-btn" style="padding: 8px 18px; border-radius: var(--radius-full); font-weight: 700; background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;">
             🖨️ Print / PDF
+          </button>
+          <button id="wakeLockToggleBtn" onclick="toggleWakeLock()" class="btn btn-secondary" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.2); color: #fff; cursor: pointer;" title="Keep screen awake while mixing drinks">
+            <span>📱</span> Keep Screen On
           </button>
           <button id="pwaInstallBtn" onclick="triggerPwaInstall()" class="btn btn-pwa-install" title="Install App on Phone or PC">
             <span>📲</span> Install App
@@ -635,6 +639,12 @@
             <button class="qol-btn" onclick="copyCustomBarSection('citrus', event)" style="font-size: 0.82rem; padding: 7px 12px; background: #d97706; color: #fff; font-weight: 700;" title="Copy only Fresh Produce & Citrus">
               <span>🍋</span> Copy Produce
             </button>
+            <button class="qol-btn" onclick="shareStoreRun('spirits')" style="font-size: 0.82rem; padding: 7px 12px; background: #0284c7; color: #fff; font-weight: 700;" title="Text or share liquor store run list">
+              <span>💬</span> Text Liquor Run
+            </button>
+            <button class="qol-btn" onclick="shareStoreRun('grocery')" style="font-size: 0.82rem; padding: 7px 12px; background: #059669; color: #fff; font-weight: 700;" title="Text or share grocery &amp; mixers run list">
+              <span>💬</span> Text Grocery Run
+            </button>
             <button class="qol-btn" onclick="resetCustomCartChecks()" style="font-size: 0.82rem; padding: 7px 12px;">
               <span>🔄</span> Reset Checks
             </button>
@@ -766,9 +776,9 @@
 
   <!-- Application Script -->
   <!-- Data & Application Scripts -->
-  <script src="js/recipes-data.js?v=3.6"></script>
-  <script src="js/pricing-data.js?v=3.6"></script>
-  <script src="js/app.js?v=3.6"></script>
+  <script src="js/recipes-data.js?v=3.7"></script>
+  <script src="js/pricing-data.js?v=3.7"></script>
+  <script src="js/app.js?v=3.7"></script>
 
   <!-- Mobile Bottom App Bar -->
   <nav class="mobile-bottom-app-bar" aria-label="Quick App Navigation">

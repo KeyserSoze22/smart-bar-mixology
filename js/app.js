@@ -434,6 +434,10 @@
     function handleUniversalSearch(query) {
       const q = (query || '').trim().toLowerCase();
       const dropdown = document.getElementById('universalSearchResults');
+      const clearBtn = document.getElementById('searchClearBtn');
+      if (clearBtn) {
+        clearBtn.style.display = (query && query.length > 0) ? 'inline-block' : 'none';
+      }
       if (!dropdown) return;
 
       // Also filter Smart Bar cards
@@ -476,6 +480,18 @@
       });
       dropdown.innerHTML = html;
       dropdown.style.display = 'block';
+    }
+
+    function clearUniversalSearch() {
+      const input = document.getElementById('drinkSearchInput');
+      const clearBtn = document.getElementById('searchClearBtn');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      if (clearBtn) clearBtn.style.display = 'none';
+      handleDrinkSearch('');
+      hideUniversalSearch();
     }
 
     function renderSearchResultItem(item) {
@@ -601,6 +617,9 @@
     }
 
     function jumpToBarCart() {
+      if (typeof expandSectionIfCollapsed === 'function') {
+        expandSectionIfCollapsed('custombar');
+      }
       const bar = document.getElementById('section-custombar');
       if (bar) {
         const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar');
@@ -680,9 +699,15 @@
             handleUniversalSearch(searchInput.value);
           }
         } else if (e.key === 'Escape') {
-          hideUniversalSearch();
-          closeRecipeQuickView();
-          closeBartenderModal();
+          const searchInput = document.getElementById('drinkSearchInput');
+          if (searchInput && (searchInput.value || document.activeElement === searchInput)) {
+            clearUniversalSearch();
+            searchInput.blur();
+          } else {
+            hideUniversalSearch();
+            closeRecipeQuickView();
+            closeBartenderModal();
+          }
         }
       });
     }
@@ -2037,6 +2062,71 @@
       document.body.removeChild(ta);
     }
 
+    /**
+     * Share or text a dedicated shopping run breakdown
+     * @param {'spirits'|'grocery'} storeType
+     */
+    function shareStoreRun(storeType) {
+      const cart = calculateCustomCart();
+      if (cart.selectedCount === 0) {
+        showToast('⚠️ Please select at least 1 cocktail first!');
+        return;
+      }
+
+      let title = '';
+      let items = [];
+      let totalEst = 0;
+
+      if (storeType === 'spirits') {
+        title = '🍾 Liquor Store Run (Smart Bar Mixology)';
+        const spirits = cart.categorized.spirits || [];
+        if (spirits.length === 0) {
+          showToast('ℹ️ No liquor bottles needed for your selected cocktails.');
+          return;
+        }
+        spirits.forEach(s => {
+          items.push(`• ${s.name} (${s.size || '1.75L'}) - ~$${s.price.toFixed(0)}`);
+          totalEst += s.price;
+        });
+      } else {
+        title = '🛒 Grocery Store Run (Mixers, Produce & Supplies)';
+        const cats = ['mixers', 'citrus', 'supplies'];
+        cats.forEach(c => {
+          const list = cart.categorized[c] || [];
+          if (list.length > 0) {
+            const heading = c === 'mixers' ? 'Mixers & Juices' : (c === 'citrus' ? 'Fresh Citrus & Produce' : 'Bar Supplies & Ice');
+            items.push(`\n[${heading}]`);
+            list.forEach(item => {
+              const name = item.name || item.brand;
+              items.push(`• ${name} - ~$${item.price.toFixed(0)}`);
+              totalEst += item.price;
+            });
+          }
+        });
+        if (items.length === 0) {
+          showToast('ℹ️ No grocery items needed for your selected cocktails.');
+          return;
+        }
+      }
+
+      const messageText = `${title}\nEstimated Cost: ~$${Math.round(totalEst)}\nDrinks Covered: ${cart.selectedCount} recipes\n\nItems Needed:\n${items.join('\n')}\n\nGenerated with Smart Bar Mixology`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: title,
+          text: messageText
+        }).then(() => {
+          showToast('📤 Shopping run shared successfully!');
+        }).catch((err) => {
+          if (err && err.name !== 'AbortError') {
+            copyTextToClipboard(messageText, '📋 Shopping run list copied to clipboard!');
+          }
+        });
+      } else {
+        copyTextToClipboard(messageText, '📋 Shopping run list copied to clipboard!');
+      }
+    }
+
 
     function handleDrinkSearch(query) {
       const q = query.trim().toLowerCase();
@@ -2220,3 +2310,76 @@
         });
       }
     }
+
+    // ==========================================================================
+    // SCREEN WAKE LOCK CONTROLLER (MIXOLOGIST HANDS-FREE SCREEN PRESERVATION)
+    // ==========================================================================
+    let screenWakeLock = null;
+
+    async function toggleWakeLock() {
+      if (!('wakeLock' in navigator)) {
+        showToast('ℹ️ Screen Wake Lock is not supported by your current browser.');
+        return;
+      }
+
+      const btn = document.getElementById('wakeLockToggleBtn');
+
+      if (screenWakeLock !== null) {
+        // Release existing lock
+        try {
+          await screenWakeLock.release();
+          screenWakeLock = null;
+          updateWakeLockButtonState(false);
+          showToast('📱 Screen Wake Lock deactivated.');
+        } catch (err) {
+          console.warn('Wake lock release error:', err);
+        }
+      } else {
+        // Request new lock
+        try {
+          screenWakeLock = await navigator.wakeLock.request('screen');
+          updateWakeLockButtonState(true);
+          showToast('💡 Screen will stay awake while mixing drinks!');
+
+          screenWakeLock.addEventListener('release', () => {
+            screenWakeLock = null;
+            updateWakeLockButtonState(false);
+          });
+        } catch (err) {
+          console.warn('Wake lock request error:', err);
+          showToast('⚠️ Could not activate Screen Wake Lock (battery saver active?).');
+          updateWakeLockButtonState(false);
+        }
+      }
+    }
+
+    function updateWakeLockButtonState(isActive) {
+      const btn = document.getElementById('wakeLockToggleBtn');
+      if (!btn) return;
+      if (isActive) {
+        btn.classList.add('active');
+        btn.innerHTML = '<span>💡</span> Screen Awake (Active)';
+        btn.setAttribute('title', 'Screen Wake Lock is active. Click to turn off.');
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '<span>📱</span> Keep Screen On';
+        btn.setAttribute('title', 'Keep screen awake while mixing drinks');
+      }
+    }
+
+    // Re-acquire lock if tab was backgrounded and returns to foreground
+    document.addEventListener('visibilitychange', async () => {
+      const btn = document.getElementById('wakeLockToggleBtn');
+      if (btn && btn.classList.contains('active') && screenWakeLock === null && document.visibilityState === 'visible') {
+        try {
+          screenWakeLock = await navigator.wakeLock.request('screen');
+          screenWakeLock.addEventListener('release', () => {
+            screenWakeLock = null;
+            updateWakeLockButtonState(false);
+          });
+        } catch (err) {
+          console.warn('Wake lock visibility re-acquire error:', err);
+        }
+      }
+    });
+
