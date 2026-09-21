@@ -555,6 +555,8 @@
           const targetEl = document.getElementById(targetId);
           if (targetEl) {
             e.preventDefault();
+            if (targetId === 'section-custombar') expandSectionIfCollapsed('custombar');
+            if (targetId === 'section-recipes') expandSectionIfCollapsed('recipes');
             document.querySelectorAll('.mobile-app-tab').forEach(t => {
               const tid = t.getAttribute('data-section') || t.getAttribute('href')?.replace('#', '');
               t.classList.toggle('active', tid === targetId);
@@ -740,17 +742,90 @@
       showToast(`🔍 Showing ${visibleCount} cocktails matching "${cat.toUpperCase()}"`);
     }
 
-    // 2. ITINERARY PAIRINGS ACCORDION
-    function toggleItineraryPairings() {
-      const grid = document.getElementById('itineraryPairingsGrid');
-      const icon = document.getElementById('itineraryToggleIcon');
-      if (!grid) return;
-      if (grid.style.display === 'none') {
-        grid.style.display = 'grid';
-        if (icon) icon.textContent = '▼ Collapse';
+    // ==========================================================================
+    // SECTION EXPAND / COLLAPSE SYSTEM
+    // ==========================================================================
+    const SECTION_COLLAPSE_MAP = {
+      masterFilterHub: { bodyId: 'masterFilterHubBody', btnId: 'btnToggleFilterHub', defaultDisplay: 'block', name: 'Filter & Sort Gallery' },
+      itinerary: { bodyId: 'itineraryPairingsGrid', btnId: 'btnToggleItinerary', defaultDisplay: 'grid', name: '7-Day Itinerary Pairings' },
+      custombar: { bodyId: 'customBarBody', btnId: 'btnToggleCustomBar', defaultDisplay: 'block', name: 'Smart Bar Builder & Cart' },
+      recipes: { bodyId: 'recipesBody', btnId: 'btnToggleRecipes', defaultDisplay: 'block', name: 'Selected Recipe Guide' },
+      brandStrategy: { bodyId: 'brandStrategyBody', btnId: 'btnToggleBrandStrategy', defaultDisplay: 'block', name: '1.75L Handle Strategy' },
+      customBarSelectors: { bodyId: 'customBarVenuesGrid', btnId: 'btnToggleSelectors', defaultDisplay: 'grid', name: 'Drink Selectors' },
+      servingsBreakdown: { bodyId: 'servingsBreakdownBody', btnId: 'btnToggleServings', defaultDisplay: 'block', name: 'Servings Scale' },
+      expenseSplitter: { bodyId: 'expenseSplitterBody', btnId: 'btnToggleExpenseSplitter', defaultDisplay: 'block', name: 'Expense Splitter' },
+      customCart: { bodyId: 'customBarCartDisplayArea', btnId: 'btnToggleCart', defaultDisplay: 'block', name: 'Shopping List' }
+    };
+
+    function toggleSectionCollapse(secKey) {
+      const cfg = SECTION_COLLAPSE_MAP[secKey];
+      if (!cfg) return;
+      const body = document.getElementById(cfg.bodyId);
+      const btn = document.getElementById(cfg.btnId);
+      if (!body) return;
+
+      const isCollapsed = body.style.display === 'none';
+      if (isCollapsed) {
+        body.style.display = cfg.defaultDisplay || '';
+        if (btn) btn.innerHTML = '<span>▼</span> Collapse' + (cfg.btnId === 'btnToggleSelectors' ? ' Selectors' : '');
       } else {
-        grid.style.display = 'none';
-        if (icon) icon.textContent = '▲ Expand';
+        body.style.display = 'none';
+        if (btn) btn.innerHTML = '<span>▲</span> Expand' + (cfg.btnId === 'btnToggleSelectors' ? ' Selectors' : '');
+      }
+      updateMasterCollapseButtonState();
+    }
+
+    function expandSectionIfCollapsed(secKey) {
+      const cfg = SECTION_COLLAPSE_MAP[secKey];
+      if (!cfg) return;
+      const body = document.getElementById(cfg.bodyId);
+      const btn = document.getElementById(cfg.btnId);
+      if (body && body.style.display === 'none') {
+        body.style.display = cfg.defaultDisplay || '';
+        if (btn) btn.innerHTML = '<span>▼</span> Collapse' + (cfg.btnId === 'btnToggleSelectors' ? ' Selectors' : '');
+      }
+      updateMasterCollapseButtonState();
+    }
+
+    function toggleItineraryPairings() {
+      toggleSectionCollapse('itinerary');
+    }
+
+    function updateMasterCollapseButtonState() {
+      const masterBtn = document.getElementById('toggleAllSectionsBtn');
+      if (!masterBtn) return;
+      const mainKeys = ['masterFilterHub', 'itinerary', 'custombar', 'recipes'];
+      const anyExpanded = mainKeys.some(k => {
+        const body = document.getElementById(SECTION_COLLAPSE_MAP[k]?.bodyId);
+        return body && body.style.display !== 'none';
+      });
+      masterBtn.innerHTML = anyExpanded ? '<span>⤡</span> Collapse All' : '<span>⤢</span> Expand All';
+    }
+
+    function toggleAllSections() {
+      const mainKeys = ['masterFilterHub', 'itinerary', 'custombar', 'recipes'];
+      const anyExpanded = mainKeys.some(k => {
+        const body = document.getElementById(SECTION_COLLAPSE_MAP[k]?.bodyId);
+        return body && body.style.display !== 'none';
+      });
+
+      mainKeys.forEach(k => {
+        const cfg = SECTION_COLLAPSE_MAP[k];
+        const body = document.getElementById(cfg.bodyId);
+        const btn = document.getElementById(cfg.btnId);
+        if (!body) return;
+        if (anyExpanded) {
+          body.style.display = 'none';
+          if (btn) btn.innerHTML = '<span>▲</span> Expand';
+        } else {
+          body.style.display = cfg.defaultDisplay || '';
+          if (btn) btn.innerHTML = '<span>▼</span> Collapse';
+        }
+      });
+
+      updateMasterCollapseButtonState();
+      if (typeof showToast === 'function') {
+        showToast(anyExpanded ? '⤡ All sections collapsed' : '⤢ All sections expanded');
       }
     }
 
@@ -761,6 +836,7 @@
     ]);
 
     function switchBarMode(mode) {
+      expandSectionIfCollapsed('custombar');
       const tabCart = document.getElementById('tabModeCart');
       const tabCab = document.getElementById('tabModeCabinet');
       const cabView = document.getElementById('cabinetModeView');
@@ -1368,6 +1444,7 @@
 
     function navigateToRecipe(dKey, event, sourceName, pushHistory = true) {
       if (event) event.stopPropagation();
+      expandSectionIfCollapsed('recipes');
       recordNavigationOrigin(sourceName || 'Smart Bar Builder');
 
       const fullKey = (typeof normalizeDrinkKey === 'function') ? normalizeDrinkKey(dKey) : dKey;
@@ -1854,6 +1931,8 @@
         showToast('⚠️ Please select at least 1 cocktail above in the Smart Bar Builder first!');
         return;
       }
+
+      expandSectionIfCollapsed('recipes');
 
       if (typeof filterRecipeCategory === 'function') {
         filterRecipeCategory('selected');

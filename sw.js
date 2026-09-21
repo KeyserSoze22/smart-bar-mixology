@@ -3,14 +3,14 @@
 // Provides 100% offline availability for beach, boat, and vacation rental use
 // ==========================================================================
 
-const CACHE_NAME = 'smart-bar-mixology-v3.5';
+const CACHE_NAME = 'smart-bar-mixology-v3.6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './css/styles.css?v=3.5',
-  './js/recipes-data.js?v=3.5',
-  './js/pricing-data.js?v=3.5',
-  './js/app.js?v=3.5',
+  './css/styles.css?v=3.6',
+  './js/recipes-data.js?v=3.6',
+  './js/pricing-data.js?v=3.6',
+  './js/app.js?v=3.6',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',

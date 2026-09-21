@@ -25,12 +25,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <!-- Application Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.5" />
+  <link rel="stylesheet" href="css/styles.css?v=3.6" />
   <script>
     if ('caches' in window) {
       caches.keys().then(keys => {
         keys.forEach(k => {
-          if (k !== 'smart-bar-mixology-v3.5') caches.delete(k);
+          if (k !== 'smart-bar-mixology-v3.6') caches.delete(k);
         });
       });
     }
@@ -80,6 +80,9 @@
           <button id="pwaInstallBtn" onclick="triggerPwaInstall()" class="btn btn-pwa-install" title="Install App on Phone or PC">
             <span>📲</span> Install App
           </button>
+          <button onclick="toggleAllSections()" class="btn btn-secondary" id="toggleAllSectionsBtn" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.2); color: #fff; cursor: pointer;" title="Expand or collapse all main sections on the page">
+            <span>⤡</span> Collapse All
+          </button>
           <button onclick="openSurpriseModal()" class="btn btn-secondary" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%); color: #fff; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;" title="Randomly Pick a Cocktail for the Group!">
             <span>🎲</span> Surprise Me!
           </button>
@@ -100,11 +103,17 @@
             Organize all 46 drinks by style (Margaritas, Whiskey Drinks, Punches, Martinis), spirit, or bar venue — compare restaurant bar prices vs. DIY batch cost!
           </p>
         </div>
-        <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()">
-          ↺ Reset Filters
-        </button>
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button type="button" class="filter-reset-btn" onclick="resetMasterFilters()">
+            ↺ Reset Filters
+          </button>
+          <button type="button" class="section-collapse-btn" id="btnToggleFilterHub" onclick="toggleSectionCollapse('masterFilterHub')" title="Collapse or expand cocktail filters &amp; gallery">
+            <span>▼</span> Collapse
+          </button>
+        </div>
       </div>
 
+      <div class="section-collapsible-body" id="masterFilterHubBody">
       <!-- Row 1: Drink Style Filter Pills (WHAT it is) -->
       <div class="style-filter-pills" id="styleFilterPills">
         <button type="button" class="style-pill-btn active" onclick="setDrinkStyleFilter('all')"><span>🍹</span> All Drinks (46)</button>
@@ -183,6 +192,7 @@
       <div class="filter-results-gallery" id="filterResultsGallery">
         <!-- Rendered dynamically by applyMasterFilters() -->
       </div>
+      </div>
     </div>
 
     </div>
@@ -197,7 +207,9 @@
             <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Curated cocktail themes matching your Holiday Isle itinerary • Click any day to view &amp; batch</p>
           </div>
         </div>
-        <span id="itineraryToggleIcon" style="font-size: 1rem; font-weight: 800; color: var(--primary);">▼ Collapse</span>
+        <button type="button" class="section-collapse-btn" id="btnToggleItinerary" onclick="event.stopPropagation(); toggleSectionCollapse('itinerary')" title="Collapse or expand itinerary pairings">
+          <span>▼</span> Collapse
+        </button>
       </div>
       <div class="itinerary-pairings-grid" id="itineraryPairingsGrid">
         <div class="itinerary-day-pill" onclick="navigateToRecipe('bp_ultimate_porchpunch')">
@@ -308,8 +320,8 @@
         </div>
       </div>
 
-      <div class="recipe-header" id="cartModeHeader">
-        <div>
+      <div class="recipe-header" id="cartModeHeader" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+        <div style="flex: 1; min-width: 280px;">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <h2><span>🍸🛒</span> Smart Consolidated Vacation Bar Builder &amp; Purchase List</h2>
             <span class="badge badge-purple">Retail Spirits Reference</span>
@@ -320,55 +332,69 @@
             <strong>Select only the cocktails your group actually wants to make</strong> from The Back Porch &amp; McGuire's. The builder automatically consolidates ingredients, eliminates duplicate bottles, recommends <strong>1–2 high-quality workhorse brands</strong> reasonably priced for mixed beach drinks, and generates an exact retail spirits and grocery shopping list!
           </p>
         </div>
+        <button type="button" class="section-collapse-btn" id="btnToggleCustomBar" onclick="toggleSectionCollapse('custombar')" title="Collapse or expand Smart Bar Builder">
+          <span>▼</span> Collapse
+        </button>
       </div>
 
+      <div class="section-collapsible-body" id="customBarBody">
       <!-- BRAND CONSOLIDATION STRATEGY CALLOUT -->
-      <div class="brand-strategy-box">
-        <div class="brand-strategy-title">
-          <span>🏆</span> 1.75L Handle Strategy for 6–8 Adults &amp; 30–40oz Tumblers (Standard Retail Spirit Handles):
+      <div class="brand-strategy-box" id="brandStrategyBox">
+        <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 10px;" onclick="toggleSectionCollapse('brandStrategy')">
+          <div class="brand-strategy-title" style="margin: 0;">
+            <span>🏆</span> 1.75L Handle Strategy for 6–8 Adults &amp; 30–40oz Tumblers (Standard Retail Spirit Handles):
+          </div>
+          <button type="button" class="section-collapse-btn" id="btnToggleBrandStrategy" onclick="event.stopPropagation(); toggleSectionCollapse('brandStrategy')" style="padding: 4px 12px; font-size: 0.78rem;" title="Collapse or expand 1.75L handle strategy guide">
+            <span>▼</span> Collapse
+          </button>
         </div>
-        <p class="brand-strategy-desc">
-          For <strong>6–8 adults drinking 2–4 drinks per day in 30–40oz Yeti mugs with heavy ice</strong>, standard 750ml bottles run dry in 1 afternoon! Stocking <strong>1.75L handles</strong> of core workhorse spirits slashes alcohol costs by <strong>30%–48% per ounce</strong> compared to 750ml fifths, giving your group ample volume for double beach pours all week without buying duplicate bottles:
-        </p>
-        <div class="brand-pill-grid">
-          <div class="brand-pill">
-            <span>🥃</span>
-            <div><strong>Tequila (1.75L Handle):</strong> Espolòn 100% Blue Agave (~$48.99) — <em>100% Blue Weber Agave workhorse; saves $50+ vs Casamigos handle ($99+) with pure agave taste</em></div>
-          </div>
-          <div class="brand-pill">
-            <span>🍸</span>
-            <div><strong>Vodka (1.75L Handle):</strong> Tito's Handmade Vodka (~$29.99) — <em>6x-distilled corn vodka; handle cuts cost to $0.51/oz (vs $0.87/oz in 750ml) for 30–40oz Yeti coolers</em></div>
-          </div>
-          <div class="brand-pill">
-            <span>🌴</span>
-            <div><strong>Rum (1.75L Handles):</strong> Bacardi Superior (~$21.99) &amp; Myers's Dark (~$39.99) — <em>Bulk 1.75L pairing for all Back Porch punches, buckets &amp; dark rum floats</em></div>
-          </div>
-          <div class="brand-pill">
-            <span>🥥</span>
-            <div><strong>Coconut Rum (1.75L Handle):</strong> Malibu Caribbean Rum (~$24.99) — <em>Essential tropical coconut base for 30–40oz Yeti mugs, porch punch &amp; beach buckets</em></div>
-          </div>
-          <div class="brand-pill">
-            <span>🍀</span>
-            <div><strong>Irish Whiskey (1.75L Handle):</strong> Bushmills Original (~$54.39) or Jameson (~$44.99) — <em>McGuire's authentic house pour in a full 1.75L handle for iced coffees &amp; mules</em></div>
-          </div>
-          <div class="brand-pill">
-            <span>🍊</span>
-            <div><strong>Orange Liqueur (1.0L Bottle):</strong> DeKuyper Triple Sec 48° (~$10.99) — <em>1.0-Liter bottle saves $27+ vs Grand Marnier/Cointreau with great citrus sweetness</em></div>
-          </div>
-          <div class="brand-pill">
-            <span>☕</span>
-            <div><strong>Coffee &amp; Cream (1.75L Handles):</strong> Kahlúa (~$52.99) &amp; Carolans Irish Cream (~$26.99) — <em>Carolans handle saves $20 vs Baileys 1.75L with real honey &amp; cream</em></div>
-          </div>
-          <div class="brand-pill">
-            <span>🍇</span>
-            <div><strong>Cordials:</strong> DeKuyper Peachtree (1.0L ~$13.99), Blue Curaçao (750ml ~$11.99), Dark Crème de Cacao (750ml ~$11.99) — <em>Exact specialty notes from 1 brand line</em></div>
+        <div id="brandStrategyBody">
+          <p class="brand-strategy-desc" style="margin-top: 10px;">
+            For <strong>6–8 adults drinking 2–4 drinks per day in 30–40oz Yeti mugs with heavy ice</strong>, standard 750ml bottles run dry in 1 afternoon! Stocking <strong>1.75L handles</strong> of core workhorse spirits slashes alcohol costs by <strong>30%–48% per ounce</strong> compared to 750ml fifths, giving your group ample volume for double beach pours all week without buying duplicate bottles:
+          </p>
+          <div class="brand-pill-grid">
+            <div class="brand-pill">
+              <span>🥃</span>
+              <div><strong>Tequila (1.75L Handle):</strong> Espolòn 100% Blue Agave (~$48.99) — <em>100% Blue Weber Agave workhorse; saves $50+ vs Casamigos handle ($99+) with pure agave taste</em></div>
+            </div>
+            <div class="brand-pill">
+              <span>🍸</span>
+              <div><strong>Vodka (1.75L Handle):</strong> Tito's Handmade Vodka (~$29.99) — <em>6x-distilled corn vodka; handle cuts cost to $0.51/oz (vs $0.87/oz in 750ml) for 30–40oz Yeti coolers</em></div>
+            </div>
+            <div class="brand-pill">
+              <span>🌴</span>
+              <div><strong>Rum (1.75L Handles):</strong> Bacardi Superior (~$21.99) &amp; Myers's Dark (~$39.99) — <em>Bulk 1.75L pairing for all Back Porch punches, buckets &amp; dark rum floats</em></div>
+            </div>
+            <div class="brand-pill">
+              <span>🥥</span>
+              <div><strong>Coconut Rum (1.75L Handle):</strong> Malibu Caribbean Rum (~$24.99) — <em>Essential tropical coconut base for 30–40oz Yeti mugs, porch punch &amp; beach buckets</em></div>
+            </div>
+            <div class="brand-pill">
+              <span>🍀</span>
+              <div><strong>Irish Whiskey (1.75L Handle):</strong> Bushmills Original (~$54.39) or Jameson (~$44.99) — <em>McGuire's authentic house pour in a full 1.75L handle for iced coffees &amp; mules</em></div>
+            </div>
+            <div class="brand-pill">
+              <span>🍊</span>
+              <div><strong>Orange Liqueur (1.0L Bottle):</strong> DeKuyper Triple Sec 48° (~$10.99) — <em>1.0-Liter bottle saves $27+ vs Grand Marnier/Cointreau with great citrus sweetness</em></div>
+            </div>
+            <div class="brand-pill">
+              <span>☕</span>
+              <div><strong>Coffee &amp; Cream (1.75L Handles):</strong> Kahlúa (~$52.99) &amp; Carolans Irish Cream (~$26.99) — <em>Carolans handle saves $20 vs Baileys 1.75L with real honey &amp; cream</em></div>
+            </div>
+            <div class="brand-pill">
+              <span>🍇</span>
+              <div><strong>Cordials:</strong> DeKuyper Peachtree (1.0L ~$13.99), Blue Curaçao (750ml ~$11.99), Dark Crème de Cacao (750ml ~$11.99) — <em>Exact specialty notes from 1 brand line</em></div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- PRESET BUTTONS -->
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
-        <span style="font-size: 0.86rem; font-weight: 700; color: var(--text-main);">Quick Cocktail Selection Presets:</span>
+        <span style="font-size: 0.86rem; font-weight: 700; color: var(--text-main);">Quick Cocktail Selection Presets &amp; Drink Matrix:</span>
+        <button type="button" class="section-collapse-btn" id="btnToggleSelectors" onclick="toggleSectionCollapse('customBarSelectors')" style="padding: 4px 12px; font-size: 0.78rem;" title="Collapse or expand 46 cocktail selector matrix">
+          <span>▼</span> Collapse Selectors
+        </button>
       </div>
       <div class="custom-bar-presets">
         <button type="button" class="preset-btn" onclick="setCustomDrinkPreset('backporch')">
@@ -392,7 +418,7 @@
       </div>
 
       <!-- TWO COLUMN COCKTAIL SELECTOR GRID -->
-      <div class="custom-bar-venues-grid">
+      <div class="custom-bar-venues-grid" id="customBarVenuesGrid">
         <!-- BACK PORCH COLUMN -->
         <div class="venue-cocktail-box backporch-box">
           <div class="venue-box-header">
@@ -469,12 +495,18 @@
 
       <!-- SERVINGS & VACATION GROUP CONSUMPTION BREAKDOWN -->
       <div class="servings-breakdown-box" id="servingsBreakdownBox">
-        <div class="servings-breakdown-header">
+        <div class="servings-breakdown-header" style="cursor: pointer;" onclick="toggleSectionCollapse('servingsBreakdown')">
           <div class="servings-title">
             <span>🪣🍺</span> Authentic 32-oz Buckets &amp; Mason Jars Scale (6–8 Adults, 7-Day Stay):
           </div>
-          <span class="servings-savings-pill" id="servingsSavingsPill">Save ~$0 vs Beach Bars</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="servings-savings-pill" id="servingsSavingsPill">Save ~$0 vs Beach Bars</span>
+            <button type="button" class="section-collapse-btn" id="btnToggleServings" onclick="event.stopPropagation(); toggleSectionCollapse('servingsBreakdown')" style="padding: 4px 10px; font-size: 0.78rem;" title="Collapse or expand servings scale">
+              <span>▼</span> Collapse
+            </button>
+          </div>
         </div>
+        <div id="servingsBreakdownBody">
         <div class="servings-breakdown-grid">
           <div class="servings-item">
             <span class="servings-icon">🧊</span>
@@ -505,6 +537,7 @@
             </div>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- GROUP EXPENSE & VENMO SPLITTER -->
@@ -518,16 +551,20 @@
               Easily split total spirits &amp; grocery costs evenly among adults for the week:
             </p>
           </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
             <button class="qol-btn" onclick="copyVenmoRequestText()" style="background: #9333ea; color: #fff; font-weight: 700; font-size: 0.82rem; padding: 6px 14px;">
               <span>📱</span> Copy Venmo Request
             </button>
             <button class="qol-btn" onclick="shareBarCartNative()" style="background: #0284c7; color: #fff; font-weight: 700; font-size: 0.82rem; padding: 6px 14px;">
               <span>📤</span> Share Bar List
             </button>
+            <button type="button" class="section-collapse-btn" id="btnToggleExpenseSplitter" onclick="toggleSectionCollapse('expenseSplitter')" style="padding: 6px 12px; font-size: 0.82rem;" title="Collapse or expand expense splitter">
+              <span>▼</span> Collapse
+            </button>
           </div>
         </div>
 
+        <div id="expenseSplitterBody">
         <!-- 1 TO 12 PEOPLE SLIDING BAR -->
         <div style="background: rgba(255, 255, 255, 0.6); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid rgba(147, 51, 234, 0.2); margin-bottom: 12px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -570,6 +607,7 @@
             <div style="font-size: 1.4rem; font-weight: 800; color: #16a34a;" id="splitSavingsVal">Save ~$0</div>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- ACTIONS & SHOPPING LIST CONTAINER -->
@@ -600,6 +638,9 @@
             <button class="qol-btn" onclick="resetCustomCartChecks()" style="font-size: 0.82rem; padding: 7px 12px;">
               <span>🔄</span> Reset Checks
             </button>
+            <button type="button" class="section-collapse-btn" id="btnToggleCart" onclick="toggleSectionCollapse('customCart')" style="padding: 7px 12px; font-size: 0.82rem;" title="Collapse or expand shopping list items">
+              <span>▼</span> Collapse
+            </button>
           </div>
         </div>
 
@@ -607,6 +648,7 @@
         <div id="customBarCartDisplayArea">
           <!-- Populated by JS -->
         </div>
+      </div>
       </div>
     </section>
 
@@ -616,15 +658,19 @@
     <span id="section-oldbaydrinks" class="nav-target-anchor"></span>
     <span id="section-classicdrinks" class="nav-target-anchor"></span>
     <section class="recipe-section" id="section-recipes">
-      <div class="recipe-header">
-        <div>
+      <div class="recipe-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+        <div style="flex: 1; min-width: 260px;">
           <h2><span>🍸</span> Selected Cocktail Recipe</h2>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
             Single-serving (32-oz Souvenir / Yeti) and 1-gallon vacation pitcher batch measurements—100% on the rocks, no blender required!
           </p>
         </div>
+        <button type="button" class="section-collapse-btn" id="btnToggleRecipes" onclick="toggleSectionCollapse('recipes')" title="Collapse or expand Selected Recipe section">
+          <span>▼</span> Collapse
+        </button>
       </div>
 
+      <div class="section-collapsible-body" id="recipesBody">
       <!-- Quick Category Filter Chips for the Recipe Selector -->
       <div class="recipe-category-chips" id="recipeCategoryChips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
         <button type="button" class="filter-chip active" id="rcat_all" onclick="filterRecipeCategory('all')">All Cocktails (46)</button>
@@ -699,6 +745,7 @@
       <div id="unifiedRecipeDisplayArea">
         <!-- Populated dynamically by JS -->
       </div>
+      </div>
     </section>
 
     <!-- Footer -->
@@ -719,9 +766,9 @@
 
   <!-- Application Script -->
   <!-- Data & Application Scripts -->
-  <script src="js/recipes-data.js?v=3.5"></script>
-  <script src="js/pricing-data.js?v=3.5"></script>
-  <script src="js/app.js?v=3.5"></script>
+  <script src="js/recipes-data.js?v=3.6"></script>
+  <script src="js/pricing-data.js?v=3.6"></script>
+  <script src="js/app.js?v=3.6"></script>
 
   <!-- Mobile Bottom App Bar -->
   <nav class="mobile-bottom-app-bar" aria-label="Quick App Navigation">
