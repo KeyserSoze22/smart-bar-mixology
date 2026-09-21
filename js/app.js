@@ -989,15 +989,29 @@
 
     function shareBarCartNative() {
       const cart = calculateCustomCart();
-      const perPerson = groupAdultCount > 0 ? (cart.grandTotal / groupAdultCount) : 0;
-      const shareData = {
-        title: 'Vacation Bar Cart',
-        text: `🍹 Here is our Vacation Bar Cart! ${cart.selectedCount} cocktails selected, ~$${perPerson.toFixed(2)} per adult for the entire week of unlimited beach drinks.`,
-        url: window.location.href
-      };
+      if (cart.selectedCount === 0) {
+        showToast('⚠️ Please select at least 1 cocktail first!');
+        return;
+      }
+
+      const items = [];
+      const cats = ['spirits', 'mixers', 'citrus', 'supplies'];
+      cats.forEach(k => {
+        const catItems = cart.categorized[k];
+        if (catItems && catItems.length > 0) {
+          catItems.forEach(i => {
+            const name = i.name || i.brand;
+            if (name) items.push(name);
+          });
+        }
+      });
+      const listText = items.join('\n');
 
       if (navigator.share) {
-        navigator.share(shareData).catch(() => {});
+        navigator.share({
+          title: 'Bar Shopping List',
+          text: listText
+        }).catch(() => {});
       } else {
         copyCustomBarShoppingList();
       }
@@ -1805,23 +1819,19 @@
         return;
       }
 
-      const sections = [];
-      const cats = [
-        { key: 'spirits', title: 'ALCOHOL & SPIRITS' },
-        { key: 'mixers', title: 'MIXERS & JUICES' },
-        { key: 'citrus', title: 'PRODUCE & CITRUS' },
-        { key: 'supplies', title: 'SUPPLIES & ICE' }
-      ];
-
-      cats.forEach(c => {
-        const items = cart.categorized[c.key];
-        if (items && items.length > 0) {
-          sections.push(`${c.title}:\n` + items.map(i => i.name || i.brand).join('\n'));
+      const items = [];
+      const cats = ['spirits', 'mixers', 'citrus', 'supplies'];
+      cats.forEach(k => {
+        const catItems = cart.categorized[k];
+        if (catItems && catItems.length > 0) {
+          catItems.forEach(i => {
+            const name = i.name || i.brand;
+            if (name) items.push(name);
+          });
         }
       });
 
-      const text = sections.join('\n\n');
-
+      const text = items.join('\n');
       copyTextToClipboard(text, '📋 Bar shopping list copied to clipboard!');
     }
 
@@ -1840,13 +1850,20 @@
     function fallbackCustomCopy(text, successToastMsg) {
       const ta = document.createElement('textarea');
       ta.value = text;
-      ta.style.position = 'fixed';
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
       ta.style.left = '-9999px';
+      ta.style.fontSize = '12pt';
       document.body.appendChild(ta);
       ta.select();
+      ta.setSelectionRange(0, 99999);
       try {
-        document.execCommand('copy');
-        showToast(successToastMsg || '📋 Copied to clipboard!');
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showToast(successToastMsg || '📋 Copied to clipboard!');
+        } else {
+          showToast('⚠️ Could not copy list automatically.');
+        }
       } catch (e) {
         showToast('⚠️ Could not copy list automatically.');
       }
@@ -1921,10 +1938,22 @@
         navigator.serviceWorker.register('./sw.js')
           .then(reg => {
             console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
+            // Proactively check for service worker updates immediately
+            if (reg.update) {
+              reg.update();
+            }
           })
           .catch(err => {
             console.warn('[PWA] Service Worker registration failed:', err);
           });
+
+        let swRefreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!swRefreshing) {
+            swRefreshing = true;
+            window.location.reload();
+          }
+        });
       }
 
       // 2. Listen for Chrome/Android install prompt
