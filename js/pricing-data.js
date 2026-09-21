@@ -135,69 +135,69 @@
 
 const customBarDatabase = {
       items: {
-        // Spirits (Retail Spirits Store - Local Retail Store | (850) 654-6161)
-        vodka: { id: "vodka", name: "Vodka (1.75L Handle)", brand: "Tito's Handmade Vodka (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 29.99, bottleOz: 59.17, yield: "~17 32-oz Buckets (3.5 oz pour)", note: "1.75L Handle — 6x-distilled corn vodka workhorse for 32-oz buckets & Yeti tumblers (saves $0.36/oz vs 750ml)" },
-        tequila: { id: "tequila", name: "100% Blue Agave Tequila (1.75L Handle)", brand: "Espolòn Blanco or Reposado Tequila (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 48.99, bottleOz: 59.17, yield: "~15–17 32-oz Margaritas (3.5–4 oz pour)", note: "1.75L Handle — 100% Blue Weber Agave workhorse, saves $50+ vs Casamigos handle ($99+) with pure agave taste" },
-        rum_white: { id: "rum_white", name: "Light / White Rum (1.75L Handle)", brand: "Bacardi Superior White Rum (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 21.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — clean, crisp rum standard for punches, buckets & 32-oz mason jars" },
-        rum_dark: { id: "rum_dark", name: "Dark / Black Rum (1.75L Handle)", brand: "Myers's Original Dark Rum (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 39.99, bottleOz: 59.17, yield: "~30–40 32-oz Floaters / Buckets", note: "1.75L Handle — rich Jamaican dark rum for mudslides, painkillers & floaters" },
-        rum_coconut: { id: "rum_coconut", name: "Coconut Rum (1.75L Handle)", brand: "Malibu Caribbean Coconut Rum (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 24.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — the essential coconut base for Porch punches, buckets & beach mixes" },
-        rum_spiced: { id: "rum_spiced", name: "Spiced Rum (1.75L Handle)", brand: "Captain Morgan Original Spiced Rum (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 25.99, bottleOz: 59.17, yield: "~40–50 32-oz Beach Buckets (1 oz pour)", note: "1.75L Handle — for 32-oz Beach Buckets & spiced highballs" },
-        rum_151: { id: "rum_151", name: "151 Overproof Rum (750ml)", brand: "Diamond Reserve 151 or Don Q 151 Rum (750ml)", cat: "spirits", store: "Retail Spirits Store", price: 23.99, bottleOz: 25.36, yield: "~17 32-oz Irish Wakes (1.5 oz pour)", note: "750ml — high-octane punch kicker for McGuire's Irish Wake (rarely bottled in handles; 750ml covers 17 large wakes)" },
-        whiskey_irish: { id: "whiskey_irish", name: "Irish Whiskey (1.75L Handle)", brand: "Bushmills Original or Jameson Irish Whiskey (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 54.39, bottleOz: 59.17, yield: "~17 32-oz Mason Jars (3.5 oz pour)", note: "1.75L Handle — McGuire's house pour (or Jameson 1.75L handle @ $44.99) for iced coffees & Dublin mules" },
-        triple_sec: { id: "triple_sec", name: "Triple Sec / Orange Liqueur (1.0L Bottle)", brand: "DeKuyper Triple Sec 48° (1.0 Liter)", cat: "spirits", store: "Retail Spirits Store", price: 10.99, bottleOz: 33.81, yield: "~22–34 32-oz Margaritas (1–1.5 oz)", note: "1.0L Bottle — saves $27–$30 vs Grand Marnier/Cointreau with great orange sweetness for mixed drinks" },
-        kahlua: { id: "kahlua", name: "Coffee Liqueur (1.75L Handle)", brand: "Kahlúa Original Coffee Liqueur (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 52.99, bottleOz: 59.17, yield: "~40 32-oz Mudslides (1.5 oz pour)", note: "1.75L Handle — rich coffee bean base for Patty'Wacked & Chocolate Moose" },
-        irish_cream: { id: "irish_cream", name: "Irish Cream Liqueur (1.75L Handle)", brand: "Carolans Irish Cream Liqueur (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 26.99, bottleOz: 59.17, yield: "~40 32-oz Iced Coffees (1.5 oz pour)", note: "1.75L Handle — real Irish spirits, rich cream & honey (saves $20 vs Baileys 1.75L)" },
-        blue_curacao: { id: "blue_curacao", name: "Blue Curaçao Liqueur (750ml)", brand: "DeKuyper Blue Curaçao Liqueur (750ml)", cat: "spirits", store: "Retail Spirits Store", price: 11.99, bottleOz: 25.36, yield: "~25 32-oz Irish Wakes (1 oz pour)", note: "750ml — gives McGuire's Irish Wake its trademark emerald green glow" },
-        creme_de_cacao: { id: "creme_de_cacao", name: "Dark Crème de Cacao (750ml)", brand: "DeKuyper Dark Crème de Cacao (750ml)", cat: "spirits", store: "Retail Spirits Store", price: 11.99, bottleOz: 25.36, yield: "~20–25 32-oz Mudslides (1–1.5 oz)", note: "750ml — rich cocoa liqueur for Patty'Wacked & Chocolate Moose" },
-        peach_schnapps: { id: "peach_schnapps", name: "Peach Schnapps (1.0L Bottle)", brand: "DeKuyper Peachtree Schnapps (1.0 Liter)", cat: "spirits", store: "Retail Spirits Store", price: 13.99, bottleOz: 33.81, yield: "~22–34 32-oz Buckets (1–1.5 oz)", note: "1.0L Bottle — for Back Porch Punch, Peach Lemonade & Strawberry Twist" },
-        fruit_liqueurs: { id: "fruit_liqueurs", name: "Blackberry & Banana Liqueurs (750ml pair)", brand: "DeKuyper Blackberry & Banana Liqueurs (750ml pair)", cat: "spirits", store: "Retail Spirits Store", price: 25.98, bottleOz: 50.72, yield: "~25 32-oz Rum Runners (1 oz each)", note: "750ml pair — only needed for Gulf Coast Rum Runners" },
-        bitters_angostura: { id: "bitters_angostura", name: "Aromatic Bitters (4 oz bottle)", brand: "Angostura Aromatic Bitters (4 oz)", cat: "spirits", store: "Retail Spirits Store", price: 9.99, bottleOz: 4.0, yield: "~100+ dashes (Old Fashioneds)", note: "4 oz — for McGuire's Tavern Old Fashioned" },
+        // Spirits / Alcohol
+        vodka: { id: "vodka", name: "Vodka (1.75L Handle)", brand: "Vodka (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 29.99, bottleOz: 59.17, yield: "~17 32-oz Buckets (3.5 oz pour)", note: "1.75L Handle — 6x-distilled corn/grain vodka for large batches & Yeti tumblers (saves $0.36/oz vs 750ml)" },
+        tequila: { id: "tequila", name: "Tequila Blanco or Reposado (1.75L Handle)", brand: "Tequila Blanco or Reposado (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 48.99, bottleOz: 59.17, yield: "~15–17 32-oz Margaritas (3.5–4 oz pour)", note: "1.75L Handle — 100% Blue Agave workhorse, pure agave flavor" },
+        rum_white: { id: "rum_white", name: "Light / White Rum (1.75L Handle)", brand: "Light / White Rum (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 21.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — clean, crisp rum standard for punches, buckets & highballs" },
+        rum_dark: { id: "rum_dark", name: "Dark / Black Rum (1.75L Handle)", brand: "Dark / Black Rum (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 39.99, bottleOz: 59.17, yield: "~30–40 32-oz Floaters / Buckets", note: "1.75L Handle — rich dark rum for mudslides, painkillers & floaters" },
+        rum_coconut: { id: "rum_coconut", name: "Coconut Rum (1.75L Handle)", brand: "Coconut Rum (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 24.99, bottleOz: 59.17, yield: "~30–40 32-oz Buckets (1.5–2 oz base)", note: "1.75L Handle — essential coconut base for punches, buckets & beach mixes" },
+        rum_spiced: { id: "rum_spiced", name: "Spiced Rum (1.75L Handle)", brand: "Spiced Rum (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 25.99, bottleOz: 59.17, yield: "~40–50 32-oz Beach Buckets (1 oz pour)", note: "1.75L Handle — for beach buckets & spiced highballs" },
+        rum_151: { id: "rum_151", name: "Overproof Rum 151 (750ml)", brand: "Overproof Rum 151 (750ml)", cat: "spirits", store: "Spirits Store", price: 23.99, bottleOz: 25.36, yield: "~17 32-oz Irish Wakes (1.5 oz pour)", note: "750ml — high-octane punch kicker (covers 17 large wakes)" },
+        whiskey_irish: { id: "whiskey_irish", name: "Irish Whiskey (1.75L Handle)", brand: "Irish Whiskey (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 54.39, bottleOz: 59.17, yield: "~17 32-oz Mason Jars (3.5 oz pour)", note: "1.75L Handle — smooth whiskey for iced coffees, sours & mules" },
+        triple_sec: { id: "triple_sec", name: "Triple Sec / Orange Liqueur (1.0L Bottle)", brand: "Triple Sec / Orange Liqueur (1.0L Bottle)", cat: "spirits", store: "Spirits Store", price: 10.99, bottleOz: 33.81, yield: "~22–34 32-oz Margaritas (1–1.5 oz)", note: "1.0L Bottle — citrus sweetness for mixed drinks & margaritas" },
+        kahlua: { id: "kahlua", name: "Coffee Liqueur (1.75L Handle)", brand: "Coffee Liqueur (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 52.99, bottleOz: 59.17, yield: "~40 32-oz Mudslides (1.5 oz pour)", note: "1.75L Handle — rich coffee bean base for mudslides & dessert drinks" },
+        irish_cream: { id: "irish_cream", name: "Irish Cream Liqueur (1.75L Handle)", brand: "Irish Cream Liqueur (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 26.99, bottleOz: 59.17, yield: "~40 32-oz Iced Coffees (1.5 oz pour)", note: "1.75L Handle — rich cream & spirits for iced coffee & cocktails" },
+        blue_curacao: { id: "blue_curacao", name: "Blue Curaçao Liqueur (750ml)", brand: "Blue Curaçao Liqueur (750ml)", cat: "spirits", store: "Spirits Store", price: 11.99, bottleOz: 25.36, yield: "~25 32-oz Irish Wakes (1 oz pour)", note: "750ml — vibrant citrus liqueur for emerald & blue drinks" },
+        creme_de_cacao: { id: "creme_de_cacao", name: "Dark Crème de Cacao (750ml)", brand: "Dark Crème de Cacao (750ml)", cat: "spirits", store: "Spirits Store", price: 11.99, bottleOz: 25.36, yield: "~20–25 32-oz Mudslides (1–1.5 oz)", note: "750ml — rich cocoa liqueur for mudslides & dessert drinks" },
+        peach_schnapps: { id: "peach_schnapps", name: "Peach Schnapps (1.0L Bottle)", brand: "Peach Schnapps (1.0L Bottle)", cat: "spirits", store: "Spirits Store", price: 13.99, bottleOz: 33.81, yield: "~22–34 32-oz Buckets (1–1.5 oz)", note: "1.0L Bottle — for punches, peach lemonade & coolers" },
+        fruit_liqueurs: { id: "fruit_liqueurs", name: "Blackberry & Banana Liqueurs (750ml pair)", brand: "Blackberry & Banana Liqueurs (750ml pair)", cat: "spirits", store: "Spirits Store", price: 25.98, bottleOz: 50.72, yield: "~25 32-oz Rum Runners (1 oz each)", note: "750ml pair — for rum runners" },
+        bitters_angostura: { id: "bitters_angostura", name: "Aromatic Bitters (4 oz bottle)", brand: "Aromatic Bitters (4 oz bottle)", cat: "spirits", store: "Spirits Store", price: 9.99, bottleOz: 4.0, yield: "~100+ dashes (Old Fashioneds)", note: "4 oz bottle — for Old Fashioneds and sours" },
 
-        // Mixers (Publix / Retail Spirits)
-        juice_pineapple: { id: "juice_pineapple", name: "Dole Pineapple Juice (52 oz)", brand: "Dole 100% Pineapple Juice (52 oz can/jug)", cat: "mixers", store: "Publix", price: 4.25, yield: "~17 servings (3 oz)" },
-        juice_orange: { id: "juice_orange", name: "Florida Orange Juice (52 oz)", brand: "Florida's Natural / Publix Orange Juice (52 oz)", cat: "mixers", store: "Publix", price: 4.99, yield: "~13–17 servings (3–4 oz)" },
-        juice_cranberry: { id: "juice_cranberry", name: "Ocean Spray Cranberry Juice (64 oz)", brand: "Ocean Spray Cranberry Juice (64 oz)", cat: "mixers", store: "Publix", price: 4.50, yield: "~42 splashes (1.5 oz)" },
-        juice_lime_bottled: { id: "juice_lime_bottled", name: "Lime Juice (15 oz bottle)", brand: "ReaLime or Fresh Lime Juice (15 oz)", cat: "mixers", store: "Publix", price: 2.99, yield: "~30 pours (0.5 oz)" },
-        syrup_grenadine: { id: "syrup_grenadine", name: "Rose's Grenadine Syrup (12 oz)", brand: "Rose's Grenadine Syrup (12 oz bottle)", cat: "mixers", store: "Retail Spirits / Publix", price: 3.99, yield: "~24 dashes (0.5 oz)" },
-        syrup_agave: { id: "syrup_agave", name: "Agave Nectar (11.75 oz bottle)", brand: "Wholesome or Publix Organic Agave Nectar (11.75 oz)", cat: "mixers", store: "Publix", price: 4.99, yield: "~24 pours (0.5 oz)" },
-        puree_strawberry: { id: "puree_strawberry", name: "Strawberry Purée / Berries (16 oz)", brand: "Publix Fresh Strawberries or Purée (16 oz)", cat: "mixers", store: "Publix", price: 4.99, yield: "~8–10 margaritas (1.5 oz)" },
-        puree_mango: { id: "puree_mango", name: "Mango Nectar / Purée (33.8 oz)", brand: "Looza or Jumex Mango Nectar (33.8 oz)", cat: "mixers", store: "Publix", price: 3.49, yield: "~16 margaritas/punches (2 oz)" },
-        puree_dragonfruit: { id: "puree_dragonfruit", name: "Dragon Fruit / Pitaya Juice (16 oz)", brand: "Pitaya Plus or Dragon Fruit Juice (16 oz)", cat: "mixers", store: "Publix", price: 4.99, yield: "~8–10 margaritas (1.5 oz)" },
-        cream_coconut: { id: "cream_coconut", name: "Coco López Cream of Coconut (15 oz)", brand: "Coco López Real Cream of Coconut (15 oz can)", cat: "mixers", store: "Publix", price: 3.99, yield: "~7–8 painkillers (2 oz)" },
-        mix_bloodymary: { id: "mix_bloodymary", name: "Zing Zang Bloody Mary Mix (32 oz)", brand: "Zing Zang Bloody Mary Mix (32 oz bottle)", cat: "mixers", store: "Retail Spirits / Publix", price: 5.99, yield: "~8 Bloody Marys (4 oz)" },
-        soda_lemonlime: { id: "soda_lemonlime", name: "Sprite / Lemon-Lime Soda (2-Liter)", brand: "Sprite or Lemon-Lime Soda (2-Liter Bottle)", cat: "mixers", store: "Publix", price: 2.49, yield: "~16 tall splashes (4 oz)" },
-        soda_gingerbeer: { id: "soda_gingerbeer", name: "Ginger Beer (4-Pack)", brand: "Q Mixers or Fever-Tree Ginger Beer (4-Pack)", cat: "mixers", store: "Publix", price: 5.99, yield: "~8 mules (3–4 oz)" },
-        soda_rootbeer: { id: "soda_rootbeer", name: "Root Beer (2-Liter)", brand: "Barq's or A&W Root Beer (2-Liter Bottle)", cat: "mixers", store: "Publix", price: 2.49, yield: "~8–10 kid floats (8 oz)" },
-        coffee_coldbrew: { id: "coffee_coldbrew", name: "Chilled Cold Brew Coffee (48 oz)", brand: "Stōk Unsweetened or Publix Cold Brew (48 oz)", cat: "mixers", store: "Publix", price: 5.99, yield: "~12 iced coffees (4 oz)" },
-        dairy_cream: { id: "dairy_cream", name: "Half-and-Half or Heavy Cream (1 Pint)", brand: "Publix Half-and-Half or Heavy Cream (1 Pint)", cat: "mixers", store: "Publix", price: 3.49, yield: "~16 splashes (1 oz)" },
-        syrup_chocolate: { id: "syrup_chocolate", name: "Hershey's Chocolate Syrup (24 oz)", brand: "Hershey's Chocolate Syrup Squeeze Bottle (24 oz)", cat: "mixers", store: "Publix", price: 3.49, yield: "~24 glass swirls" },
-        beer_guinness: { id: "beer_guinness", name: "Guinness Extra Stout (Single/4-pack)", brand: "Guinness Extra Stout (Single bottle or 4-pack)", cat: "mixers", store: "Retail Spirits / Publix", price: 4.99, yield: "~6 pub floats (2 oz)" },
-        lemonade: { id: "lemonade", name: "Simply Lemonade (52 oz)", brand: "Simply Lemonade (52 oz jug)", cat: "mixers", store: "Publix", price: 3.99, yield: "~13 coolers (4 oz)" },
-        icecream_vanilla: { id: "icecream_vanilla", name: "Vanilla Bean Ice Cream (tub)", brand: "Breyers or Publix Vanilla Bean Ice Cream (tub)", cat: "mixers", store: "Publix", price: 5.49, yield: "~8–10 scoops (kid floats)" },
+        // Mixers
+        juice_pineapple: { id: "juice_pineapple", name: "Pineapple Juice (52 oz)", brand: "Pineapple Juice (52 oz)", cat: "mixers", store: "Grocery Store", price: 4.25, yield: "~17 servings (3 oz)" },
+        juice_orange: { id: "juice_orange", name: "Orange Juice (52 oz)", brand: "Orange Juice (52 oz)", cat: "mixers", store: "Grocery Store", price: 4.99, yield: "~13–17 servings (3–4 oz)" },
+        juice_cranberry: { id: "juice_cranberry", name: "Cranberry Juice (64 oz)", brand: "Cranberry Juice (64 oz)", cat: "mixers", store: "Grocery Store", price: 4.50, yield: "~42 splashes (1.5 oz)" },
+        juice_lime_bottled: { id: "juice_lime_bottled", name: "Lime Juice (15 oz)", brand: "Lime Juice (15 oz bottle)", cat: "mixers", store: "Grocery Store", price: 2.99, yield: "~30 pours (0.5 oz)" },
+        syrup_grenadine: { id: "syrup_grenadine", name: "Grenadine Syrup (12 oz)", brand: "Grenadine Syrup (12 oz bottle)", cat: "mixers", store: "Grocery Store", price: 3.99, yield: "~24 dashes (0.5 oz)" },
+        syrup_agave: { id: "syrup_agave", name: "Agave Nectar (11.75 oz)", brand: "Agave Nectar (11.75 oz bottle)", cat: "mixers", store: "Grocery Store", price: 4.99, yield: "~24 pours (0.5 oz)" },
+        puree_strawberry: { id: "puree_strawberry", name: "Strawberry Purée / Berries (16 oz)", brand: "Strawberry Purée / Berries (16 oz)", cat: "mixers", store: "Grocery Store", price: 4.99, yield: "~8–10 margaritas (1.5 oz)" },
+        puree_mango: { id: "puree_mango", name: "Mango Nectar / Purée (33.8 oz)", brand: "Mango Nectar / Purée (33.8 oz)", cat: "mixers", store: "Grocery Store", price: 3.49, yield: "~16 margaritas/punches (2 oz)" },
+        puree_dragonfruit: { id: "puree_dragonfruit", name: "Dragon Fruit / Pitaya Juice (16 oz)", brand: "Dragon Fruit / Pitaya Juice (16 oz)", cat: "mixers", store: "Grocery Store", price: 4.99, yield: "~8–10 margaritas (1.5 oz)" },
+        cream_coconut: { id: "cream_coconut", name: "Cream of Coconut (15 oz)", brand: "Cream of Coconut (15 oz can)", cat: "mixers", store: "Grocery Store", price: 3.99, yield: "~7–8 painkillers (2 oz)" },
+        mix_bloodymary: { id: "mix_bloodymary", name: "Bloody Mary Mix (32 oz)", brand: "Bloody Mary Mix (32 oz bottle)", cat: "mixers", store: "Grocery Store", price: 5.99, yield: "~8 Bloody Marys (4 oz)" },
+        soda_lemonlime: { id: "soda_lemonlime", name: "Lemon-Lime Soda (2-Liter)", brand: "Lemon-Lime Soda (2-Liter Bottle)", cat: "mixers", store: "Grocery Store", price: 2.49, yield: "~16 tall splashes (4 oz)" },
+        soda_gingerbeer: { id: "soda_gingerbeer", name: "Ginger Beer (4-Pack)", brand: "Ginger Beer (4-Pack)", cat: "mixers", store: "Grocery Store", price: 5.99, yield: "~8 mules (3–4 oz)" },
+        soda_rootbeer: { id: "soda_rootbeer", name: "Root Beer (2-Liter)", brand: "Root Beer (2-Liter Bottle)", cat: "mixers", store: "Grocery Store", price: 2.49, yield: "~8–10 kid floats (8 oz)" },
+        coffee_coldbrew: { id: "coffee_coldbrew", name: "Chilled Cold Brew Coffee (48 oz)", brand: "Chilled Cold Brew Coffee (48 oz)", cat: "mixers", store: "Grocery Store", price: 5.99, yield: "~12 iced coffees (4 oz)" },
+        dairy_cream: { id: "dairy_cream", name: "Half-and-Half or Heavy Cream (1 Pint)", brand: "Half-and-Half or Heavy Cream (1 Pint)", cat: "mixers", store: "Grocery Store", price: 3.49, yield: "~16 splashes (1 oz)" },
+        syrup_chocolate: { id: "syrup_chocolate", name: "Chocolate Syrup (24 oz)", brand: "Chocolate Syrup (24 oz squeeze bottle)", cat: "mixers", store: "Grocery Store", price: 3.49, yield: "~24 glass swirls" },
+        beer_guinness: { id: "beer_guinness", name: "Stout Beer (Single or 4-pack)", brand: "Stout Beer (Single or 4-pack)", cat: "mixers", store: "Grocery Store", price: 4.99, yield: "~6 pub floats (2 oz)" },
+        lemonade: { id: "lemonade", name: "Lemonade (52 oz)", brand: "Lemonade (52 oz jug)", cat: "mixers", store: "Grocery Store", price: 3.99, yield: "~13 coolers (4 oz)" },
+        icecream_vanilla: { id: "icecream_vanilla", name: "Vanilla Bean Ice Cream (Tub)", brand: "Vanilla Bean Ice Cream (Tub)", cat: "mixers", store: "Grocery Store", price: 5.49, yield: "~8–10 scoops (kid floats)" },
 
-        // Fresh Produce & Citrus (Publix Fresh Produce)
-        produce_limes: { id: "produce_limes", name: "Fresh Limes (2-lb bag, ~12–15 limes)", brand: "Publix Fresh Limes (2-lb bag, ~12–15 limes)", cat: "citrus", store: "Publix Fresh Produce", price: 4.99, yield: "~70–80 wedges (~12–15 limes)" },
-        produce_lemons: { id: "produce_lemons", name: "Fresh Lemons (2-lb bag, ~8–10 lemons)", brand: "Publix Fresh Lemons (2-lb bag, ~8–10 lemons)", cat: "citrus", store: "Publix Fresh Produce", price: 4.99, yield: "~40–50 wedges (~8–10 lemons)" },
-        produce_oranges: { id: "produce_oranges", name: "Fresh Oranges (3-lb bag, ~6–8 oranges)", brand: "Publix Fresh Oranges (3-lb bag, ~6–8 oranges)", cat: "citrus", store: "Publix Fresh Produce", price: 5.99, yield: "~35–40 wheels (~6–8 oranges)" },
-        produce_jalapenos: { id: "produce_jalapenos", name: "Fresh Jalapeño Peppers (3–4 peppers)", brand: "Publix Fresh Jalapeño Peppers (3–4 peppers)", cat: "citrus", store: "Publix Fresh Produce", price: 1.49, yield: "~40–50 slices (margaritas)" },
-        produce_mint: { id: "produce_mint", name: "Fresh Mint Sprigs (clamshell)", brand: "Publix Fresh Mint Sprigs (clamshell)", cat: "citrus", store: "Publix Fresh Herbs", price: 2.99, yield: "~15–20 sprigs (mules & coolers)" },
-        produce_cherries: { id: "produce_cherries", name: "Maraschino Cherries with stems (16 oz)", brand: "Publix Maraschino Cherries with Stems (16 oz jar)", cat: "citrus", store: "Publix Grocery", price: 3.99, yield: "~45–50 cherries" },
-        produce_celery_olives: { id: "produce_celery_olives", name: "Celery Stalk & Queen Spanish Olives", brand: "Publix Fresh Celery Stalk & Queen Spanish Olives", cat: "citrus", store: "Publix Fresh Produce", price: 5.99, yield: "~12–15 skewers (Bloody Marys)" },
-        rim_salt_tajin: { id: "rim_salt_tajin", name: "Margarita Salt & Tajín Clásico Seasoning", brand: "Master of Mixes Margarita Salt & Tajín Clásico", cat: "citrus", store: "Publix Grocery", price: 4.99, yield: "~50+ glass rims" },
-        spice_nutmeg: { id: "spice_nutmeg", name: "Ground Nutmeg (spice shaker)", brand: "McCormick Ground Nutmeg (spice shaker)", cat: "citrus", store: "Publix Grocery", price: 3.99, yield: "~100+ dustings" },
+        // Fresh Produce & Citrus
+        produce_limes: { id: "produce_limes", name: "Fresh Limes (2-lb bag, ~12–15 limes)", brand: "Fresh Limes (2-lb bag, ~12–15 limes)", cat: "citrus", store: "Grocery Store", price: 4.99, yield: "~70–80 wedges (~12–15 limes)" },
+        produce_lemons: { id: "produce_lemons", name: "Fresh Lemons (2-lb bag, ~8–10 lemons)", brand: "Fresh Lemons (2-lb bag, ~8–10 lemons)", cat: "citrus", store: "Grocery Store", price: 4.99, yield: "~40–50 wedges (~8–10 lemons)" },
+        produce_oranges: { id: "produce_oranges", name: "Fresh Oranges (3-lb bag, ~6–8 oranges)", brand: "Fresh Oranges (3-lb bag, ~6–8 oranges)", cat: "citrus", store: "Grocery Store", price: 5.99, yield: "~35–40 wheels (~6–8 oranges)" },
+        produce_jalapenos: { id: "produce_jalapenos", name: "Fresh Jalapeño Peppers (3–4 peppers)", brand: "Fresh Jalapeño Peppers (3–4 peppers)", cat: "citrus", store: "Grocery Store", price: 1.49, yield: "~40–50 slices (margaritas)" },
+        produce_mint: { id: "produce_mint", name: "Fresh Mint Sprigs (clamshell)", brand: "Fresh Mint Sprigs (clamshell)", cat: "citrus", store: "Grocery Store", price: 2.99, yield: "~15–20 sprigs (mules & coolers)" },
+        produce_cherries: { id: "produce_cherries", name: "Maraschino Cherries with Stems (16 oz jar)", brand: "Maraschino Cherries with Stems (16 oz jar)", cat: "citrus", store: "Grocery Store", price: 3.99, yield: "~45–50 cherries" },
+        produce_celery_olives: { id: "produce_celery_olives", name: "Fresh Celery & Spanish Olives", brand: "Fresh Celery Stalk & Spanish Olives", cat: "citrus", store: "Grocery Store", price: 5.99, yield: "~12–15 skewers (Bloody Marys)" },
+        rim_salt_tajin: { id: "rim_salt_tajin", name: "Margarita Salt & Chili-Lime / Tajín", brand: "Margarita Salt & Chili-Lime / Tajín", cat: "citrus", store: "Grocery Store", price: 4.99, yield: "~50+ glass rims" },
+        spice_nutmeg: { id: "spice_nutmeg", name: "Ground Nutmeg (spice shaker)", brand: "Ground Nutmeg (spice shaker)", cat: "citrus", store: "Grocery Store", price: 3.99, yield: "~100+ dustings" },
 
-        // Barware & Supplies (Scaled for 6–8 Adults with 30–40oz Yeti Tumblers)
-        supplies_ice: { id: "supplies_ice", name: "3× 16-lb Ice Bags (48 lbs total)", brand: "Reddy Ice 16-lb Bags (3× Bags = 48 lbs total)", cat: "supplies", store: "Publix / Resort (Keep in condo freezer)", price: 11.97, yield: "48 lbs ice (~45–60 Yeti mugs packed with ice)" },
-        supplies_cups: { id: "supplies_cups", name: "50-pack 16-oz Plastic Party Tumblers", brand: "Solo / Hefty 16-oz Plastic Tumblers (50-pack)", cat: "supplies", store: "Publix (NO GLASS on beach/boats)", price: 6.99, yield: "50 cups + BYO Yeti tumblers" },
-        tea_sweettea: { id: "tea_sweettea", name: "Southern Sweet Tea (Publix Deli 1-Gallon)", brand: "Publix Deli Southern Sweet Tea (1-Gallon Jug)", cat: "mixers", store: "Publix Deli", price: 3.99, yield: "~16 pours (8 oz)" },
-        produce_cucumber: { id: "produce_cucumber", name: "English Seedless Cucumber (1 cucumber)", brand: "Publix English Seedless Cucumber (1 cucumber)", cat: "citrus", store: "Publix Fresh Produce", price: 1.99, yield: "~30–40 slices" },
-        rim_oldbay: { id: "rim_oldbay", name: "Old Bay Seasoning (6 oz can)", brand: "McCormick Old Bay Seasoning (6 oz can)", cat: "citrus", store: "Publix Grocery", price: 4.49, yield: "~50+ rims & seafood steaming" },
-        gin: { id: "gin", name: "London Dry Gin (1.75L Handle)", brand: "Beefeater London Dry Gin (1.75L Handle)", cat: "spirits", store: "Retail Spirits Store", price: 34.99, bottleOz: 59.17, yield: "~15–20 32-oz Cocktails (3–4 oz pour)", note: "1.75L Handle — classic juniper-forward London dry gin for Martinis, Long Islands & G&Ts" },
-        soda_grapefruit: { id: "soda_grapefruit", name: "Grapefruit Soda (2-Liter / 4-pack)", brand: "Squirt, Jarritos or Fever-Tree Grapefruit Soda", cat: "mixers", store: "Publix", price: 3.49, yield: "~8–10 Palomas (4–5 oz)" },
-        soda_clubsoda: { id: "soda_clubsoda", name: "Club Soda / Sparkling Water (2-Liter)", brand: "Schweppes or Canada Dry Club Soda (2-Liter)", cat: "mixers", store: "Publix", price: 2.49, yield: "~12–16 highballs (4 oz)" },
-        soda_cola: { id: "soda_cola", name: "Coca-Cola Classic (2-Liter)", brand: "Coca-Cola Classic (2-Liter Bottle)", cat: "mixers", store: "Publix", price: 2.99, yield: "~16 highball splashes (4 oz)" },
-        syrup_orgeat: { id: "syrup_orgeat", name: "Orgeat / Almond Syrup (12 oz)", brand: "Torani or Monin Almond/Orgeat Syrup (12 oz bottle)", cat: "mixers", store: "Publix / Retail Spirits", price: 5.99, yield: "~12–16 Mai Tais (1 oz)" },
-        supplies_shaker: { id: "supplies_shaker", name: "16-oz Cocktail Shaker with Strainer", brand: "Cocktail Shaker with Strainer (16 oz)", cat: "supplies", store: "Retail Spirits / Publix", price: 9.99, yield: "Reusable all week" }
+        // Barware & Supplies
+        supplies_ice: { id: "supplies_ice", name: "Ice Bags (3× 16-lb Bags = 48 lbs total)", brand: "Ice Bags (3× 16-lb Bags = 48 lbs total)", cat: "supplies", store: "Grocery / Resort", price: 11.97, yield: "48 lbs ice (~45–60 Yeti mugs packed with ice)" },
+        supplies_cups: { id: "supplies_cups", name: "Plastic Party Tumblers (50-pack 16-oz)", brand: "Plastic Party Tumblers (50-pack 16-oz)", cat: "supplies", store: "Grocery Store", price: 6.99, yield: "50 cups + BYO Yeti tumblers" },
+        tea_sweettea: { id: "tea_sweettea", name: "Southern Sweet Tea (1-Gallon Jug)", brand: "Southern Sweet Tea (1-Gallon Jug)", cat: "mixers", store: "Grocery Store", price: 3.99, yield: "~16 pours (8 oz)" },
+        produce_cucumber: { id: "produce_cucumber", name: "English Seedless Cucumber (1 cucumber)", brand: "English Seedless Cucumber (1 cucumber)", cat: "citrus", store: "Grocery Store", price: 1.99, yield: "~30–40 slices" },
+        rim_oldbay: { id: "rim_oldbay", name: "Seafood Seasoning / Old Bay (6 oz can)", brand: "Seafood Seasoning / Old Bay (6 oz can)", cat: "citrus", store: "Grocery Store", price: 4.49, yield: "~50+ rims & seafood steaming" },
+        gin: { id: "gin", name: "London Dry Gin (1.75L Handle)", brand: "London Dry Gin (1.75L Handle)", cat: "spirits", store: "Spirits Store", price: 34.99, bottleOz: 59.17, yield: "~15–20 32-oz Cocktails (3–4 oz pour)", note: "1.75L Handle — classic juniper gin for martinis & highballs" },
+        soda_grapefruit: { id: "soda_grapefruit", name: "Grapefruit Soda (2-Liter / 4-pack)", brand: "Grapefruit Soda (2-Liter / 4-pack)", cat: "mixers", store: "Grocery Store", price: 3.49, yield: "~8–10 Palomas (4–5 oz)" },
+        soda_clubsoda: { id: "soda_clubsoda", name: "Club Soda / Sparkling Water (2-Liter)", brand: "Club Soda / Sparkling Water (2-Liter)", cat: "mixers", store: "Grocery Store", price: 2.49, yield: "~12–16 highballs (4 oz)" },
+        soda_cola: { id: "soda_cola", name: "Cola (2-Liter)", brand: "Cola (2-Liter Bottle)", cat: "mixers", store: "Grocery Store", price: 2.99, yield: "~16 highball splashes (4 oz)" },
+        syrup_orgeat: { id: "syrup_orgeat", name: "Orgeat / Almond Syrup (12 oz)", brand: "Orgeat / Almond Syrup (12 oz bottle)", cat: "mixers", store: "Grocery / Spirits", price: 5.99, yield: "~12–16 Mai Tais (1 oz)" },
+        supplies_shaker: { id: "supplies_shaker", name: "Cocktail Shaker with Strainer (16 oz)", brand: "Cocktail Shaker with Strainer (16 oz)", cat: "supplies", store: "Grocery / Spirits", price: 9.99, yield: "Reusable all week" }
       },
 
       drinks: {
@@ -219,8 +219,8 @@ const customBarDatabase = {
           items: ["rum_coconut", "rum_white", "rum_spiced", "rum_dark", "juice_pineapple", "juice_orange", "juice_cranberry", "syrup_grenadine", "produce_limes", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         bp_porchmargarita: {
-          key: "bp_porchmargarita", name: "Grand Porch Sunset Margarita", venue: "The Back Porch", icon: "🧂", tag: "32-oz Bucket • Espolòn 100% Agave & Triple Sec", liquorOz: 5.0,
-          items: ["tequila", "triple_sec", "juice_lime_bottled", "syrup_agave", "juice_orange", "produce_limes", "rim_salt_tajin", "supplies_ice", "supplies_cups", "supplies_shaker"]
+          key: "bp_porchmargarita", name: "Grand Porch Sunset Margarita", venue: "The Back Porch", icon: "🧂", tag: "32-oz Bucket • 100% Agave & Triple Sec", liquorOz: 5.0,
+          items: ["tequila", "triple_sec", "juice_lime_bottled", "syrup_agave", "juice_orange", "produce_limes", "produce_oranges", "rim_salt_tajin", "supplies_ice", "supplies_cups", "supplies_shaker"]
         },
         bp_strawberry_margarita: {
           key: "bp_strawberry_margarita", name: "Strawberry Coral Margarita", venue: "The Back Porch", icon: "🍓", tag: "32-oz Bucket • Fresh Strawberry Purée & Tequila", liquorOz: 5.0,
@@ -239,11 +239,11 @@ const customBarDatabase = {
           items: ["tequila", "triple_sec", "puree_dragonfruit", "juice_lime_bottled", "syrup_agave", "produce_limes", "rim_salt_tajin", "supplies_ice", "supplies_cups", "supplies_shaker"]
         },
         bp_bloodymary: {
-          key: "bp_bloodymary", name: "Spicy Gulf Coast Bloody Mary", venue: "The Back Porch", icon: "🌶️", tag: "32-oz Bucket • Tito's Vodka, Zing Zang & Pickled Okra", liquorOz: 3.5,
+          key: "bp_bloodymary", name: "Spicy Gulf Coast Bloody Mary", venue: "The Back Porch", icon: "🌶️", tag: "32-oz Bucket • Vodka, Tomato Mary Mix & Loaded Skewer", liquorOz: 3.5,
           items: ["vodka", "mix_bloodymary", "produce_lemons", "produce_limes", "produce_celery_olives", "rim_salt_tajin", "supplies_ice", "supplies_cups"]
         },
         bp_painkiller: {
-          key: "bp_painkiller", name: "Coastal Vacation Painkiller", venue: "The Back Porch", icon: "🥥", tag: "32-oz Bucket • Myers's Dark Rum, Coconut & Nutmeg", liquorOz: 4.0,
+          key: "bp_painkiller", name: "Coastal Vacation Painkiller", venue: "The Back Porch", icon: "🥥", tag: "32-oz Bucket • Dark Rum, Coconut & Nutmeg", liquorOz: 4.0,
           items: ["rum_dark", "juice_pineapple", "juice_orange", "cream_coconut", "spice_nutmeg", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         bp_rumrunner: {
@@ -251,12 +251,12 @@ const customBarDatabase = {
           items: ["rum_white", "rum_dark", "fruit_liqueurs", "juice_pineapple", "juice_orange", "syrup_grenadine", "produce_limes", "produce_oranges", "supplies_ice", "supplies_cups"]
         },
         bp_peachlemonade: {
-          key: "bp_peachlemonade", name: "Vacation Sunset Peach Lemonade", venue: "The Back Porch", icon: "🍋", tag: "32-oz Bucket • Tito's Vodka, Peach & Lemonade", liquorOz: 5.0,
+          key: "bp_peachlemonade", name: "Vacation Sunset Peach Lemonade", venue: "The Back Porch", icon: "🍋", tag: "32-oz Bucket • Vodka, Peach & Lemonade", liquorOz: 5.0,
           items: ["vodka", "peach_schnapps", "lemonade", "juice_cranberry", "produce_lemons", "produce_mint", "supplies_ice", "supplies_cups"]
         },
         bp_sunset_punch_kid: {
           key: "bp_sunset_punch_kid", name: "Little Porch Sunset Punch (Mocktail)", venue: "The Back Porch", icon: "🧒", tag: "32-oz Souvenir Bucket • 0.0% ABV for Kids", liquorOz: 0.0,
-          items: ["juice_pineapple", "juice_orange", "soda_lemonlime", "syrup_grenadine", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
+          items: ["juice_pineapple", "juice_orange", "soda_lemonlime", "syrup_grenadine", "produce_limes", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
 
         // McGuire's Irish Pub (12) - Portioned for 32-oz Souvenir Mason Jars / Yeti Tumblers
@@ -319,10 +319,10 @@ const customBarDatabase = {
         },
         obs_bahamamama: {
           key: "obs_bahamamama", name: "The Steamer Bahama Mama", venue: "Old Bay Steamer", icon: "🌴", tag: "32-oz Bucket • Triple Rum, Banana & Dark Rum Float", liquorOz: 5.5,
-          items: ["rum_white", "rum_coconut", "rum_dark", "fruit_liqueurs", "juice_pineapple", "juice_orange", "syrup_grenadine", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
+          items: ["rum_white", "rum_coconut", "rum_dark", "fruit_liqueurs", "juice_pineapple", "juice_orange", "syrup_grenadine", "produce_limes", "produce_oranges", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         obs_cucumbercooler: {
-          key: "obs_cucumbercooler", name: "The Coastal Cucumber Cooler", venue: "Old Bay Steamer", icon: "🥒", tag: "32-oz Vessel • Beefeater Gin, Cucumber & Lime", liquorOz: 4.0,
+          key: "obs_cucumbercooler", name: "The Coastal Cucumber Cooler", venue: "Old Bay Steamer", icon: "🥒", tag: "32-oz Vessel • Gin, Cucumber & Fresh Lime", liquorOz: 4.0,
           items: ["gin", "produce_cucumber", "juice_lime_bottled", "syrup_agave", "soda_clubsoda", "produce_limes", "supplies_ice", "supplies_cups"]
         },
         obs_strongisland: {
@@ -330,16 +330,16 @@ const customBarDatabase = {
           items: ["vodka", "rum_white", "tequila", "gin", "triple_sec", "produce_lemons", "syrup_agave", "soda_cola", "supplies_ice", "supplies_cups"]
         },
         obs_seafoodbloodymary: {
-          key: "obs_seafoodbloodymary", name: "Steamer Seafood Bloody Mary", venue: "Old Bay Steamer", icon: "🦀", tag: "32-oz Vessel • Tito's, Old Bay Rim & Loaded Skewer", liquorOz: 4.0,
+          key: "obs_seafoodbloodymary", name: "Steamer Seafood Bloody Mary", venue: "Old Bay Steamer", icon: "🦀", tag: "32-oz Vessel • Vodka, Old Bay Rim & Loaded Skewer", liquorOz: 4.0,
           items: ["vodka", "mix_bloodymary", "rim_oldbay", "produce_lemons", "produce_limes", "produce_celery_olives", "supplies_ice", "supplies_cups"]
         },
         obs_topshelfmargarita: {
           key: "obs_topshelfmargarita", name: "Steamer Grand Sunset Margarita", venue: "Old Bay Steamer", icon: "🧂", tag: "32-oz Bucket • 100% Agave, Grand Float & Old Bay Rim", liquorOz: 5.5,
-          items: ["tequila", "triple_sec", "juice_lime_bottled", "syrup_agave", "juice_orange", "rim_oldbay", "produce_limes", "supplies_ice", "supplies_cups", "supplies_shaker"]
+          items: ["tequila", "triple_sec", "juice_lime_bottled", "syrup_agave", "juice_orange", "rim_oldbay", "produce_limes", "produce_oranges", "supplies_ice", "supplies_cups", "supplies_shaker"]
         },
         obs_bushwacker: {
           key: "obs_bushwacker", name: "Coastal Vacation Bushwacker", venue: "Old Bay Steamer", icon: "🍫", tag: "32-oz Mug • Dark Rum, Kahlúa, Cacao & Coconut", liquorOz: 5.5,
-          items: ["rum_dark", "kahlua", "creme_de_cacao", "cream_coconut", "dairy_cream", "syrup_chocolate", "spice_nutmeg", "supplies_ice", "supplies_cups"]
+          items: ["rum_dark", "kahlua", "creme_de_cacao", "cream_coconut", "dairy_cream", "syrup_chocolate", "spice_nutmeg", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         obs_little_steamer_kid: {
           key: "obs_little_steamer_kid", name: "Little Steamer Lemon Sweet Tea", venue: "Old Bay Steamer", icon: "🧒", tag: "32-oz Bucket • Southern Sweet Tea & Lemonade (0.0% ABV)", liquorOz: 0.0,
@@ -347,16 +347,16 @@ const customBarDatabase = {
         },
         // Vacation & Beach Classics (12) - Portioned for 32-oz Vessels / Yeti Tumblers
         cl_classic_mojito: {
-          key: "cl_classic_mojito", name: "The Classic Mojito", venue: "Vacation Classics", icon: "🌿", tag: "32-oz Vessel • Bacardi Rum, Mint, Fresh Lime & Club Soda", liquorOz: 4.0,
+          key: "cl_classic_mojito", name: "The Classic Mojito", venue: "Vacation Classics", icon: "🌿", tag: "32-oz Vessel • White Rum, Mint, Fresh Lime & Club Soda", liquorOz: 4.0,
           items: ["rum_white", "juice_lime_bottled", "soda_clubsoda", "syrup_agave", "produce_limes", "produce_mint", "supplies_ice", "supplies_cups"]
         },
         cl_classic_pina_colada: {
-          key: "cl_classic_pina_colada", name: "Classic Piña Colada", venue: "Vacation Classics", icon: "🥥", tag: "32-oz Bucket • Bacardi, Myers's Float & Coco López", liquorOz: 4.5,
+          key: "cl_classic_pina_colada", name: "Classic Piña Colada", venue: "Vacation Classics", icon: "🥥", tag: "32-oz Bucket • White Rum, Dark Rum Float & Cream of Coconut", liquorOz: 4.5,
           items: ["rum_white", "rum_dark", "cream_coconut", "juice_pineapple", "produce_limes", "produce_cherries", "supplies_ice", "supplies_cups"]
         },
         cl_classic_mai_tai: {
           key: "cl_classic_mai_tai", name: "The 1944 Mai Tai", venue: "Vacation Classics", icon: "🌺", tag: "32-oz Vessel • Dual Rums, Triple Sec, Orgeat & Fresh Lime", liquorOz: 4.5,
-          items: ["rum_white", "rum_dark", "triple_sec", "syrup_orgeat", "juice_lime_bottled", "juice_orange", "produce_limes", "produce_mint", "supplies_ice", "supplies_cups"]
+          items: ["rum_white", "rum_dark", "triple_sec", "syrup_orgeat", "juice_lime_bottled", "juice_orange", "produce_limes", "produce_oranges", "produce_cherries", "produce_mint", "supplies_ice", "supplies_cups"]
         },
         cl_classic_paloma: {
           key: "cl_classic_paloma", name: "Coastal Vacation Paloma", venue: "Vacation Classics", icon: "🍈", tag: "32-oz Bucket • Espolòn 100% Agave, Grapefruit Soda & Tajín", liquorOz: 4.0,

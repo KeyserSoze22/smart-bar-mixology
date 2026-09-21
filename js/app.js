@@ -1757,10 +1757,10 @@
         });
       }
 
-      renderCategory('spirits', 'Alcohol & Spirits', '🍾', 'Retail Spirits Store - Local Retail Store', cart.spiritsCost);
-      renderCategory('mixers', 'Mixers & Juices', '🥥', 'Publix / Retail Spirits', cart.mixersCost);
-      renderCategory('citrus', 'Produce & Fresh Citrus', '🍋', 'Publix Fresh Produce', cart.citrusCost);
-      renderCategory('supplies', 'Bar Supplies & Ice', '🧊', 'Publix & Resort', cart.suppliesCost);
+      renderCategory('spirits', 'Alcohol & Spirits', '🍾', 'Spirits Store', cart.spiritsCost);
+      renderCategory('mixers', 'Mixers & Juices', '🥥', 'Grocery Store', cart.mixersCost);
+      renderCategory('citrus', 'Produce & Fresh Citrus', '🍋', 'Produce / Grocery', cart.citrusCost);
+      renderCategory('supplies', 'Bar Supplies & Ice', '🧊', 'Grocery / Resort', cart.suppliesCost);
 
       displayArea.innerHTML = htmlContent;
     }
@@ -1802,51 +1802,40 @@
         spirits: {
           title: 'ALCOHOL & SPIRITS SHOPPING LIST',
           icon: '🍾',
-          store: 'Retail Spirits Store, Local Retail Store | (850) 654-6161',
           subtotal: cart.spiritsCost,
           shortName: 'Alcohol'
         },
         mixers: {
           title: 'MIXERS & JUICES SHOPPING LIST',
           icon: '🥥',
-          store: 'Publix / Retail Spirits',
           subtotal: cart.mixersCost,
           shortName: 'Mixers'
         },
         citrus: {
           title: 'PRODUCE & FRESH CITRUS SHOPPING LIST',
           icon: '🍋',
-          store: 'Publix Fresh Produce',
           subtotal: cart.citrusCost,
           shortName: 'Produce'
         },
         supplies: {
-          title: 'ICE & BAR SUPPLIES SHOPPING LIST',
+          title: 'BAR SUPPLIES & ICE SHOPPING LIST',
           icon: '🧊',
-          store: 'Publix & Resort',
           subtotal: cart.suppliesCost,
           shortName: 'Supplies'
         }
-      }[catKey] || { title: 'SHOPPING LIST', icon: '📋', store: '', subtotal: 0, shortName: 'Section' };
+      }[catKey] || { title: 'SHOPPING LIST', icon: '📋', subtotal: 0, shortName: 'Section' };
 
-      let text = `${sectionMeta.icon} SMART BAR MIXOLOGY — ${sectionMeta.title}\n`;
-      text += `Store: ${sectionMeta.store}\n`;
+      let text = `${sectionMeta.icon} ${sectionMeta.title}\n`;
       text += `Selected Cocktails (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
-      text += `Est. ${sectionMeta.shortName} Total: ~$${sectionMeta.subtotal.toFixed(2)} (${items.length} ${items.length === 1 ? 'item' : 'items'})\n`;
-      if (catKey === 'spirits') {
-        text += `Authentic 32-oz Vessel Yield: ~${cart.bucketServings} Buckets/Jars (~${cart.pitchersCount} Condo Pitchers)\n`;
-      }
-      text += '\n';
+      text += `Est. ${sectionMeta.shortName} Total: ~$${sectionMeta.subtotal.toFixed(2)} (${items.length} ${items.length === 1 ? 'item' : 'items'})\n\n`;
 
       items.forEach(i => {
         const itemTitle = i.brand || i.name;
-        const yieldStr = i.yield ? ` [Yield: ${i.yield}]` : '';
-        const drinksStr = i.usedIn && i.usedIn.length > 0 ? ` — For: ${i.usedIn.map(u => u.name).join(', ')}` : '';
-        text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})${yieldStr}${drinksStr}\n`;
+        text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})\n`;
       });
 
       if (catKey === 'spirits' || catKey === 'supplies') {
-        text += '\nStrict Vacation Rule: Strictly NO GLASS on beaches or vacation party boats! Save $500 fine.';
+        text += '\nNote: No glass containers on beaches or boats.';
       }
 
       copyTextToClipboard(text, `📋 ${sectionMeta.shortName} shopping list copied to clipboard!`);
@@ -1861,13 +1850,11 @@
 
       const selectedNames = [...customBarSelectedDrinks].map(k => (customBarDatabase.drinks[k] && customBarDatabase.drinks[k].name) || k);
 
-      let text = '🍸 SMART CONSOLIDATED BEACH VACATION BAR LIST (Vacation 2026)\n';
-      text += `Store: Retail Spirits Store, Local Retail Store, Beach Vacation 32541 | (850) 654-6161\n`;
-      text += `Selected Drinks (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
+      let text = '🍸 SMART CONSOLIDATED BAR SHOPPING LIST\n';
+      text += `Selected Cocktails (${cart.selectedCount}): ${selectedNames.join(', ')}\n`;
       text += 'Estimated Total: ~$' + cart.grandTotal.toFixed(2) + ' (Alcohol: ~$' + cart.spiritsCost.toFixed(2) + ' | Mixers/Produce/Ice: ~$' + (cart.mixersCost + cart.citrusCost + cart.suppliesCost).toFixed(2) + ')\n';
-      text += '32-oz Bucket & Mason Jar Yield: ~' + cart.bucketServings + ' Full 32-oz Vessels (~' + cart.pitchersCount + ' 1-Gallon Condo Pitcher Batches)\n';
-      text += 'Group Vacation Pace: ~' + cart.bucketsPerAdultPerDay + ' 32-oz Buckets/Jars per adult per day (for 6–8 adults over 7 days with heavy ice)\n';
-      text += "Cost per 32-oz Vessel: ~$" + cart.costPerBucket + " (vs $24–$28 at The Back Porch & McGuire's — Saves ~$" + cart.estSavings.toLocaleString() + "!)\n\n";
+      text += 'Vessel Yield: ~' + cart.bucketServings + ' Full 32-oz Vessels (~' + cart.pitchersCount + ' 1-Gallon Condo Pitcher Batches)\n';
+      text += 'Estimated Group Savings: ~$' + cart.estSavings.toLocaleString() + ' vs restaurant prices\n\n';
 
       function appendTextCategory(catKey, catHeader) {
         const items = cart.categorized[catKey];
@@ -1875,19 +1862,17 @@
         text += `--- ${catHeader} ---\n`;
         items.forEach(i => {
           const itemTitle = i.brand || i.name;
-          const yieldStr = i.yield ? ` [Yield: ${i.yield}]` : '';
-          const drinksStr = i.usedIn && i.usedIn.length > 0 ? ` — For: ${i.usedIn.map(u => u.name).join(', ')}` : '';
-          text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})${yieldStr}${drinksStr}\n`;
+          text += `[ ] ${itemTitle} (~$${i.price.toFixed(2)})\n`;
         });
         text += '\n';
       }
 
-      appendTextCategory('spirits', '🍾 ALCOHOL & SPIRITS (Retail Spirits Store)');
-      appendTextCategory('mixers', '🥥 MIXERS & JUICES (Publix / Retail Spirits)');
-      appendTextCategory('citrus', '🍋 PRODUCE & FRESH CITRUS (Publix Fresh Produce)');
-      appendTextCategory('supplies', '🧊 ICE & BARWARE SUPPLIES (Publix & Resort)');
+      appendTextCategory('spirits', '🍾 ALCOHOL & SPIRITS');
+      appendTextCategory('mixers', '🥥 MIXERS & JUICES');
+      appendTextCategory('citrus', '🍋 PRODUCE & FRESH CITRUS');
+      appendTextCategory('supplies', '🧊 BAR SUPPLIES & ICE');
 
-      text += 'Strict Vacation Rule: Strictly NO GLASS on Vacation beaches or vacation party boats! Save $500 fine.';
+      text += 'Note: No glass containers on beaches or boats.';
 
       copyTextToClipboard(text, '📋 Consolidated Bar List copied to clipboard!');
     }
