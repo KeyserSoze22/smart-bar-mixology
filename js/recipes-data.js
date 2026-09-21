@@ -874,14 +874,85 @@ function normalizeDrinkKey(k) {
 
 let currentUnifiedRecipeKey = 'bp_ultimate_porchpunch';
 
+/**
+ * Scale ingredient quantities in a list of ingredient strings by a multiplier.
+ * Detects leading numbers (fractions like 1/2, decimals, whole) and scales them.
+ * Lines without a leading number (garnish notes, "Serves: X") are returned as-is.
+ * @param {string[]} ingredients
+ * @param {number} multiplier
+ * @returns {string[]}
+ */
+function scaleIngredients(ingredients, multiplier) {
+  // Regex: match a leading number at the start (whole, decimal, or fraction like 1/2 or 1 1/2)
+  const numRe = /^(\d+\s+\d+\/\d+|\d+\/\d+|\d+\.?\d*)\s*/;
+  return ingredients.map(line => {
+    // Skip garnish/serve notes that don't start with a number
+    const m = line.match(numRe);
+    if (!m) return line;
+    const parsed = m[1].includes('/')
+      ? m[1].split(' ').reduce((acc, part) => {
+          if (part.includes('/')) { const [n,d] = part.split('/'); return acc + Number(n)/Number(d); }
+          return acc + Number(part);
+        }, 0)
+      : parseFloat(m[1]);
+    const scaled = parsed * multiplier;
+    // Format: remove trailing zeros, keep up to 2 decimal places
+    const formatted = Number.isInteger(scaled) ? String(scaled) : parseFloat(scaled.toFixed(2)).toString();
+    return formatted + ' ' + line.slice(m[0].length);
+  });
+}
+
+/**
+ * Called by the servings slider — re-renders the scaled ingredient list in-place
+ * without re-rendering the whole card. Stores singleIngredients on the container.
+ * @param {HTMLElement} sliderEl
+ */
+function updateServingsSlider(sliderEl) {
+  const servings = parseInt(sliderEl.value, 10);
+  const card = sliderEl.closest('.recipe-display-card');
+  if (!card) return;
+
+  // Read stored raw single-serving ingredients from the container dataset
+  let rawList;
+  try { rawList = JSON.parse(card.dataset.singleIngredients || '[]'); } catch(e) { rawList = []; }
+  const venueColor = card.dataset.venueColor || 'var(--primary)';
+
+  const scaled = scaleIngredients(rawList, servings);
+  const listEl = card.querySelector('.ingredient-list');
+  if (listEl) {
+    listEl.innerHTML = scaled.map(i => `<li>${i}</li>`).join('');
+  }
+
+  // Update the label
+  const labelEl = card.querySelector('.servings-label');
+  if (labelEl) {
+    let labelText = `${servings} Serving${servings > 1 ? 's' : ''}`;
+    if (servings === 4) labelText += ' — 1 Gallon Pitcher Batch';
+    else if (servings === 8) labelText += ' — Double Pitcher / Full Party';
+    labelEl.textContent = labelText;
+    labelEl.style.color = venueColor;
+  }
+
+  // Update slider track fill color
+  const pct = ((servings - 1) / 7) * 100;
+  sliderEl.style.background = `linear-gradient(to right, ${venueColor} 0%, ${venueColor} ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
+}
+
 function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
   const details = getRecipeDataAndMeta(dKey);
   const { r, venue, venueName, venueIcon, venueColor, fullKey, rawKey } = details;
   if (!r) return '<div style="padding: 24px; text-align: center; color: var(--text-muted);">Recipe details not found.</div>';
 
   const meta = (typeof drinkMetadata !== 'undefined' && drinkMetadata[fullKey]) || {};
-  const singleItems = r.single.map(i => `<li>${i}</li>`).join('');
-  const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
+
+  // Escape single ingredients for JSON embedding in data attribute
+  const singleJson = JSON.stringify(r.single).replace(/"/g, '&quot;');
+
+  // Default: 1 serving = single; show scaled list
+  const defaultServings = 1;
+  const defaultScaled = scaleIngredients(r.single, defaultServings);
+  const scaledItems = defaultScaled.map(i => `<li>${i}</li>`).join('');
+
   const stepsHtml = r.steps.map((s, idx) => `<li class="recipe-step-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off step">${s}</li>`).join('');
 
   const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
@@ -916,7 +987,8 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
     : '';
 
   return `
-    <div class="recipe-display-card" id="${containerId}" style="border-left: 4px solid ${venueColor};">
+    <div class="recipe-display-card" id="${containerId}" style="border-left: 4px solid ${venueColor};"
+         data-single-ingredients="${singleJson}" data-venue-color="${venueColor}">
       <div class="recipe-title-bar">
         <div>
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
@@ -939,15 +1011,22 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
         </div>
       </div>
 
-      <div class="recipe-grid">
-        <div class="ingredient-box" style="border-color: ${venueColor};">
-          <h4 style="color: ${venueColor};"><span>🪣</span> Single Serving (32-oz Souvenir / Yeti):</h4>
-          <ul class="ingredient-list">${singleItems}</ul>
+      <div class="servings-scaler-row">
+        <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">🪣 Servings</span>
+        <div class="servings-slider-wrap">
+          <span class="servings-num-badge" style="border-color: ${venueColor}; color: ${venueColor};">1</span>
+          <input type="range" class="servings-slider" min="1" max="8" value="1" step="1"
+            style="background: linear-gradient(to right, ${venueColor} 0%, ${venueColor} 0%, var(--border) 0%, var(--border) 100%);"
+            oninput="this.previousElementSibling.textContent = this.value; updateServingsSlider(this);"
+            aria-label="Number of servings" />
+          <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">8</span>
         </div>
-        <div class="ingredient-box" style="border-color: var(--primary);">
-          <h4 style="color: var(--primary);"><span>🍹</span> 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
-          <ul class="ingredient-list">${pitcherItems}</ul>
-        </div>
+        <span class="servings-label" style="color: ${venueColor}; font-size: 0.85rem; font-weight: 700;">1 Serving</span>
+      </div>
+
+      <div class="ingredient-box" style="border-color: ${venueColor}; margin-bottom: 18px;">
+        <h4 style="color: ${venueColor};"><span>🧪</span> Ingredients (32-oz Souvenir Vessel):</h4>
+        <ul class="ingredient-list">${scaledItems}</ul>
       </div>
 
       <div class="recipe-steps-box" style="border-left: 3px solid ${venueColor};">
@@ -959,6 +1038,7 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
     </div>
   `;
 }
+
 
 let currentRecipeCategoryFilter = 'all';
 
