@@ -1,16 +1,17 @@
 // ==========================================================================
 // SERVICE WORKER - SMART BAR MIXOLOGY PWA
 // Provides 100% offline availability for beach, boat, and vacation rental use
+// Cache v4.0 — force-busts all prior versions (v3.6–v3.9 alignment fix)
 // ==========================================================================
 
-const CACHE_NAME = 'smart-bar-mixology-v3.9';
+const CACHE_NAME = 'smart-bar-mixology-v4.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './css/styles.css?v=3.7',
-  './js/recipes-data.js?v=3.7',
-  './js/pricing-data.js?v=3.7',
-  './js/app.js?v=3.7',
+  './css/styles.css?v=4.0',
+  './js/recipes-data.js?v=4.0',
+  './js/pricing-data.js?v=4.0',
+  './js/app.js?v=4.0',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
@@ -18,24 +19,24 @@ const ASSETS_TO_CACHE = [
   './icon-512.svg'
 ];
 
-// Install Event: Cache critical shell assets
+// Install Event: Pre-cache shell & immediately take control (skipWaiting)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[ServiceWorker] Pre-caching offline app shell & modules');
+      console.log('[ServiceWorker] Pre-caching v4.0 shell & modules');
       return cache.addAll(ASSETS_TO_CACHE);
     }).then(() => self.skipWaiting())
   );
 });
 
-// Activate Event: Clean up stale caches
+// Activate Event: Wipe ALL stale caches and claim all open clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(
         keyList.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[ServiceWorker] Removing old cache', key);
+            console.log('[ServiceWorker] Removing old cache:', key);
             return caches.delete(key);
           }
         })
@@ -44,7 +45,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event: Network-first with fallback to cache (offline support)
+// Fetch Event: Network-first with cache fallback (offline support)
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
