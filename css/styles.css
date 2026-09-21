@@ -5253,18 +5253,32 @@
       .recipe-quickview-card {
         border-radius: 22px 22px 0 0;
         max-height: 92vh;
-        padding: 16px 14px 28px;
+        max-height: 92dvh;
+        padding: 16px 14px calc(24px + env(safe-area-inset-bottom, 16px));
         transform: translateY(100%);
         border-bottom: none;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
       .recipe-quickview-backdrop.show .recipe-quickview-card {
         transform: translateY(0);
       }
       .recipe-quickview-drag-handle {
         display: block;
+        cursor: grab;
       }
       .recipe-quickview-close-btn {
         top: 12px;
         right: 14px;
+        width: 36px;
+        height: 36px;
+        font-size: 1.6rem;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .drink-card .view-recipe-link {
+        min-height: 30px;
+        padding: 4px 12px;
+        font-size: 0.74rem;
+        -webkit-tap-highlight-color: transparent;
       }
     }

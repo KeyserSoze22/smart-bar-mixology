@@ -1323,7 +1323,10 @@
       updatePresetButtons();
     }
 
-    function toggleCustomDrink(drinkKey) {
+    function toggleCustomDrink(drinkKey, event) {
+      if (event && event.target && event.target.closest('.view-recipe-link')) {
+        return;
+      }
       if (customBarSelectedDrinks.has(drinkKey)) {
         customBarSelectedDrinks.delete(drinkKey);
       } else {
@@ -1461,7 +1464,10 @@
     // QUICK-VIEW RECIPE MODAL & BOTTOM SHEET CONTROLLER
     // ==========================================================================
     function openRecipeQuickView(dKey, event) {
-      if (event && event.stopPropagation) event.stopPropagation();
+      if (event) {
+        if (event.stopPropagation) event.stopPropagation();
+        if (event.preventDefault) event.preventDefault();
+      }
       const modal = document.getElementById('recipeQuickViewModal');
       const content = document.getElementById('recipeQuickViewContent');
       if (!modal || !content) return;
@@ -1469,6 +1475,11 @@
       const cleanId = 'rqvCard_' + dKey.replace(/[^a-zA-Z0-9_]/g, '');
       if (typeof renderUnifiedRecipeCardHtml === 'function') {
         content.innerHTML = renderUnifiedRecipeCardHtml(dKey, cleanId, true);
+      }
+      const card = modal.querySelector('.recipe-quickview-card');
+      if (card) {
+        card.style.transform = '';
+        card.scrollTop = 0;
       }
       modal.classList.add('show');
       document.body.style.overflow = 'hidden';
@@ -1479,8 +1490,53 @@
         return;
       }
       const modal = document.getElementById('recipeQuickViewModal');
-      if (modal) modal.classList.remove('show');
+      if (modal) {
+        modal.classList.remove('show');
+        const card = modal.querySelector('.recipe-quickview-card');
+        if (card) card.style.transform = '';
+      }
       document.body.style.overflow = '';
+    }
+
+    function initQuickViewTouchDismiss() {
+      const modal = document.getElementById('recipeQuickViewModal');
+      const card = modal?.querySelector('.recipe-quickview-card');
+      const handle = modal?.querySelector('.recipe-quickview-drag-handle');
+      if (!modal || !card) return;
+
+      let startY = 0;
+      let currentY = 0;
+      let isDragging = false;
+
+      card.addEventListener('touchstart', (e) => {
+        if (card.scrollTop > 5 && e.target !== handle) return;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        card.style.transition = 'none';
+      }, { passive: true });
+
+      card.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+        if (diff > 0) {
+          card.style.transform = `translateY(${diff}px)`;
+        }
+      }, { passive: true });
+
+      card.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        card.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+        const diff = currentY - startY;
+        if (diff > 80) {
+          closeRecipeQuickView();
+        } else {
+          card.style.transform = '';
+        }
+        startY = 0;
+        currentY = 0;
+      }, { passive: true });
     }
 
     function toggleCustomDrinkFromQuickView(fullKey, containerId) {
@@ -1951,6 +2007,7 @@
       attachSwipeListeners('oldBayRecipeDisplayArea', 'obs');
       attachSwipeListeners('classicRecipeDisplayArea', 'cl');
       initDeepLinkingAndHotkeys();
+      initQuickViewTouchDismiss();
       initPwaCapabilities();
       console.log('Smart Bar Mixology loaded successfully!');
     });
