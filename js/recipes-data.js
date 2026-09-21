@@ -838,22 +838,58 @@ function getRecipeDataAndMeta(dKey) {
   return { r, venue, venueName, venueIcon, venueColor, fullKey, rawKey };
 }
 
+// UNIFIED RECIPE DATA ACCESSOR & CARD BUILDER
+// Powers both in-page single recipe view and the Quick-View Modal / Bottom Sheet
+// ==========================================================================
+const ALL_UNIFIED_DRINK_KEYS = [
+  // The Back Porch (14)
+  'bp_ultimate_porchpunch', 'bp_porchpunch', 'bp_pattywacked', 'bp_beachbucket',
+  'bp_porchmargarita', 'bp_strawberry_margarita', 'bp_mango_margarita', 'bp_spicy_margarita',
+  'bp_dragonfruit_margarita', 'bp_bloodymary', 'bp_painkiller', 'bp_rumrunner',
+  'bp_peachlemonade', 'bp_sunset_punch_kid',
+  // McGuire's Irish Pub (12)
+  'mc_irish_wake', 'mc_emory_chenoweth', 'mc_iced_irish_coffee', 'mc_bloody_irish',
+  'mc_dublin_mule', 'mc_blueberry_lemon_drop', 'mc_strawberry_twist', 'mc_chocolate_moose',
+  'mc_james_bond', 'mc_south_of_the_border', 'mc_smoked_old_fashioned', 'mc_root_beer_float_kid',
+  // Old Bay Steamer (9)
+  'obs_blt', 'obs_darkandstormy', 'obs_bahamamama', 'obs_cucumbercooler',
+  'obs_strongisland', 'obs_seafoodbloodymary', 'obs_topshelfmargarita', 'obs_bushwacker',
+  'obs_little_steamer_kid',
+  // Vacation Classics (11)
+  'cl_classic_mojito', 'cl_classic_pina_colada', 'cl_classic_mai_tai', 'cl_classic_paloma',
+  'cl_classic_tequila_sunrise', 'cl_classic_moscow_mule', 'cl_classic_daiquiri',
+  'cl_classic_espresso_martini', 'cl_classic_long_island', 'cl_classic_whiskey_sour',
+  'cl_classic_coconut_limeade_kid'
+];
+
+function normalizeDrinkKey(k) {
+  if (!k) return 'bp_ultimate_porchpunch';
+  if (k.startsWith('bp_') || k.startsWith('mc_') || k.startsWith('obs_') || k.startsWith('cl_')) return k;
+  if (typeof recipeData !== 'undefined' && recipeData[k]) return 'bp_' + k;
+  if (typeof mcguiresRecipeData !== 'undefined' && mcguiresRecipeData[k]) return 'mc_' + k;
+  if (typeof oldBayRecipeData !== 'undefined' && (oldBayRecipeData['obs_' + k] || oldBayRecipeData[k])) return k.startsWith('obs_') ? k : 'obs_' + k;
+  if (typeof classicRecipeData !== 'undefined' && (classicRecipeData['cl_' + k] || classicRecipeData[k])) return k.startsWith('cl_') ? k : 'cl_' + k;
+  return 'bp_' + k;
+}
+
+let currentUnifiedRecipeKey = 'bp_ultimate_porchpunch';
+
 function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
   const details = getRecipeDataAndMeta(dKey);
   const { r, venue, venueName, venueIcon, venueColor, fullKey, rawKey } = details;
   if (!r) return '<div style="padding: 24px; text-align: center; color: var(--text-muted);">Recipe details not found.</div>';
 
   const meta = (typeof drinkMetadata !== 'undefined' && drinkMetadata[fullKey]) || {};
-  const singleItems = r.single.map(i => `<li>${scaleIngredientText(i, activeVesselMultiplier)}</li>`).join('');
+  const singleItems = r.single.map(i => `<li>${i}</li>`).join('');
   const pitcherItems = r.pitcher.map(i => `<li>${i}</li>`).join('');
   const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
 
   const inCart = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.has(fullKey));
   const cartBtnHtml = isModal
-    ? `<button type="button" class="qol-btn rqv-cart-toggle-btn" onclick="toggleCustomDrinkFromQuickView('${fullKey}', '${containerId}')" style="background: ${inCart ? '#16a34a' : venueColor}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
+    ? `<button type="button" class="qol-btn rqv-cart-toggle-btn" onclick="toggleCustomDrinkFromQuickView('${fullKey}', '${containerId}')" style="background: ${inCart ? '#16a34a' : venueColor}; color: #fff; font-size: 0.84rem; padding: 7px 16px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
         <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
       </button>`
-    : `<button type="button" class="qol-btn" onclick="toggleCustomDrinkFromRecipe('${fullKey}')" style="background: ${inCart ? '#16a34a' : venueColor}; color: #fff; font-size: 0.82rem; padding: 6px 14px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
+    : `<button type="button" class="qol-btn" onclick="toggleCustomDrinkFromRecipe('${fullKey}')" style="background: ${inCart ? '#16a34a' : venueColor}; color: #fff; font-size: 0.84rem; padding: 7px 16px; font-weight: 700; border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: var(--transition);">
         <span>${inCart ? '✓ In Combined Bar Cart' : '➕ Add to Combined Bar Cart'}</span>
       </button>`;
 
@@ -867,96 +903,179 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
     potencyHtml = `<span class="potency-badge potency-med">🍹 Standard Beach Pour (~11% ABV • ${meta.spiritsOz || 3.5} oz Spirits)</span>`;
   }
 
-  // Layer preview bar if layers exist
-  let layerHtml = '';
-  if (meta.layers && meta.layers.length > 1) {
-    const gradStops = meta.layers.map((col, idx) => `${col} ${(idx / (meta.layers.length - 1)) * 100}%`).join(', ');
-    const legendItems = meta.layers.map((col, idx) => `
-      <span><span class="layer-legend-dot" style="background: ${col};"></span> ${meta.layerNames?.[idx] || 'Layer ' + (idx + 1)}</span>
-    `).join('');
-    layerHtml = `
-      <div style="margin: 14px 0 10px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">
-          <span>🎨 Authentic Visual Layering &amp; Float Guide:</span>
-          <span style="font-size: 0.72rem;">Bottom ➔ Surface Float</span>
-        </div>
-        <div class="layer-preview-bar" style="background: linear-gradient(to right, ${gradStops});"></div>
-        <div class="layer-legend">${legendItems}</div>
-      </div>
-    `;
-  }
+  const tipHtml = r.beachTip ? `
+    <div class="insider-tip" style="margin-top: 14px; border-left-color: ${venueColor};">
+      💡 <strong>Pro-Tip &amp; Glassware:</strong> ${r.beachTip}
+    </div>
+  ` : '';
 
   const jumpSectionHtml = isModal
-    ? `<button type="button" class="qol-btn" onclick="closeRecipeQuickView(); navigateToRecipe('${fullKey}');" style="background: rgba(0,0,0,0.06); color: var(--text-main); border: 1px solid var(--border); font-size: 0.8rem; padding: 6px 12px; font-weight: 700; cursor: pointer;" title="Jump to full recipe catalog section">
-        <span>📍 Full Page Section</span>
+    ? `<button type="button" class="qol-btn" onclick="closeRecipeQuickView(); navigateToRecipe('${fullKey}');" style="background: rgba(0,0,0,0.06); color: var(--text-main); border: 1px solid var(--border); font-size: 0.8rem; padding: 6px 12px; font-weight: 700; cursor: pointer;" title="Jump to recipe view">
+        <span>📍 Open in Recipe View</span>
       </button>`
     : '';
 
-  const priceCardHtml = (typeof renderPriceComparisonCard === 'function') ? renderPriceComparisonCard(fullKey) : '';
-  const scalerHtml = (typeof renderVesselScalerHtml === 'function') ? renderVesselScalerHtml(rawKey, containerId) : '';
-
   return `
-    ${priceCardHtml}
     <div class="recipe-display-card" id="${containerId}" style="border-left: 4px solid ${venueColor};">
       <div class="recipe-title-bar">
         <div>
-          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
             <span style="font-size: 0.78rem; font-weight: 800; color: ${venueColor}; background: rgba(0,0,0,0.05); padding: 3px 10px; border-radius: 999px;">${venueIcon} ${venueName}</span>
-            <h3 style="font-size: 1.25rem; color: var(--text-main); margin: 0;">${r.title}</h3>
+            <h3 style="font-size: 1.3rem; color: var(--text-main); margin: 0;">${r.title}</h3>
             ${potencyHtml}
           </div>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 2px;">${r.desc}</p>
+          <p style="font-size: 0.92rem; color: var(--text-muted); margin-top: 2px; line-height: 1.5;">${r.desc}</p>
         </div>
         <div class="recipe-badge-row">
           <span class="deal-badge" style="background: var(--primary-light); color: ${venueColor}; font-weight: 700;">${r.tag}</span>
           ${cartBtnHtml}
-          <button type="button" class="qol-btn" onclick="openBartenderMode('${rawKey}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.82rem; padding: 6px 14px; font-weight: 700;">
+          <button type="button" class="qol-btn" onclick="openBartenderMode('${rawKey}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.84rem; padding: 7px 16px; font-weight: 700; border-radius: var(--radius-full);">
             <span>👨‍🍳</span> Bartender Mode
+          </button>
+          <button type="button" class="qol-btn" onclick="copyCurrentRecipeIngredients()" style="background: var(--surface); color: var(--text-main); border: 1px solid var(--border); font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Copy Ingredients for this drink">
+            <span>📋</span> Copy Ingredients
           </button>
           ${jumpSectionHtml}
         </div>
       </div>
 
-      ${layerHtml}
-      ${scalerHtml}
-
       <div class="recipe-grid">
         <div class="ingredient-box" style="border-color: ${venueColor};">
-          <h4 style="color: ${venueColor};"><span>🪣</span> <span class="dynamic-box-title">Dynamic Measurements (${DRINK_SCALE_STEPS[activeDrinkStepIndex]?.short || '32-oz Bucket'}):</span></h4>
-          <ul class="ingredient-list dynamic-scale-list">${singleItems}</ul>
+          <h4 style="color: ${venueColor};"><span>🪣</span> Single Serving (32-oz Souvenir / Yeti):</h4>
+          <ul class="ingredient-list">${singleItems}</ul>
         </div>
         <div class="ingredient-box" style="border-color: var(--primary);">
-          <h4 style="color: var(--primary);"><span>🍹</span> Standard 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
+          <h4 style="color: var(--primary);"><span>🍹</span> 1-Gallon Condo Batch (Pours 4× 32-oz Vessels):</h4>
           <ul class="ingredient-list">${pitcherItems}</ul>
         </div>
       </div>
 
       <div class="recipe-steps-box" style="border-left: 3px solid ${venueColor};">
-        <h4 style="color: ${venueColor};"><span>📋</span> Mixing &amp; Pouring Instructions (On The Rocks):</h4>
+        <h4 style="color: ${venueColor};"><span>📋</span> Mixing Instructions (On The Rocks):</h4>
         <ol class="recipe-steps-list">${stepsHtml}</ol>
       </div>
 
-      <div class="insider-tip" style="margin-top: 12px; border-left-color: ${venueColor};">
-        💡 <strong>Pro-Tip:</strong> ${r.beachTip || ''}
-        <div style="font-size: 0.8rem; margin-top: 6px; color: #0284c7; font-weight: 700;">
-          ☀️ <strong>Florida Heat Safety:</strong> In summer beach humidity, pace with 1 full glass of ice water per 32-oz vessel!
-        </div>
-      </div>
+      ${tipHtml}
     </div>
   `;
 }
 
-function showRecipe(key) {
-  const fullKey = 'bp_' + key;
-  updateCarouselActivePill('bp', key);
-  const sel = document.getElementById('drinkRecipeSelect'); if (sel) sel.value = key;
-  const displayArea = document.getElementById('recipeDisplayArea');
-  if (!displayArea) return;
-  displayArea.innerHTML = `
-    ${getReturnBreadcrumbHtml()}
-    ${getStepperHtml('bp', key, recipeData)}
-    ${renderUnifiedRecipeCardHtml(fullKey, 'recipeCard_' + key, false)}
+function showUnifiedRecipe(key) {
+  const fullKey = normalizeDrinkKey(key);
+  currentUnifiedRecipeKey = fullKey;
+
+  const sel = document.getElementById('unifiedDrinkRecipeSelect');
+  if (sel) sel.value = fullKey;
+
+  const navNameEl = document.getElementById('currentRecipeNavName');
+  if (navNameEl) {
+    const details = getRecipeDataAndMeta(fullKey);
+    if (details && details.r) {
+      navNameEl.textContent = details.r.title.replace(/^[^\w]+/, '').split('(')[0].trim();
+    }
+  }
+
+  const displayArea = document.getElementById('unifiedRecipeDisplayArea');
+  if (displayArea) {
+    const breadcrumbHtml = (typeof getReturnBreadcrumbHtml === 'function') ? getReturnBreadcrumbHtml() : '';
+    const stepperHtml = (typeof getUnifiedStepperHtml === 'function') ? getUnifiedStepperHtml(fullKey) : '';
+    displayArea.innerHTML = `
+      ${breadcrumbHtml}
+      ${stepperHtml}
+      ${renderUnifiedRecipeCardHtml(fullKey, 'unifiedRecipeCard_' + fullKey, false)}
+    `;
+  }
+}
+
+function getUnifiedStepperHtml(fullKey) {
+  const keys = ALL_UNIFIED_DRINK_KEYS;
+  const idx = keys.indexOf(fullKey);
+  const currentIdx = idx === -1 ? 0 : idx;
+  const prevIdx = (currentIdx - 1 + keys.length) % keys.length;
+  const nextIdx = (currentIdx + 1) % keys.length;
+  const prevDetails = getRecipeDataAndMeta(keys[prevIdx]);
+  const nextDetails = getRecipeDataAndMeta(keys[nextIdx]);
+  const prevTitle = (prevDetails.r?.title || 'Previous').replace(/^[^\w]+/, '').split('(')[0].trim();
+  const nextTitle = (nextDetails.r?.title || 'Next').replace(/^[^\w]+/, '').split('(')[0].trim();
+
+  return `
+    <div class="recipe-stepper-bar">
+      <button type="button" class="recipe-stepper-btn" onclick="stepUnifiedRecipe(-1)" title="Previous: ${prevTitle}">
+        ◀ Previous: ${prevTitle}
+      </button>
+      <span class="recipe-stepper-indicator">${currentIdx + 1} of ${keys.length}</span>
+      <button type="button" class="recipe-stepper-btn" onclick="stepUnifiedRecipe(1)" title="Next: ${nextTitle}">
+        Next: ${nextTitle} ▶
+      </button>
+    </div>
   `;
+}
+
+function stepUnifiedRecipe(delta) {
+  const keys = ALL_UNIFIED_DRINK_KEYS;
+  let idx = keys.indexOf(currentUnifiedRecipeKey);
+  if (idx === -1) idx = 0;
+  const nextIdx = (idx + delta + keys.length) % keys.length;
+  showUnifiedRecipe(keys[nextIdx]);
+}
+
+function filterRecipeCategory(cat) {
+  ['all', 'bp', 'mc', 'obs', 'cl'].forEach(c => {
+    const chip = document.getElementById('rcat_' + c);
+    if (chip) chip.classList.toggle('active', c === cat);
+  });
+
+  const sel = document.getElementById('unifiedDrinkRecipeSelect');
+  if (!sel) return;
+
+  const optgroups = sel.querySelectorAll('optgroup');
+  optgroups.forEach(og => {
+    const ogCat = og.getAttribute('data-cat');
+    if (cat === 'all' || ogCat === cat) {
+      og.style.display = '';
+      og.disabled = false;
+    } else {
+      og.style.display = 'none';
+      og.disabled = true;
+    }
+  });
+
+  const currentOption = sel.querySelector(`option[value="${currentUnifiedRecipeKey}"]`);
+  const isCurrentVisible = currentOption && !currentOption.parentElement.disabled;
+  if (!isCurrentVisible) {
+    const firstVisible = sel.querySelector('optgroup:not([disabled]) option');
+    if (firstVisible) {
+      showUnifiedRecipe(firstVisible.value);
+    }
+  }
+}
+
+function copyCurrentRecipeIngredients() {
+  const details = getRecipeDataAndMeta(currentUnifiedRecipeKey);
+  if (!details || !details.r) return;
+  const lines = [
+    `${details.r.title} Ingredients:`,
+    '',
+    '[Single Serving (32-oz / Yeti)]',
+    ...details.r.single.map(s => `• ${s}`),
+    '',
+    '[1-Gallon Vacation Batch (Pours 4x)]',
+    ...details.r.pitcher.map(p => `• ${p}`)
+  ];
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    if (typeof showToast === 'function') {
+      showToast(`✓ Copied ingredients for ${details.r.title.split('(')[0].trim()}`);
+    } else {
+      alert(`Copied ingredients for ${details.r.title}`);
+    }
+  }).catch(() => {
+    prompt('Copy ingredients below:', text);
+  });
+}
+
+function showRecipe(key) {
+  showUnifiedRecipe('bp_' + key);
 }
 
 // ==========================================================================
@@ -1303,16 +1422,7 @@ const mcguiresRecipeData = {
     };
 
 function showMcguiresRecipe(key) {
-  const fullKey = 'mc_' + key;
-  updateCarouselActivePill('mc', key);
-  const sel = document.getElementById('mcguiresDrinkRecipeSelect'); if (sel) sel.value = key;
-  const displayArea = document.getElementById('mcguiresRecipeDisplayArea');
-  if (!displayArea) return;
-  displayArea.innerHTML = `
-    ${getReturnBreadcrumbHtml()}
-    ${getStepperHtml('mc', key, mcguiresRecipeData)}
-    ${renderUnifiedRecipeCardHtml(fullKey, 'mcguiresRecipeCard_' + key, false)}
-  `;
+  showUnifiedRecipe('mc_' + key);
 }
 
 
@@ -1913,16 +2023,7 @@ const classicRecipeData = {
 };
 
 function showClassicRecipe(key) {
-  const fullKey = 'cl_' + key;
-  updateCarouselActivePill('cl', key);
-  const sel = document.getElementById('classicDrinkRecipeSelect'); if (sel) sel.value = key;
-  const displayArea = document.getElementById('classicRecipeDisplayArea');
-  if (!displayArea) return;
-  displayArea.innerHTML = `
-    ${getReturnBreadcrumbHtml()}
-    ${getStepperHtml('cl', key, classicRecipeData)}
-    ${renderUnifiedRecipeCardHtml(fullKey, 'classicRecipeCard_' + key, false)}
-  `;
+  showUnifiedRecipe(key.startsWith('cl_') ? key : 'cl_' + key);
 }
 
 function copyClassicsBarList() {
@@ -1948,17 +2049,7 @@ function copyBarShoppingList() {
 }
 
 function showOldBayRecipe(key) {
-  const fullKey = key.startsWith('obs_') ? key : 'obs_' + key;
-  const strippedKey = key.replace('obs_', '');
-  updateCarouselActivePill('obs', strippedKey);
-  const sel = document.getElementById('oldBayDrinkRecipeSelect'); if (sel) sel.value = fullKey;
-  const displayArea = document.getElementById('oldBayRecipeDisplayArea');
-  if (!displayArea) return;
-  displayArea.innerHTML = `
-    ${getReturnBreadcrumbHtml()}
-    ${getStepperHtml('obs', strippedKey, oldBayRecipeData)}
-    ${renderUnifiedRecipeCardHtml(fullKey, 'oldBayRecipeCard_' + strippedKey, false)}
-  `;
+  showUnifiedRecipe(key.startsWith('obs_') ? key : 'obs_' + key);
 }
 
     function copyOldBayBarList() {

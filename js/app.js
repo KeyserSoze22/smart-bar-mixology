@@ -81,15 +81,9 @@
     function handlePricingTierChange(val) {
       currentPricingTier = val;
       applyMasterFilters();
-      // Re-render open active recipe cards across all 4 venues
-      const bpVal = document.getElementById('drinkRecipeSelect')?.value || 'ultimate_porchpunch';
-      showRecipe(bpVal);
-      const mcVal = document.getElementById('mcguiresDrinkRecipeSelect')?.value || 'irish_wake';
-      showMcguiresRecipe(mcVal);
-      const obsVal = document.getElementById('oldBayDrinkRecipeSelect')?.value || 'strongisland';
-      showOldBayRecipe(obsVal);
-      const clVal = document.getElementById('classicDrinkRecipeSelect')?.value || 'classic_mai_tai';
-      showClassicRecipe(clVal);
+      if (typeof showUnifiedRecipe === 'function') {
+        showUnifiedRecipe(currentUnifiedRecipeKey);
+      }
     }
 
     function applyMasterFilters() {
@@ -522,10 +516,7 @@
     function initScrollspyAndFloatingControls() {
       const sections = [
         document.getElementById('section-custombar'),
-        document.getElementById('section-beachbar'),
-        document.getElementById('section-mcguiresdrinks'),
-        document.getElementById('section-oldbaydrinks'),
-        document.getElementById('section-classicdrinks')
+        document.getElementById('section-recipes')
       ].filter(Boolean);
 
       if ('IntersectionObserver' in window) {
@@ -645,10 +636,10 @@
           const deltaX = e.changedTouches[0].clientX - startX;
           const deltaY = e.changedTouches[0].clientY - startY;
           if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-            if (deltaX < 0) {
-              stepRecipe(venue, 1);
-            } else {
-              stepRecipe(venue, -1);
+            if (typeof stepUnifiedRecipe === 'function') {
+              stepUnifiedRecipe(deltaX < 0 ? 1 : -1);
+            } else if (venue && typeof stepRecipe === 'function') {
+              stepRecipe(venue, deltaX < 0 ? 1 : -1);
             }
           }
         }
@@ -1375,52 +1366,19 @@
       if (event) event.stopPropagation();
       recordNavigationOrigin(sourceName || 'Smart Bar Builder');
 
-      const isBp = dKey.startsWith('bp_');
-      const isMc = dKey.startsWith('mc_');
-      const isObs = dKey.startsWith('obs_');
-      let key = dKey;
-      let selectId = 'classicDrinkRecipeSelect';
-      let sectionId = 'section-classicdrinks';
-      let showFunc = showClassicRecipe;
-      let venue = 'cl';
-
-      if (isBp) {
-        key = dKey.replace('bp_', '');
-        selectId = 'drinkRecipeSelect';
-        sectionId = 'section-beachbar';
-        showFunc = showRecipe;
-        venue = 'bp';
-      } else if (isMc) {
-        key = dKey.replace('mc_', '');
-        selectId = 'mcguiresDrinkRecipeSelect';
-        sectionId = 'section-mcguiresdrinks';
-        showFunc = showMcguiresRecipe;
-        venue = 'mc';
-      } else if (isObs) {
-        key = dKey; // Old Bay option values & recipeData use obs_ prefix
-        selectId = 'oldBayDrinkRecipeSelect';
-        sectionId = 'section-oldbaydrinks';
-        showFunc = showOldBayRecipe;
-        venue = 'obs';
-      } else {
-        key = dKey.replace('cl_', '');
+      const fullKey = (typeof normalizeDrinkKey === 'function') ? normalizeDrinkKey(dKey) : dKey;
+      if (typeof showUnifiedRecipe === 'function') {
+        showUnifiedRecipe(fullKey);
       }
-
-      const select = document.getElementById(selectId);
-      if (select) {
-        select.value = key;
-      }
-      showFunc(key);
-      updateCarouselActivePill(venue, key);
 
       // Deep linking & history state
       if (pushHistory && window.history && window.history.pushState) {
         try {
-          history.pushState({ drink: dKey }, '', '#drink=' + dKey);
+          history.pushState({ drink: fullKey }, '', '#drink=' + fullKey);
         } catch(e) {}
       }
 
-      const targetSection = document.getElementById(sectionId);
+      const targetSection = document.getElementById('section-recipes');
       if (targetSection) {
         const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar') || document.getElementById('navbar');
         const isNavVisible = navBar && window.getComputedStyle(navBar).display !== 'none';
@@ -1433,25 +1391,12 @@
         });
 
         // Briefly highlight the recipe display card with a glow
-        const displayId = isBp ? 'recipeDisplayArea' : (isMc ? 'mcguiresRecipeDisplayArea' : (isObs ? 'oldBayRecipeDisplayArea' : 'classicRecipeDisplayArea'));
-        const displayArea = document.getElementById(displayId);
+        const displayArea = document.getElementById('unifiedRecipeDisplayArea');
         if (displayArea) {
           const card = displayArea.querySelector('.recipe-display-card') || displayArea.querySelector('.recipe-card');
           if (card) {
             card.style.transition = 'box-shadow 0.4s ease, transform 0.4s ease';
-            let glowColor = 'rgba(2, 132, 199, 0.35)';
-            let borderColor = '#0284c7';
-            if (isMc) {
-              glowColor = 'rgba(22, 163, 74, 0.35)';
-              borderColor = '#16a34a';
-            } else if (isObs) {
-              glowColor = 'rgba(194, 65, 12, 0.35)';
-              borderColor = '#c2410c';
-            } else if (isBp) {
-              glowColor = 'rgba(249, 115, 22, 0.35)';
-              borderColor = '#f97316';
-            }
-            card.style.boxShadow = `0 0 0 3px ${borderColor}, 0 10px 25px ${glowColor}`;
+            card.style.boxShadow = '0 0 0 3px var(--primary), 0 10px 25px rgba(2, 132, 199, 0.35)';
             setTimeout(() => {
               card.style.boxShadow = '';
             }, 1800);
@@ -1997,15 +1942,9 @@
       initCustomBar();
       renderRecipeCarousels();
       applyMasterFilters();
-      showRecipe('beachbucket');
-      showMcguiresRecipe('irish_wake');
-      showOldBayRecipe('obs_blt');
-      showClassicRecipe('classic_mojito');
+      showUnifiedRecipe('bp_ultimate_porchpunch');
       initScrollspyAndFloatingControls();
-      attachSwipeListeners('recipeDisplayArea', 'bp');
-      attachSwipeListeners('mcguiresRecipeDisplayArea', 'mc');
-      attachSwipeListeners('oldBayRecipeDisplayArea', 'obs');
-      attachSwipeListeners('classicRecipeDisplayArea', 'cl');
+      attachSwipeListeners('unifiedRecipeDisplayArea');
       initDeepLinkingAndHotkeys();
       initQuickViewTouchDismiss();
       initPwaCapabilities();
@@ -2024,7 +1963,7 @@
     function initPwaCapabilities() {
       // 1. Register Service Worker for offline capability
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=3.3', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('./sw.js?v=3.4', { updateViaCache: 'none' })
           .then(reg => {
             console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
             // Proactively check for service worker updates immediately

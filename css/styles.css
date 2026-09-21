@@ -5282,3 +5282,36 @@
         -webkit-tap-highlight-color: transparent;
       }
     }
+
+    /* Single Recipe Section & Responsive Anchors */
+    .nav-target-anchor {
+      position: relative;
+      top: -80px;
+      display: block;
+      visibility: hidden;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+    .recipe-category-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .recipe-stepper-indicator {
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    @media (max-width: 600px) {
+      .recipe-stepper-bar {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .recipe-stepper-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }

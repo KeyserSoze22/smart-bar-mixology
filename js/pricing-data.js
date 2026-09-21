@@ -393,14 +393,7 @@ const customBarDatabase = {
       }
     };
 
-    let customBarSelectedDrinks = new Set([
-      'bp_ultimate_porchpunch',
-      'bp_porchmargarita',
-      'bp_pattywacked',
-      'mc_irish_wake',
-      'mc_iced_irish_coffee',
-      'mc_dublin_mule'
-    ]);
+    let customBarSelectedDrinks = new Set();
     let customBarPackedItems = new Set();
 
     function saveCustomBarState() {

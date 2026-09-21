@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <!-- Application Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=3.3" />
+  <link rel="stylesheet" href="css/styles.css?v=3.4" />
   <script>
     if ('caches' in window) {
       caches.keys().then(keys => {
@@ -258,17 +258,8 @@
         <a href="#section-custombar" class="streamlined-nav-link active" data-section="section-custombar">
           <span>🍸🛒</span> Smart Bar Builder &amp; Cart
         </a>
-        <a href="#section-beachbar" class="streamlined-nav-link" data-section="section-beachbar">
-          <span>🌴</span> Beach Bar &amp; Punch (14)
-        </a>
-        <a href="#section-mcguiresdrinks" class="streamlined-nav-link" data-section="section-mcguiresdrinks">
-          <span>🍀</span> McGuire's Pub (12)
-        </a>
-        <a href="#section-oldbaydrinks" class="streamlined-nav-link" data-section="section-oldbaydrinks">
-          <span>🦀</span> Old Bay Steamer (9)
-        </a>
-        <a href="#section-classicdrinks" class="streamlined-nav-link" data-section="section-classicdrinks">
-          <span>🍸</span> Vacation Classics (11)
+        <a href="#section-recipes" class="streamlined-nav-link" data-section="section-recipes">
+          <span>📖</span> Selected Recipe (<span id="currentRecipeNavName">Ultimate Back Porch Punch</span>)
         </a>
       </div>
     </nav>
@@ -615,175 +606,92 @@
       </div>
     </section>
 
-    <!-- SECTION 2: THE BACK PORCH RECIPES (14) -->
-<section class="recipe-section" id="section-beachbar">
+    <!-- SECTION 2: SINGLE UNIFIED RECIPE VIEW (ONE DRINK AT A TIME) -->
+    <span id="section-beachbar" class="nav-target-anchor"></span>
+    <span id="section-mcguiresdrinks" class="nav-target-anchor"></span>
+    <span id="section-oldbaydrinks" class="nav-target-anchor"></span>
+    <span id="section-classicdrinks" class="nav-target-anchor"></span>
+    <section class="recipe-section" id="section-recipes">
       <div class="recipe-header">
         <div>
-          <h2><span>🍹</span> Copycat "The Back Porch" Beach Bar & Punch Recipes</h2>
+          <h2><span>🍸</span> Selected Cocktail Recipe</h2>
           <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
-            Signature beach bar cocktails served <strong>on the rocks &amp; in cooler pitchers</strong>—100% blender-free with no frozen slush melting in the sun!
+            Single-serving (32-oz Souvenir / Yeti) and 1-gallon vacation pitcher batch measurements—100% on the rocks, no blender required!
           </p>
         </div>
-        <button class="qol-btn" onclick="copyBarShoppingList()" style="background: var(--coral); color: #fff;">
-          <span>📋</span> Copy Bar Shopping List
-        </button>
       </div>
 
-      <div class="beach-liquors-banner" style="border-left-color: var(--coral); background: #fff1f0; border-color: #fecdd3; color: #9f1239;">
-        🏪 <strong>Retail Spirits &amp; Grocery Price Reference:</strong> Benchmarked against standard coastal liquor store retail pricing for 1.75L economy handles and 750ml premium bottles, designed to eliminate high resort markups!
+      <!-- Quick Category Filter Chips for the Recipe Selector -->
+      <div class="recipe-category-chips" id="recipeCategoryChips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
+        <button type="button" class="filter-chip active" id="rcat_all" onclick="filterRecipeCategory('all')">All Cocktails (46)</button>
+        <button type="button" class="filter-chip" id="rcat_bp" onclick="filterRecipeCategory('bp')">🌴 Beach Bar &amp; Punch (14)</button>
+        <button type="button" class="filter-chip" id="rcat_mc" onclick="filterRecipeCategory('mc')">🍀 McGuire's Pub (12)</button>
+        <button type="button" class="filter-chip" id="rcat_obs" onclick="filterRecipeCategory('obs')">🦀 Old Bay Steamer (9)</button>
+        <button type="button" class="filter-chip" id="rcat_cl" onclick="filterRecipeCategory('cl')">🍸 Vacation Classics (11)</button>
       </div>
 
-      <div class="recipe-pill-carousel-wrap" id="carouselWrap_bp"><div class="recipe-pill-carousel" id="carousel_bp"></div></div>
       <div class="recipe-dropdown-wrap">
-        <label for="drinkRecipeSelect">🍹 Select Any Signature "The Back Porch" Cocktail or Punch to View Recipe & Pitcher Measurements:</label>
-        <select id="drinkRecipeSelect" class="recipe-select" onchange="showRecipe(this.value)">
-          <option value="ultimate_porchpunch" selected>🍹 The Ultimate Back Porch Punch (The Famous Souvenir Bucket Recipe)</option>
-          <option value="porchpunch">🍹 The Signature Back Porch Punch (Classic Gulf Coast Rum &amp; Peach Cooler)</option>
-          <option value="pattywacked">🍫 The Legendary "Patty'Wacked" (Back Porch Coffee-Rum Mudslide On The Rocks)</option>
-          <option value="beachbucket">🪣 The 32-oz Back Porch Beach Bucket (4-Rum Tropical Party Bucket)</option>
-          <option value="porchmargarita">🧂 Margarita #1: Grand Porch Sunset Margarita (100% Agave Tequila &amp; Grand Marnier)</option>
-          <option value="strawberry_margarita">🍓 Margarita #2: Back Porch Strawberry Coral Margarita (Fresh Strawberry Purée)</option>
-          <option value="mango_margarita">🥭 Margarita #3: Back Porch Mango Sunset Margarita (Sweet Mango Nectar &amp; Tajín)</option>
-          <option value="spicy_margarita">🌶️ Margarita #4: Back Porch Spicy Jalapeño "Hot Porch" Margarita (Fresh Jalapeño &amp; Tajín)</option>
-          <option value="dragonfruit_margarita">🌺 Margarita #5: Back Porch Electric Dragon Fruit Margarita (Pitaya &amp; Optional Spicy Kick!)</option>
-          <option value="bloodymary">🌶️ Back Porch Spicy Gulf Coast Bloody Mary (Old Bay Rim &amp; Pickled Okra)</option>
-          <option value="painkiller">🥥 Coastal Vacation Painkiller (Rich Coconut, Dark Rum &amp; Nutmeg)</option>
-          <option value="rumrunner">🌴 Gulf Coast Rum Runner (Classic Florida Keys Tiki Punch)</option>
-          <option value="peachlemonade">🍋 Sunset Beach Peach Lemonade (Vodka, Peach Schnapps &amp; Pink Sunset Blush)</option>
-          <option value="sunset_punch_kid">🧒 The "Little Porch Sunset Punch" Mocktail (Fizzy Non-Alcoholic for the 2 Kids!)</option>
+        <label for="unifiedDrinkRecipeSelect">🍸 Select Any Cocktail to View Recipe &amp; Measurements:</label>
+        <select id="unifiedDrinkRecipeSelect" class="recipe-select" onchange="showUnifiedRecipe(this.value)">
+          <optgroup label="🍹 The Back Porch Beach Bar (14 Drinks)" data-cat="bp">
+            <option value="bp_ultimate_porchpunch" selected>🍹 The Ultimate Back Porch Punch (The Famous Souvenir Bucket Recipe)</option>
+            <option value="bp_porchpunch">🍹 The Signature Back Porch Punch (Classic Gulf Coast Rum &amp; Peach Cooler)</option>
+            <option value="bp_pattywacked">🍫 The Legendary "Patty'Wacked" (Back Porch Coffee-Rum Mudslide On The Rocks)</option>
+            <option value="bp_beachbucket">🪣 The 32-oz Back Porch Beach Bucket (4-Rum Tropical Party Bucket)</option>
+            <option value="bp_porchmargarita">🧂 Margarita #1: Grand Porch Sunset Margarita (100% Agave Tequila &amp; Grand Marnier)</option>
+            <option value="bp_strawberry_margarita">🍓 Margarita #2: Back Porch Strawberry Coral Margarita (Fresh Strawberry Purée)</option>
+            <option value="bp_mango_margarita">🥭 Margarita #3: Back Porch Mango Sunset Margarita (Sweet Mango Nectar &amp; Tajín)</option>
+            <option value="bp_spicy_margarita">🌶️ Margarita #4: Back Porch Spicy Jalapeño "Hot Porch" Margarita (Fresh Jalapeño &amp; Tajín)</option>
+            <option value="bp_dragonfruit_margarita">🌺 Margarita #5: Back Porch Electric Dragon Fruit Margarita (Pitaya &amp; Optional Spicy Kick!)</option>
+            <option value="bp_bloodymary">🌶️ Back Porch Spicy Gulf Coast Bloody Mary (Old Bay Rim &amp; Pickled Okra)</option>
+            <option value="bp_painkiller">🥥 Coastal Vacation Painkiller (Rich Coconut, Dark Rum &amp; Nutmeg)</option>
+            <option value="bp_rumrunner">🌴 Gulf Coast Rum Runner (Classic Florida Keys Tiki Punch)</option>
+            <option value="bp_peachlemonade">🍋 Sunset Beach Peach Lemonade (Vodka, Peach Schnapps &amp; Pink Sunset Blush)</option>
+            <option value="bp_sunset_punch_kid">🧒 The "Little Porch Sunset Punch" Mocktail (Fizzy Non-Alcoholic for the 2 Kids!)</option>
+          </optgroup>
+          <optgroup label="🍀 McGuire's Irish Pub Specialties (12 Drinks)" data-cat="mc">
+            <option value="mc_irish_wake">🍀 The Famous "Irish Wake" (McGuire's #1 Mason Jar Legend)</option>
+            <option value="mc_emory_chenoweth">✈️ The "Emory Chenoweth" (Legendary Aviator Tropical Rum Punch)</option>
+            <option value="mc_iced_irish_coffee">☕ McGuire's Ultimate Iced Irish Coffee (Cold Brew &amp; Bushmills On The Rocks)</option>
+            <option value="mc_bloody_irish">🌶️ "The Bloody Irish" (McGuire's Pub Bloody Mary with Old Bay &amp; Okra Skewer)</option>
+            <option value="mc_dublin_mule">🍺 The Dublin Mule (Bushmills Irish Whiskey &amp; Fiery Ginger Beer)</option>
+            <option value="mc_blueberry_lemon_drop">🫐 McGuire's Blueberry Lemon Drop (Double Shot Stoli Blueberi &amp; Lemonade)</option>
+            <option value="mc_strawberry_twist">🍓 McGuire's Strawberry Twist (Double Shot Stoli Citros, Peach &amp; Strawberry)</option>
+            <option value="mc_chocolate_moose">🍫 McGuire's "Chocolate Moose" Martini (Vanilla Vodka &amp; Dark Chocolate Liqueur)</option>
+            <option value="mc_james_bond">🍸 The "James Bond" Double Shot Martini (Beefeater Gin, Tito's Vodka &amp; Lillet)</option>
+            <option value="mc_south_of_the_border">🌶️ McGuire's "South of the Border" Pub Margarita (100% Agave, Cointreau &amp; Jalapeño)</option>
+            <option value="mc_smoked_old_fashioned">🥃 McGuire's Tavern Old Fashioned (Bushmills Irish Whiskey &amp; Bitters)</option>
+            <option value="mc_root_beer_float_kid">🧒 McGuire's House Draft Root Beer Float (Craft Vanilla Mocktail for the 2 Kids!)</option>
+          </optgroup>
+          <optgroup label="🦀 Old Bay Steamer Specialties (9 Drinks)" data-cat="obs">
+            <option value="obs_blt">🥃 The Steamer "BLT" (Bourbon/Whiskey, Lemonade &amp; Southern Sweet Tea)</option>
+            <option value="obs_darkandstormy">⛈️ The Steamer Dark 'n Stormy (Myers's Dark Rum Storm Cloud &amp; Spicy Ginger Beer)</option>
+            <option value="obs_bahamamama">🌴 The Steamer Bahama Mama (Triple Rum, Banana &amp; Dark Rum Float)</option>
+            <option value="obs_cucumbercooler">🥒 The Coastal Cucumber Cooler (Beefeater Gin, Muddled Cucumber &amp; Lime)</option>
+            <option value="obs_strongisland">⚡ The "Strong Island" (Old Bay Steamer 5-Spirits Legend)</option>
+            <option value="obs_seafoodbloodymary">🦀 The Old Bay Steamer Seafood Bloody Mary (Old Bay Rim &amp; Loaded Skewer)</option>
+            <option value="obs_topshelfmargarita">🧂 The Steamer Grand Sunset Margarita (100% Agave, Grand Marnier &amp; Old Bay Rim)</option>
+            <option value="obs_bushwacker">🍫 The Classic Coastal Bushwacker (Dark Rum, Kahlúa, Cacao &amp; Coconut)</option>
+            <option value="obs_little_steamer_kid">🧒 The "Little Steamer" Lemon Sweet Tea (Sweet Tea &amp; Lemonade for Kids!)</option>
+          </optgroup>
+          <optgroup label="🍸 Resort &amp; Vacation Classics (11 Drinks)" data-cat="cl">
+            <option value="cl_classic_mojito">🌿 The Classic Mojito (Fresh Muddled Mint, Lime &amp; Crisp Rum)</option>
+            <option value="cl_classic_pina_colada">🥥 Classic Piña Colada (On The Rocks with Coco López &amp; Dark Rum Float)</option>
+            <option value="cl_classic_mai_tai">🌺 The 1944 Mai Tai (Authentic Trader Vic's Tiki Masterpiece)</option>
+            <option value="cl_classic_paloma">🍈 Coastal Vacation Paloma (100% Agave Tequila, Grapefruit Soda &amp; Tajín)</option>
+            <option value="cl_classic_tequila_sunrise">🌅 Classic Tequila Sunrise (Fresh Citrus OJ &amp; Sunken Grenadine Glow)</option>
+            <option value="cl_classic_moscow_mule">🧊 Classic Moscow Mule (Tito's Vodka, Fiery Ginger Beer &amp; Mint)</option>
+            <option value="cl_classic_daiquiri">🌴 Classic Cuban Daiquiri (Hemingway Beach Style • Crisp Rum &amp; Tart Lime)</option>
+            <option value="cl_classic_espresso_martini">☕ Beach Espresso Martini (Cold Brew, Tito's &amp; Kahlúa on the Rocks)</option>
+            <option value="cl_classic_long_island">⚡ The Long Island Iced Tea (Vacation 5-Spirits Powerhouse)</option>
+            <option value="cl_classic_whiskey_sour">🥃 Classic Whiskey Sour (Bushmills Irish Whiskey, Lemon &amp; Bitters)</option>
+            <option value="cl_classic_coconut_limeade_kid">🧒 Tropical Coconut Limeade Mocktail (Creamy Coconut &amp; Lime for Kids!)</option>
+          </optgroup>
         </select>
       </div>
 
-      <!-- RECIPE DISPLAY CONTAINER (DYNAMICALLY POPULATED) -->
-      <div id="recipeDisplayArea">
-        <!-- Default Back Porch Punch will be populated by JS -->
-      
-      </div>
-    </section>
-
-    <!-- SECTION 3: MCGUIRE'S IRISH PUB RECIPES (12) -->
-<section class="recipe-section" id="section-mcguiresdrinks" style="border-top: 4px solid #16a34a;">
-      <div class="recipe-header">
-        <div>
-          <h2><span>🍀</span> Coastal Irish Pub Specialty Cocktails &amp; Drinks (McGuire's Style)</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
-            Legendary harbor tavern and pub cocktails served <strong>on the rocks &amp; in vacation pitchers</strong>—100% blender-free with standard retail spirit price benchmarks!
-          </p>
-        </div>
-        <button class="qol-btn" onclick="copyMcguiresBarList()" style="background: #15803d; color: #fff;">
-          <span>📋</span> Copy McGuire's Bar List
-        </button>
-      </div>
-
-      <div class="beach-liquors-banner">
-        🏪 <strong>Retail Spirits &amp; Grocery Price Reference:</strong> Benchmarked against standard coastal liquor store retail pricing for 1.75L economy handles and 750ml premium bottles, designed to eliminate high resort markups!
-      </div>
-
-      <div class="recipe-pill-carousel-wrap" id="carousel_mc"><div class="recipe-pill-carousel" id="carousel_mc_strip"></div></div>
-      <div class="recipe-dropdown-wrap">
-        <label for="mcguiresDrinkRecipeSelect">🍀 Select Any Signature McGuire's Irish Pub Cocktail to View Recipe &amp; Pitcher Measurements:</label>
-        <select id="mcguiresDrinkRecipeSelect" class="recipe-select" onchange="showMcguiresRecipe(this.value)">
-          <option value="irish_wake" selected>🍀 The Famous "Irish Wake" (McGuire's #1 Mason Jar Legend)</option>
-          <option value="emory_chenoweth">✈️ The "Emory Chenoweth" (Legendary Aviator Tropical Rum Punch)</option>
-          <option value="iced_irish_coffee">☕ McGuire's Ultimate Iced Irish Coffee (Cold Brew &amp; Bushmills On The Rocks)</option>
-          <option value="bloody_irish">🌶️ "The Bloody Irish" (McGuire's Pub Bloody Mary with Old Bay &amp; Okra Skewer)</option>
-          <option value="dublin_mule">🍺 The Dublin Mule (Bushmills Irish Whiskey &amp; Fiery Ginger Beer)</option>
-          <option value="blueberry_lemon_drop">🫐 McGuire's Blueberry Lemon Drop (Double Shot Stoli Blueberi &amp; Lemonade)</option>
-          <option value="strawberry_twist">🍓 McGuire's Strawberry Twist (Double Shot Stoli Citros, Peach &amp; Strawberry)</option>
-          <option value="chocolate_moose">🍫 McGuire's "Chocolate Moose" Martini (Vanilla Vodka &amp; Dark Chocolate Liqueur)</option>
-          <option value="james_bond">🍸 The "James Bond" Double Shot Martini (Beefeater Gin, Tito's Vodka &amp; Lillet)</option>
-          <option value="south_of_the_border">🌶️ McGuire's "South of the Border" Pub Margarita (100% Agave, Cointreau &amp; Jalapeño)</option>
-          <option value="smoked_old_fashioned">🥃 McGuire's Tavern Old Fashioned (Bushmills Irish Whiskey &amp; Bitters)</option>
-          <option value="root_beer_float_kid">🧒 McGuire's House Draft Root Beer Float (Craft Vanilla Mocktail for the 2 Kids!)</option>
-        </select>
-      </div>
-
-      <!-- MCGUIRE'S RECIPE DISPLAY CONTAINER (DYNAMICALLY POPULATED) -->
-      <div id="mcguiresRecipeDisplayArea">
-        <!-- Populated dynamically by JS -->
-      
-      </div>
-    </section>
-
-
-    <!-- SECTION 3.5: OLD BAY STEAMER SPECIALTY COCKTAILS (9) -->
-    <section class="recipe-section" id="section-oldbaydrinks" style="border-top: 4px solid #c2410c;">
-      <div class="recipe-header">
-        <div>
-          <h2><span>🦀</span> Coastal Steamer &amp; Bay Bar Specialties (Old Bay Steamer Style)</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
-            Legendary coastal seafood bar cocktails served <strong>on the rocks &amp; in vacation pitchers</strong>—calibrated for 32-oz vessels, tumblers, and consolidated 1.75L handles!
-          </p>
-        </div>
-        <button class="qol-btn" onclick="copyOldBayBarList()" style="background: #c2410c; color: #fff;">
-          <span>📋</span> Copy Steamer Bar List
-        </button>
-      </div>
-
-      <div class="beach-liquors-banner" style="border-left-color: #c2410c; background: #fff7ed; border-color: #ffedd5; color: #9a3412;">
-        🦀 <strong>Coastal Seafood Bar Reference:</strong> Classic gulf seafood house cocktail recipes scaled for vacation batches and benchmarked against standard retail bottle pricing.
-      </div>
-
-      <div class="recipe-pill-carousel-wrap" id="carousel_obs"><div class="recipe-pill-carousel" id="carousel_obs_strip"></div></div>
-      <div class="recipe-dropdown-wrap">
-        <label for="oldBayDrinkRecipeSelect">🦀 Select Any Signature Old Bay Steamer Cocktail to View Recipe &amp; Pitcher Measurements:</label>
-        <select id="oldBayDrinkRecipeSelect" class="recipe-select" onchange="showOldBayRecipe(this.value)">
-          <option value="obs_blt" selected>🥃 The Steamer "BLT" (Bourbon/Whiskey, Lemonade &amp; Southern Sweet Tea)</option>
-          <option value="obs_darkandstormy">⛈️ The Steamer Dark 'n Stormy (Myers's Dark Rum Storm Cloud &amp; Spicy Ginger Beer)</option>
-          <option value="obs_bahamamama">🌴 The Steamer Bahama Mama (Triple Rum, Banana &amp; Dark Rum Float)</option>
-          <option value="obs_cucumbercooler">🥒 The Coastal Cucumber Cooler (Beefeater Gin, Muddled Cucumber &amp; Lime)</option>
-          <option value="obs_strongisland">⚡ The "Strong Island" (Old Bay Steamer 5-Spirits Legend • Limit of 1)</option>
-          <option value="obs_seafoodbloodymary">🦀 The Old Bay Steamer Seafood Bloody Mary (Old Bay Rim &amp; Loaded Skewer)</option>
-          <option value="obs_topshelfmargarita">🧂 The Steamer Grand Sunset Margarita (100% Agave, Grand Marnier &amp; Old Bay Rim)</option>
-          <option value="obs_bushwacker">🍫 The Classic Coastal Bushwacker (Dark Rum, Kahlúa, Cacao &amp; Coconut)</option>
-          <option value="obs_little_steamer_kid">🧒 The "Little Steamer" Lemon Sweet Tea (Sweet Tea &amp; Lemonade for Kids!)</option>
-        </select>
-      </div>
-
-      <!-- OLD BAY RECIPE DISPLAY CONTAINER (DYNAMICALLY POPULATED) -->
-      <div id="oldBayRecipeDisplayArea">
-        <!-- Populated dynamically by JS -->
-      </div>
-    </section>
-
-    <!-- SECTION 4: ALL-TIME VACATION & BEACH CLASSIC COCKTAILS (11) -->
-    <section class="recipe-section" id="section-classicdrinks" style="border-top: 4px solid #0284c7;">
-      <div class="recipe-header">
-        <div>
-          <h2><span>🍸</span> Resort &amp; Vacation Classic Cocktails</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
-            Essential beach, tiki, and all-time classic vacation drinks served <strong>on the rocks &amp; in condo pitchers</strong>—calibrated for 32-oz vessels, Yeti tumblers, and consolidated 1.75L handles!
-          </p>
-        </div>
-        <button class="qol-btn" onclick="copyClassicsBarList()" style="background: #0284c7; color: #fff;">
-          <span>📋</span> Copy Classics Bar List
-        </button>
-      </div>
-
-      <div class="beach-liquors-banner" style="border-left-color: #0284c7; background: #f0f9ff; border-color: #bae6fd; color: #0369a1;">
-        🏪 <strong>Retail Spirits &amp; Grocery Price Reference:</strong> Benchmarked against standard coastal liquor store retail pricing for 1.75L economy handles and 750ml premium bottles, designed to eliminate high resort markups!
-      </div>
-
-      <div class="recipe-pill-carousel-wrap" id="carousel_cl"><div class="recipe-pill-carousel" id="carousel_cl_strip"></div></div>
-      <div class="recipe-dropdown-wrap">
-        <label for="classicDrinkRecipeSelect">🍸 Select Any All-Time Vacation Classic to View Recipe &amp; Pitcher Measurements:</label>
-        <select id="classicDrinkRecipeSelect" class="recipe-select" onchange="showClassicRecipe(this.value)">
-          <option value="classic_mojito" selected>🌿 The Classic Mojito (Fresh Muddled Mint, Lime &amp; Crisp Rum)</option>
-          <option value="classic_pina_colada">🥥 Classic Piña Colada (On The Rocks with Coco López &amp; Dark Rum Float)</option>
-          <option value="classic_mai_tai">🌺 The 1944 Mai Tai (Authentic Trader Vic's Tiki Masterpiece)</option>
-          <option value="classic_paloma">🍈 Coastal Vacation Paloma (100% Agave Tequila, Grapefruit Soda &amp; Tajín)</option>
-          <option value="classic_tequila_sunrise">🌅 Classic Tequila Sunrise (Fresh Citrus OJ &amp; Sunken Grenadine Glow)</option>
-          <option value="classic_moscow_mule">🧊 Classic Moscow Mule (Tito's Vodka, Fiery Ginger Beer &amp; Mint)</option>
-          <option value="classic_daiquiri">🌴 Classic Cuban Daiquiri (Hemingway Beach Style • Crisp Rum &amp; Tart Lime)</option>
-          <option value="classic_espresso_martini">☕ Beach Espresso Martini (Cold Brew, Tito's &amp; Kahlúa on the Rocks)</option>
-          <option value="classic_long_island">⚡ The Long Island Iced Tea (Vacation 5-Spirits Powerhouse)</option>
-          <option value="classic_whiskey_sour">🥃 Classic Whiskey Sour (Bushmills Irish Whiskey, Lemon &amp; Bitters)</option>
-          <option value="classic_coconut_limeade_kid">🧒 Tropical Coconut Limeade Mocktail (Creamy Coconut &amp; Lime for Kids!)</option>
-        </select>
-      </div>
-
-      <!-- CLASSIC RECIPE DISPLAY CONTAINER (DYNAMICALLY POPULATED) -->
-      <div id="classicRecipeDisplayArea">
+      <!-- SINGLE RECIPE DISPLAY CONTAINER (ONE DRINK AT A TIME) -->
+      <div id="unifiedRecipeDisplayArea">
         <!-- Populated dynamically by JS -->
       </div>
     </section>
@@ -806,9 +714,9 @@
 
   <!-- Application Script -->
   <!-- Data & Application Scripts -->
-  <script src="js/recipes-data.js?v=3.3"></script>
-  <script src="js/pricing-data.js?v=3.3"></script>
-  <script src="js/app.js?v=3.3"></script>
+  <script src="js/recipes-data.js?v=3.4"></script>
+  <script src="js/pricing-data.js?v=3.4"></script>
+  <script src="js/app.js?v=3.4"></script>
 
   <!-- Mobile Bottom App Bar -->
   <nav class="mobile-bottom-app-bar" aria-label="Quick App Navigation">
@@ -816,21 +724,17 @@
       <span class="icon" style="position: relative;">🛒<span id="mobileNavCartBadge" class="mobile-nav-badge" style="display: none;">0</span></span>
       <span>Smart Bar</span>
     </a>
-    <a href="#section-beachbar" class="mobile-app-tab" data-section="section-beachbar">
-      <span class="icon">🌴</span>
-      <span>Beach Bar</span>
+    <a href="#section-recipes" class="mobile-app-tab" data-section="section-recipes">
+      <span class="icon">📖</span>
+      <span>Recipe</span>
     </a>
-    <a href="#section-mcguiresdrinks" class="mobile-app-tab" data-section="section-mcguiresdrinks">
-      <span class="icon">🍀</span>
-      <span>McGuire's</span>
+    <a href="#section-custombar" class="mobile-app-tab" onclick="switchBarMode('cabinet'); return false;">
+      <span class="icon">🍾</span>
+      <span>Cabinet</span>
     </a>
-    <a href="#section-oldbaydrinks" class="mobile-app-tab" data-section="section-oldbaydrinks">
-      <span class="icon">🦀</span>
-      <span>Old Bay</span>
-    </a>
-    <a href="#section-classicdrinks" class="mobile-app-tab" data-section="section-classicdrinks">
-      <span class="icon">🍸</span>
-      <span>Classics</span>
+    <a href="#" class="mobile-app-tab" onclick="openSurpriseModal(); return false;">
+      <span class="icon">🎲</span>
+      <span>Surprise</span>
     </a>
   </nav>
 
