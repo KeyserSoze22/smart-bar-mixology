@@ -1702,8 +1702,10 @@
       font-size: 0.9rem;
       color: var(--text-main);
     }
-    /* Tap-to-check recipe step item */
-    .recipe-step-item {
+    /* Tap-to-check recipe step item, ingredient item, and growler instructions */
+    .recipe-step-item,
+    .recipe-ingredient-item,
+    .growler-step-item {
       cursor: pointer;
       border-radius: 6px;
       padding: 4px 6px;
@@ -1712,22 +1714,30 @@
       -webkit-user-select: none;
       position: relative;
     }
-    .recipe-step-item:hover {
+    .recipe-step-item:hover,
+    .recipe-ingredient-item:hover,
+    .growler-step-item:hover {
       background: rgba(16, 185, 129, 0.07);
     }
-    .recipe-step-item::after {
+    .recipe-step-item::after,
+    .recipe-ingredient-item::after,
+    .growler-step-item::after {
       content: '';
       font-size: 0.75rem;
       margin-left: 8px;
       opacity: 0;
       transition: opacity 0.15s;
     }
-    .recipe-step-item.step-done {
+    .recipe-step-item.step-done,
+    .recipe-ingredient-item.step-done,
+    .growler-step-item.step-done {
       text-decoration: line-through;
       color: var(--text-muted);
       background: rgba(16, 185, 129, 0.09);
     }
-    .recipe-step-item.step-done::after {
+    .recipe-step-item.step-done::after,
+    .recipe-ingredient-item.step-done::after,
+    .growler-step-item.step-done::after {
       content: '✓';
       color: #16a34a;
       font-weight: 900;

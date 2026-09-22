@@ -944,7 +944,7 @@ function updateServingsSlider(sliderEl) {
   const scaled = scaleIngredients(rawList, servings);
   const listEl = card.querySelector('.ingredient-list');
   if (listEl) {
-    listEl.innerHTML = scaled.map(i => `<li>${i}</li>`).join('');
+    listEl.innerHTML = scaled.map(i => `<li class="recipe-ingredient-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off ingredient">${i}</li>`).join('');
   }
 
   // Update the ingredient box heading based on serving count
@@ -981,7 +981,7 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
   // Persistent servings scale across recipe navigation
   const currentServings = (typeof activeRecipeServings === 'number' && activeRecipeServings >= 1) ? activeRecipeServings : 1;
   const defaultScaled = scaleIngredients(r.single, currentServings);
-  const scaledItems = defaultScaled.map(i => `<li>${i}</li>`).join('');
+  const scaledItems = defaultScaled.map(i => `<li class="recipe-ingredient-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off ingredient">${i}</li>`).join('');
   const currentHeadingText = getServingsHeadingText(currentServings);
   const currentLabelText = getServingsLabelText(currentServings);
   const currentSliderPct = ((currentServings - 1) / 7) * 100;
@@ -1017,24 +1017,34 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
     ? `<button type="button" class="qol-btn" onclick="closeRecipeQuickView(); navigateToRecipe('${fullKey}');" style="background: rgba(0,0,0,0.06); color: var(--text-main); border: 1px solid var(--border); font-size: 0.8rem; padding: 6px 12px; font-weight: 700; cursor: pointer;" title="Jump to recipe view">
         <span>📍 Open in Recipe View</span>
       </button>`
-    : '';
+    : `
+    <a href="#section-custombar" class="qol-btn" style="background: var(--surface); color: var(--text-main); border: 1px solid var(--border); font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full); text-decoration: none;" title="Jump up to Consolidated Shopping List">
+      <span>🛒</span> View Consolidated List
+    </a>
+  `;
 
   return `
-    <div class="recipe-display-card" id="${containerId}" style="border-left: 4px solid ${venueColor};"
-         data-single-ingredients="${singleJson}" data-venue-color="${venueColor}">
-      <div class="recipe-title-bar">
+    <div class="recipe-display-card" id="${containerId}"
+      data-drink-key="${fullKey}"
+      data-venue="${venue}"
+      data-venue-color="${venueColor}"
+      data-single-ingredients="${singleJson}">
+
+      <div class="recipe-card-header" style="border-top-color: ${venueColor};">
         <div>
-          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
-            <span style="font-size: 0.78rem; font-weight: 800; color: ${venueColor}; background: rgba(0,0,0,0.05); padding: 3px 10px; border-radius: 999px;">${venueIcon} ${venueName}</span>
-            <h3 style="font-size: 1.3rem; color: var(--text-main); margin: 0;">${r.title}</h3>
-            ${potencyHtml}
-          </div>
-          <p style="font-size: 0.92rem; color: var(--text-muted); margin-top: 2px; line-height: 1.5;">${r.desc}</p>
+          <span class="venue-badge" style="background: ${venueColor};">${venueIcon} ${venueName}</span>
+          <h3 class="recipe-card-title">${r.title}</h3>
+          <p class="recipe-card-desc">${r.desc}</p>
         </div>
-        <div class="recipe-badge-row">
-          <span class="deal-badge" style="background: var(--primary-light); color: ${venueColor}; font-weight: 700;">${r.tag}</span>
+        <div class="recipe-card-badges">
+          ${potencyHtml}
+        </div>
+      </div>
+
+      <div class="recipe-card-quick-actions">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
           ${cartBtnHtml}
-          <button type="button" class="qol-btn" onclick="openBartenderMode('${rawKey}')" style="background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; font-size: 0.84rem; padding: 7px 16px; font-weight: 700; border-radius: var(--radius-full);">
+          <button type="button" class="qol-btn" onclick="openBartenderMode('${fullKey}')" style="background: #1e293b; color: #fff; font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Full-screen step-by-step mixologist mode">
             <span>👨‍🍳</span> Bartender Mode
           </button>
           <button type="button" class="qol-btn" onclick="copyCurrentRecipeIngredients()" style="background: var(--surface); color: var(--text-main); border: 1px solid var(--border); font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Copy Ingredients for this drink">
@@ -1065,10 +1075,10 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
       <div class="growler-workflow-box">
         <div class="growler-workflow-title" style="color: ${venueColor};">🧊 Beach Growler Method</div>
         <ol class="growler-workflow-steps">
-          <li><strong>Mix with ice in the gallon jug</strong> — Combine all ingredients directly in a 1-gallon insulated jug or drink pitcher with a full tray of ice. Stir or shake vigorously until everything is fully integrated and ice-cold.</li>
-          <li><strong>Fill your 64-oz growlers</strong> — Pack both insulated 64-oz growlers tightly with fresh ice. Pour the pre-cooled batch evenly between them (2 servings per growler = 1 gallon fills 2 growlers). Seal tight.</li>
-          <li><strong>Float layers at the jug stage</strong> — Add any dark rum floats, cranberry, or grenadine layers into the jug before sealing — they'll layer naturally when poured into cups at the beach.</li>
-          <li><strong>At the beach</strong> — Pour directly from the growler into 32-oz souvenir cups, Yeti tumblers, or buckets over fresh ice. Garnish and serve.</li>
+          <li class="growler-step-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off step"><strong>Mix with ice in the gallon jug</strong> — Combine all ingredients directly in a 1-gallon insulated jug or drink pitcher with a full tray of ice. Stir or shake vigorously until everything is fully integrated and ice-cold.</li>
+          <li class="growler-step-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off step"><strong>Fill your 64-oz growlers</strong> — Pack both insulated 64-oz growlers tightly with fresh ice. Pour the pre-cooled batch evenly between them (2 servings per growler = 1 gallon fills 2 growlers). Seal tight.</li>
+          <li class="growler-step-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off step"><strong>Float layers at the jug stage</strong> — Add any dark rum floats, cranberry, or grenadine layers into the jug before sealing — they'll layer naturally when poured into cups at the beach.</li>
+          <li class="growler-step-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off step"><strong>At the beach</strong> — Pour directly from the growler into 32-oz souvenir cups, Yeti tumblers, or buckets over fresh ice. Garnish and serve.</li>
         </ol>
         <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">💡 <em>Slide to <strong>3 servings</strong> for a no-ice growler fill (pours straight into cups over ice at the beach), or <strong>4 servings</strong> for a full 1-gallon batch to fill 2 × 64-oz growlers.</em></div>
       </div>
