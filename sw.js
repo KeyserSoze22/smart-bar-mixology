@@ -1,17 +1,17 @@
 // ==========================================================================
 // SERVICE WORKER - SMART BAR MIXOLOGY PWA
 // Provides 100% offline availability for beach, boat, and vacation rental use
-// Cache v4.1 — force-busts all prior versions (v3.6–v3.9 alignment fix)
+// Cache v4.2 — force-busts prior caches to deliver mobile swipe and uncollapsed recipe updates
 // ==========================================================================
 
-const CACHE_NAME = 'smart-bar-mixology-v4.1';
+const CACHE_NAME = 'smart-bar-mixology-v4.2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './css/styles.css?v=4.0',
-  './js/recipes-data.js?v=4.0',
-  './js/pricing-data.js?v=4.0',
-  './js/app.js?v=4.0',
+  './css/styles.css?v=4.2',
+  './js/recipes-data.js?v=4.2',
+  './js/pricing-data.js?v=4.2',
+  './js/app.js?v=4.2',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',

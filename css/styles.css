@@ -5474,7 +5474,9 @@
 
     /* ── Recipe Step Check-Off — larger tap area on mobile ── */
     @media (max-width: 640px) {
-      .recipe-step-item {
+      .recipe-step-item,
+      .recipe-ingredient-item,
+      .growler-step-item {
         padding: 7px 8px;
         font-size: 0.92rem;
         border-radius: 8px;
