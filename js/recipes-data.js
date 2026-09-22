@@ -1102,7 +1102,7 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
 }
 
 
-let currentRecipeCategoryFilter = 'all';
+let currentRecipeCategoryFilter = 'selected';
 
 function getVisibleUnifiedRecipeKeys() {
   const sel = document.getElementById('unifiedDrinkRecipeSelect');
@@ -1194,7 +1194,7 @@ function toggleRecipeStepCheck(el) {
 }
 
 
-function filterRecipeCategory(cat) {
+function filterRecipeCategory(cat, silent = false) {
   currentRecipeCategoryFilter = cat;
   ['all', 'selected', 'bp', 'mc', 'obs', 'cl'].forEach(c => {
     const chip = document.getElementById('rcat_' + c);
@@ -1220,7 +1220,7 @@ function filterRecipeCategory(cat) {
       emptyOpt.selected = true;
       emptyOpt.textContent = '⚠️ No cocktails selected above yet (Check drinks in Smart Bar Builder)';
       sel.appendChild(emptyOpt);
-      if (typeof showToast === 'function') {
+      if (typeof showToast === 'function' && !silent) {
         showToast('ℹ️ No cocktails selected in Smart Bar above yet! Check off drinks above to filter here.');
       }
       return;

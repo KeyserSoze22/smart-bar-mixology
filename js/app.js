@@ -829,7 +829,7 @@
     function updateMasterCollapseButtonState() {
       const masterBtn = document.getElementById('toggleAllSectionsBtn');
       if (!masterBtn) return;
-      const mainKeys = ['masterFilterHub', 'custombar', 'recipes'];
+      const mainKeys = ['masterFilterHub', 'custombar'];
       const anyExpanded = mainKeys.some(k => {
         const body = document.getElementById(SECTION_COLLAPSE_MAP[k]?.bodyId);
         return body && body.style.display !== 'none';
@@ -838,7 +838,7 @@
     }
 
     function toggleAllSections() {
-      const mainKeys = ['masterFilterHub', 'custombar', 'recipes'];
+      const mainKeys = ['masterFilterHub', 'custombar'];
       const anyExpanded = mainKeys.some(k => {
         const body = document.getElementById(SECTION_COLLAPSE_MAP[k]?.bodyId);
         return body && body.style.display !== 'none';
@@ -860,7 +860,7 @@
 
       updateMasterCollapseButtonState();
       if (typeof showToast === 'function') {
-        showToast(anyExpanded ? '⤡ All sections collapsed' : '⤢ All sections expanded');
+        showToast(anyExpanded ? '⤡ Builder & Filter sections collapsed' : '⤢ All sections expanded');
       }
     }
 
@@ -1323,6 +1323,8 @@
           const parsed = JSON.parse(savedDrinks);
           if (Array.isArray(parsed) && parsed.length > 0) {
             customBarSelectedDrinks = new Set(parsed);
+          } else if (Array.isArray(parsed) && parsed.length === 0) {
+            customBarSelectedDrinks = new Set();
           }
         }
         const savedPacked = localStorage.getItem('destin_custom_bar_packed');
@@ -2087,7 +2089,13 @@
       initCustomBar();
       renderRecipeCarousels();
       applyMasterFilters();
-      showUnifiedRecipe('bp_ultimate_porchpunch');
+      if (typeof filterRecipeCategory === 'function') {
+        filterRecipeCategory('selected', true);
+      }
+      const initialRecipeKey = (typeof customBarSelectedDrinks !== 'undefined' && customBarSelectedDrinks.size > 0)
+        ? [...customBarSelectedDrinks][0]
+        : 'bp_ultimate_porchpunch';
+      showUnifiedRecipe(initialRecipeKey);
       initScrollspyAndFloatingControls();
       attachSwipeListeners('unifiedRecipeDisplayArea');
       initDeepLinkingAndHotkeys();

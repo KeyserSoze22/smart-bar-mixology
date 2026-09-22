@@ -609,15 +609,15 @@
           </p>
         </div>
         <button type="button" class="section-collapse-btn" id="btnToggleRecipes" onclick="toggleSectionCollapse('recipes')" title="Collapse or expand Selected Recipe section">
-          <span>▲</span> Expand
+          <span>▼</span> Collapse
         </button>
       </div>
 
-      <div class="section-collapsible-body" id="recipesBody" style="display: none;">
+      <div class="section-collapsible-body" id="recipesBody">
       <!-- Quick Category Filter Chips for the Recipe Selector -->
       <div class="recipe-category-chips" id="recipeCategoryChips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
-        <button type="button" class="filter-chip active" id="rcat_all" onclick="filterRecipeCategory('all')">All Cocktails (46)</button>
-        <button type="button" class="filter-chip" id="rcat_selected" onclick="filterRecipeCategory('selected')"><span>🛒</span> Selected in Bar (<span id="rcat_selected_count">0</span>)</button>
+        <button type="button" class="filter-chip" id="rcat_all" onclick="filterRecipeCategory('all')">All Cocktails (46)</button>
+        <button type="button" class="filter-chip active" id="rcat_selected" onclick="filterRecipeCategory('selected')"><span>🛒</span> Selected in Bar (<span id="rcat_selected_count">0</span>)</button>
         <button type="button" class="filter-chip" id="rcat_bp" onclick="filterRecipeCategory('bp')">🌴 Beach Bar &amp; Punch (14)</button>
         <button type="button" class="filter-chip" id="rcat_mc" onclick="filterRecipeCategory('mc')">🍀 McGuire's Pub (12)</button>
         <button type="button" class="filter-chip" id="rcat_obs" onclick="filterRecipeCategory('obs')">🦀 Old Bay Steamer (9)</button>
