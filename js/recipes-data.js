@@ -1030,14 +1030,16 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
       data-venue-color="${venueColor}"
       data-single-ingredients="${singleJson}">
 
-      <div class="recipe-card-header" style="border-top-color: ${venueColor};">
-        <div>
-          <span class="venue-badge" style="background: ${venueColor};">${venueIcon} ${venueName}</span>
+      <div class="recipe-card-header">
+        <div style="flex: 1; min-width: 250px;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+            <span class="recipe-venue-pill" style="color: ${venueColor}; border-color: ${venueColor}; background: rgba(0,0,0,0.03);">
+              <span>${venueIcon}</span> ${venueName}
+            </span>
+            ${potencyHtml}
+          </div>
           <h3 class="recipe-card-title">${r.title}</h3>
           <p class="recipe-card-desc">${r.desc}</p>
-        </div>
-        <div class="recipe-card-badges">
-          ${potencyHtml}
         </div>
       </div>
 
