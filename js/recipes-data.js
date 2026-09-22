@@ -908,20 +908,26 @@ function scaleIngredients(ingredients, multiplier) {
 let activeRecipeServings = 1;
 
 function getServingsHeadingText(servings) {
-  if (servings === 1) return '🧪 Ingredients — 1 Serving (32-oz Vessel):';
+  if (servings === 1) return '🧪 Ingredients — 1 Serving (32-oz Vessel / Yeti Tumbler):';
   if (servings === 2) return '🧊 Ingredients — 2 Servings (Fills 1 × 64-oz Growler w/ Ice):';
   if (servings === 3) return '🧊 Ingredients — 3 Servings (Fills 1 × 64-oz Growler, No Ice):';
-  if (servings === 4) return '🍶 Ingredients — 1-Gallon Batch (Fills 2 × 64-oz Growlers):';
-  if (servings === 8) return '🎉 Ingredients — Double Batch (Fills 4 × 64-oz Growlers):';
+  if (servings === 4) return '🍶 Ingredients — 4 Servings / 1-Gallon Batch (Fills 2 × 64-oz Growlers):';
+  if (servings === 5) return '🪣 Ingredients — 5 Servings (1 Gallon + 1 × 32-oz Vessel):';
+  if (servings === 6) return '🍶 Ingredients — 6 Servings (Fills 2 × 64-oz Growlers, No Ice):';
+  if (servings === 7) return '🏖️ Ingredients — 7 Servings (Paced for 6–8 Adult Group):';
+  if (servings === 8) return '🎉 Ingredients — 8 Servings / 2-Gallon Double Batch (Fills 4 × 64-oz Growlers):';
   return `🧪 Ingredients — ${servings} Servings:`;
 }
 
 function getServingsLabelText(servings) {
-  if (servings === 1) return '1 Serving — 32-oz Vessel';
+  if (servings === 1) return '1 Serving — 32-oz Vessel / Yeti';
   if (servings === 2) return '2 Servings — 1 × 64-oz Growler (w/ Ice)';
   if (servings === 3) return '3 Servings — 1 × 64-oz Growler (No Ice)';
-  if (servings === 4) return '4 Servings — 2 × 64-oz Growlers (1 Gallon)';
-  if (servings === 8) return '8 Servings — 4 × 64-oz Growlers';
+  if (servings === 4) return '4 Servings — 2 × 64-oz Growlers (1 Gallon Batch)';
+  if (servings === 5) return '5 Servings — 1 Gallon + 1 Vessel';
+  if (servings === 6) return '6 Servings — 2 × 64-oz Growlers (No Ice)';
+  if (servings === 7) return '7 Servings — Party Round (6–8 Adults)';
+  if (servings === 8) return '8 Servings — 4 × 64-oz Growlers (2 Gallon Double Batch)';
   return `${servings} Servings`;
 }
 
