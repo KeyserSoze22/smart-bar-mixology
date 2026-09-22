@@ -3865,55 +3865,6 @@
       border-color: #38bdf8;
     }
 
-    /* Itinerary Daily Pairings Accordion / Card */
-    .itinerary-pairings-card {
-      background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%);
-      border: 1px solid rgba(2, 132, 199, 0.25);
-      border-radius: var(--radius-lg);
-      padding: 16px 20px;
-      margin-bottom: 24px;
-      transition: var(--transition);
-    }
-    body.dark-mode .itinerary-pairings-card {
-      background: rgba(2, 132, 199, 0.06);
-      border-color: #233554;
-    }
-    .itinerary-pairings-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      cursor: pointer;
-      user-select: none;
-    }
-    .itinerary-pairings-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .itinerary-day-pill {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .itinerary-day-pill:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
-    }
-    body.dark-mode .itinerary-day-pill {
-      background: #0d1829;
-      border-color: #233554;
-    }
 
     /* Group Expense & Venmo Splitter */
     .expense-splitter-box {

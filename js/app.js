@@ -788,7 +788,6 @@
     // ==========================================================================
     const SECTION_COLLAPSE_MAP = {
       masterFilterHub: { bodyId: 'masterFilterHubBody', btnId: 'btnToggleFilterHub', defaultDisplay: 'block', name: 'Filter & Sort Gallery' },
-      itinerary: { bodyId: 'itineraryPairingsGrid', btnId: 'btnToggleItinerary', defaultDisplay: 'grid', name: '7-Day Itinerary Pairings' },
       custombar: { bodyId: 'customBarBody', btnId: 'btnToggleCustomBar', defaultDisplay: 'block', name: 'Smart Bar Builder & Cart' },
       recipes: { bodyId: 'recipesBody', btnId: 'btnToggleRecipes', defaultDisplay: 'block', name: 'Selected Recipe Guide' },
       brandStrategy: { bodyId: 'brandStrategyBody', btnId: 'btnToggleBrandStrategy', defaultDisplay: 'block', name: '1.75L Handle Strategy' },
@@ -828,14 +827,10 @@
       updateMasterCollapseButtonState();
     }
 
-    function toggleItineraryPairings() {
-      toggleSectionCollapse('itinerary');
-    }
-
     function updateMasterCollapseButtonState() {
       const masterBtn = document.getElementById('toggleAllSectionsBtn');
       if (!masterBtn) return;
-      const mainKeys = ['masterFilterHub', 'itinerary', 'custombar', 'recipes'];
+      const mainKeys = ['masterFilterHub', 'custombar', 'recipes'];
       const anyExpanded = mainKeys.some(k => {
         const body = document.getElementById(SECTION_COLLAPSE_MAP[k]?.bodyId);
         return body && body.style.display !== 'none';
@@ -844,7 +839,7 @@
     }
 
     function toggleAllSections() {
-      const mainKeys = ['masterFilterHub', 'itinerary', 'custombar', 'recipes'];
+      const mainKeys = ['masterFilterHub', 'custombar', 'recipes'];
       const anyExpanded = mainKeys.some(k => {
         const body = document.getElementById(SECTION_COLLAPSE_MAP[k]?.bodyId);
         return body && body.style.display !== 'none';
