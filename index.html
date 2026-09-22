@@ -821,42 +821,6 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN KITCHEN / BEACH BARTENDER MODE MODAL -->
-  <div id="bartenderModal" class="bartender-modal-backdrop" onclick="closeBartenderModal(event)">
-    <div class="bartender-modal-card" onclick="event.stopPropagation()">
-      <button class="pwa-modal-close" style="color: #94a3b8;" onclick="closeBartenderModal()">&times;</button>
-      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-        <span style="font-size: 1.8rem;">👨‍🍳</span>
-        <div>
-          <h3 id="btModalTitle" style="font-size: 1.35rem; margin: 0; color: #38bdf8;">Cocktail Name</h3>
-          <span id="btModalVessel" style="font-size: 0.8rem; color: #94a3b8;">Portioned for 32-oz Bucket</span>
-        </div>
-      </div>
-
-      <div class="timer-display-box">
-        <div style="font-size: 0.8rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Shake &amp; Chill Timer</div>
-        <div class="timer-digits" id="timerDigits">00:20</div>
-        <div style="display: flex; justify-content: center; gap: 8px;">
-          <button class="qol-btn" id="timerStartBtn" onclick="toggleShakeTimer()" style="background: #38bdf8; color: #0f172a; font-weight: 800; padding: 6px 16px;">▶ Start 20s</button>
-          <button class="qol-btn" onclick="resetShakeTimer()" style="background: rgba(255,255,255,0.15); color: #fff; padding: 6px 14px;">↺ Reset</button>
-        </div>
-      </div>
-
-      <h4 style="color: #f8fafc; font-size: 1.05rem; margin: 16px 0 8px;">📋 Ingredients Checklist:</h4>
-      <ul id="btModalIngredients" style="list-style: none; padding: 0; margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px;">
-        <!-- Populated by JS -->
-      </ul>
-
-      <h4 style="color: #f8fafc; font-size: 1.05rem; margin: 16px 0 8px;">🍸 Step-by-Step Instructions:</h4>
-      <ol id="btModalSteps" style="padding-left: 20px; color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
-        <!-- Populated by JS -->
-      </ol>
-
-      <button class="btn btn-secondary" onclick="closeBartenderModal()" style="margin-top: 18px; width: 100%; padding: 10px; border-radius: var(--radius-full); font-weight: 700; background: #38bdf8; color: #0f172a; border: none; cursor: pointer;">
-        Done Mixing!
-      </button>
-    </div>
-  </div>
 
   <!-- SURPRISE ME RANDOMIZER MODAL -->
   <div id="surpriseModal" class="surprise-modal-backdrop" onclick="closeSurpriseModal(event)">

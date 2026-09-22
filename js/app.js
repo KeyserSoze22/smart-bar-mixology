@@ -722,7 +722,6 @@
           } else {
             hideUniversalSearch();
             closeRecipeQuickView();
-            closeBartenderModal();
           }
         }
       });
@@ -1159,95 +1158,6 @@
       showToast(`📏 Scaled to: ${name}`);
     }
 
-    // 6. FULL-SCREEN "BARTENDER MODE" WITH SHAKE TIMER
-    let currentBtRecipe = null;
-    let shakeTimerInterval = null;
-    let shakeTimerSeconds = 20;
-
-    function openBartenderMode(recipeKey) {
-      const r = (typeof recipeData !== 'undefined' && recipeData[recipeKey]) ||
-                (typeof mcguiresRecipeData !== 'undefined' && mcguiresRecipeData[recipeKey]) ||
-                (typeof oldBayRecipeData !== 'undefined' && oldBayRecipeData[recipeKey]) ||
-                (typeof classicRecipeData !== 'undefined' && classicRecipeData[recipeKey]);
-      if (!r) return;
-      currentBtRecipe = r;
-
-      const modal = document.getElementById('bartenderModal');
-      const titleEl = document.getElementById('btModalTitle');
-      const vesselEl = document.getElementById('btModalVessel');
-      const ingEl = document.getElementById('btModalIngredients');
-      const stepsEl = document.getElementById('btModalSteps');
-
-      if (titleEl) titleEl.textContent = r.title;
-      if (vesselEl) {
-        const yieldCalc = (typeof getBatchYieldCalculation === 'function')
-          ? getBatchYieldCalculation(activeDrinkStepIndex, activePeopleCount)
-          : null;
-        const volumeNote = yieldCalc ? ` (${yieldCalc.totalVolumeText} • for ${activePeopleCount} ${activePeopleCount === 1 ? 'person' : 'people'})` : '';
-        vesselEl.textContent = `Batching for: ${activeVesselName}${volumeNote}`;
-      }
-
-      if (ingEl) {
-        ingEl.innerHTML = r.single.map((item, idx) => `
-          <li style="display: flex; align-items: center; gap: 10px; font-size: 1.05rem; background: rgba(255,255,255,0.06); padding: 8px 12px; border-radius: 8px; cursor: pointer;" onclick="this.style.opacity = this.style.opacity === '0.4' ? '1' : '0.4';">
-            <input type="checkbox" style="width: 20px; height: 20px; accent-color: #38bdf8;" />
-            <span>${scaleIngredientText(item, activeVesselMultiplier)}</span>
-          </li>
-        `).join('');
-      }
-
-      if (stepsEl) {
-        stepsEl.innerHTML = r.steps.map(s => `<li>${s}</li>`).join('');
-      }
-
-      resetShakeTimer();
-      if (modal) modal.classList.add('show');
-    }
-
-    function closeBartenderModal(event) {
-      const modal = document.getElementById('bartenderModal');
-      if (modal) modal.classList.remove('show');
-      resetShakeTimer();
-    }
-
-    function toggleShakeTimer() {
-      const btn = document.getElementById('timerStartBtn');
-      if (shakeTimerInterval) {
-        clearInterval(shakeTimerInterval);
-        shakeTimerInterval = null;
-        if (btn) btn.textContent = '▶ Resume';
-      } else {
-        if (shakeTimerSeconds <= 0) shakeTimerSeconds = 20;
-        if (btn) btn.textContent = '⏸ Pause';
-        shakeTimerInterval = setInterval(() => {
-          shakeTimerSeconds--;
-          updateTimerDisplay();
-          if (shakeTimerSeconds <= 0) {
-            clearInterval(shakeTimerInterval);
-            shakeTimerInterval = null;
-            if (btn) btn.textContent = '🎉 Done!';
-            showToast('🧊 Shake Complete! Ice cold and ready to pour!');
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-          }
-        }, 1000);
-      }
-    }
-
-    function resetShakeTimer() {
-      if (shakeTimerInterval) clearInterval(shakeTimerInterval);
-      shakeTimerInterval = null;
-      shakeTimerSeconds = 20;
-      updateTimerDisplay();
-      const btn = document.getElementById('timerStartBtn');
-      if (btn) btn.textContent = '▶ Start 20s';
-    }
-
-    function updateTimerDisplay() {
-      const el = document.getElementById('timerDigits');
-      if (!el) return;
-      const sec = shakeTimerSeconds < 10 ? `0${shakeTimerSeconds}` : shakeTimerSeconds;
-      el.textContent = `00:${sec}`;
-    }
 
     // 7. SURPRISE ME RANDOMIZER
     let randomMoodFilter = 'all';
@@ -2366,17 +2276,22 @@
     }
 
     function updateWakeLockButtonState(isActive) {
-      const btn = document.getElementById('wakeLockToggleBtn');
-      if (!btn) return;
-      if (isActive) {
-        btn.classList.add('active');
-        btn.innerHTML = '<span>💡</span> Screen Awake (Active)';
-        btn.setAttribute('title', 'Screen Wake Lock is active. Click to turn off.');
-      } else {
-        btn.classList.remove('active');
-        btn.innerHTML = '<span>📱</span> Keep Screen On';
-        btn.setAttribute('title', 'Keep screen awake while mixing drinks');
-      }
+      const btns = [
+        document.getElementById('wakeLockToggleBtn'),
+        ...document.querySelectorAll('.recipe-wakelock-btn')
+      ].filter(Boolean);
+
+      btns.forEach(btn => {
+        if (isActive) {
+          btn.classList.add('active');
+          btn.innerHTML = '<span>💡</span> Screen Awake (Active)';
+          btn.setAttribute('title', 'Screen Wake Lock is active. Click to turn off.');
+        } else {
+          btn.classList.remove('active');
+          btn.innerHTML = '<span>📱</span> Keep Screen On';
+          btn.setAttribute('title', 'Keep screen awake while mixing drinks');
+        }
+      });
     }
 
     // Re-acquire lock if tab was backgrounded and returns to foreground

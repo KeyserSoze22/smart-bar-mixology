@@ -1781,11 +1781,22 @@
       opacity: 1;
     }
     /* Wake Lock button active glow */
-    #wakeLockToggleBtn.active {
+    #wakeLockToggleBtn.active,
+    .recipe-wakelock-btn.active {
       background: rgba(251, 191, 36, 0.28) !important;
       border-color: rgba(251, 191, 36, 0.6) !important;
       color: #fbbf24 !important;
       box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.22);
+    }
+    .recipe-wakelock-btn {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .recipe-wakelock-btn:hover {
+      background: #334155;
     }
     /* ── Servings Scaler Row ─────────────────────────────── */
     .servings-scaler-row {

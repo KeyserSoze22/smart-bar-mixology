@@ -1046,8 +1046,8 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
       <div class="recipe-card-quick-actions">
         <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
           ${cartBtnHtml}
-          <button type="button" class="qol-btn" onclick="openBartenderMode('${fullKey}')" style="background: #1e293b; color: #fff; font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Full-screen step-by-step mixologist mode">
-            <span>👨‍🍳</span> Bartender Mode
+          <button type="button" class="qol-btn recipe-wakelock-btn ${(typeof screenWakeLock !== 'undefined' && screenWakeLock !== null) ? 'active' : ''}" onclick="toggleWakeLock()" style="font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Keep screen awake while reading recipe & mixing">
+            <span>📱</span> Keep Screen On
           </button>
           <button type="button" class="qol-btn" onclick="copyCurrentRecipeIngredients()" style="background: var(--surface); color: var(--text-main); border: 1px solid var(--border); font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Copy Ingredients for this drink">
             <span>📋</span> Copy Ingredients
