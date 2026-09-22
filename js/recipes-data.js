@@ -930,7 +930,9 @@ function updateServingsSlider(sliderEl) {
     if (servings === 1) {
       headingText = '🧪 Ingredients — 1 Serving (32-oz Vessel):';
     } else if (servings === 2) {
-      headingText = '🧊 Ingredients — 2 Servings (Fills 1 × 64-oz Growler):';
+      headingText = '🧊 Ingredients — 2 Servings (Fills 1 × 64-oz Growler w/ Ice):';
+    } else if (servings === 3) {
+      headingText = '🧊 Ingredients — 3 Servings (Fills 1 × 64-oz Growler, No Ice):';
     } else if (servings === 4) {
       headingText = '🍶 Ingredients — 1-Gallon Batch (Fills 2 × 64-oz Growlers):';
     } else if (servings === 8) {
@@ -947,7 +949,8 @@ function updateServingsSlider(sliderEl) {
   if (labelEl) {
     let labelText = '';
     if (servings === 1)      labelText = '1 Serving — 32-oz Vessel';
-    else if (servings === 2) labelText = '2 Servings — 1 × 64-oz Growler';
+    else if (servings === 2) labelText = '2 Servings — 1 × 64-oz Growler (w/ Ice)';
+    else if (servings === 3) labelText = '3 Servings — 1 × 64-oz Growler (No Ice)';
     else if (servings === 4) labelText = '4 Servings — 2 × 64-oz Growlers (1 Gallon)';
     else if (servings === 8) labelText = '8 Servings — 4 × 64-oz Growlers';
     else                     labelText = `${servings} Servings`;
@@ -1059,7 +1062,7 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
           <li><strong>Float layers at the jug stage</strong> — Add any dark rum floats, cranberry, or grenadine layers into the jug before sealing — they'll layer naturally when poured into cups at the beach.</li>
           <li><strong>At the beach</strong> — Pour directly from the growler into 32-oz souvenir cups, Yeti tumblers, or buckets over fresh ice. Garnish and serve.</li>
         </ol>
-        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">💡 <em>Slide to 4 servings above for a full 1-gallon batch — the perfect fill for 2 × 64-oz growlers.</em></div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">💡 <em>Slide to <strong>3 servings</strong> for a no-ice growler fill (pours straight into cups over ice at the beach), or <strong>4 servings</strong> for a full 1-gallon batch to fill 2 × 64-oz growlers.</em></div>
       </div>
 
       <div class="recipe-steps-box" style="border-left: 3px solid ${venueColor};">
