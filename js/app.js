@@ -648,19 +648,35 @@
       if (!el) return;
       let startX = 0;
       let startY = 0;
+      // Tag of the element where the touch originated — used to block swipe
+      // when the user is interacting with sliders, buttons, or other controls.
+      let touchOriginTag = '';
+      let touchOriginType = '';
 
       el.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           startX = e.touches[0].clientX;
           startY = e.touches[0].clientY;
+          const originEl = e.target;
+          touchOriginTag  = originEl ? originEl.tagName.toUpperCase() : '';
+          touchOriginType = originEl ? (originEl.type || '').toLowerCase() : '';
         }
       }, { passive: true });
 
       el.addEventListener('touchend', (e) => {
+        // Block swipe navigation when the touch started on an interactive control
+        // (especially range sliders which move horizontally like a swipe).
+        const blockedTags  = ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'A'];
+        const isSlider     = touchOriginTag === 'INPUT' && touchOriginType === 'range';
+        const isControl    = blockedTags.includes(touchOriginTag);
+        if (isSlider || isControl) return;
+
         if (e.changedTouches.length === 1) {
           const deltaX = e.changedTouches[0].clientX - startX;
           const deltaY = e.changedTouches[0].clientY - startY;
-          if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+          // Require 90 px minimum horizontal travel and a 2:1 horizontal-to-vertical
+          // ratio so the gesture must be clearly intentional and directional.
+          if (Math.abs(deltaX) > 90 && Math.abs(deltaX) > Math.abs(deltaY) * 2.0) {
             if (typeof stepUnifiedRecipe === 'function') {
               stepUnifiedRecipe(deltaX < 0 ? 1 : -1);
             } else if (venue && typeof stepRecipe === 'function') {
