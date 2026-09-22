@@ -1631,8 +1631,8 @@ const mcguiresRecipeData = {
         ]
       },
       root_beer_float_kid: {
-        title: "🧒 McGuire's House Draft Root Beer Float (Mocktail for 2 Kids)",
-        tag: "Craft Draft Root Beer & Ice Cream • 32-oz Mason Jar for Kids!",
+        title: "🧒 McGuire's House Draft Root Beer Float (Craft Mocktail)",
+        tag: "Craft Draft Root Beer & Ice Cream • 32-oz Mason Jar",
         desc: "A McGuire's pub tradition for the kids! Authentic craft root beer poured over generous scoops of vanilla bean ice cream in an authentic 32-oz souvenir mason jar with whipped cream and cherries—100% alcohol-free!",
         single: [
           "1 whole bottle or can (12 oz) craft Root Beer (Barq's, A&W, or Stewart's)",

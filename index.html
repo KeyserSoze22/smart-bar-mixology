@@ -25,12 +25,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <!-- Application Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css?v=4.2" />
+  <link rel="stylesheet" href="css/styles.css?v=4.3" />
   <script>
     if ('caches' in window) {
       caches.keys().then(keys => {
         keys.forEach(k => {
-          if (k !== 'smart-bar-mixology-v4.2') caches.delete(k);
+          if (k !== 'smart-bar-mixology-v4.3') caches.delete(k);
         });
       });
     }
@@ -46,16 +46,12 @@
     <header class="streamlined-header">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 12px;">
         <div class="streamlined-badges">
-          <span class="streamlined-badge">🍸 Smart Bar Mixology</span>
-          <span class="streamlined-badge">🪣 32-oz Souvenir Buckets &amp; Jars</span>
-          <span class="streamlined-badge">🍾 Standard 1.75L Handles &amp; Spirits</span>
-          <span class="streamlined-badge">👥 6–8 Adults Pacing</span>
-          <span class="streamlined-badge" style="background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.4); color: #ecfdf5;">⚡ Installable App</span>
+          <span class="streamlined-badge">🍸 46 Authentic Recipes</span>
+          <span class="streamlined-badge">🪣 1 to 8 Servings Scaler</span>
+          <span class="streamlined-badge">🛒 Smart Bar Builder</span>
+          <span class="streamlined-badge" style="background: rgba(16, 185, 129, 0.25); border-color: rgba(16, 185, 129, 0.4); color: #ecfdf5;">⚡ Offline PWA</span>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="destin_vacation_itinerary.html" class="guide-back-btn" title="Return to Full 7-Day Vacation Itinerary">
-            <span>🗺️</span> Vacation Itinerary ➔
-          </a>
           <button id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-secondary" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.25); color: #fff; cursor: pointer;">
             🌙 Dark
           </button>
@@ -64,7 +60,7 @@
 
       <h1 class="streamlined-title">🍸 Smart Bar Mixology</h1>
       <p class="streamlined-subtitle">
-        Your dedicated manual for <strong>46 authentic beach bar &amp; vacation cocktail recipes</strong> (Beach Bar Coolers &amp; Buckets, Coastal Irish Pub Classics, Steamer Specialties, and All-Time Vacation Favorites) with the interactive <strong>Smart Bar Builder</strong>. Select only the drinks your group wants to calculate a consolidated 1.75L handle shopping list with retail price estimates, 1-gallon vacation pitcher batches, and cost splitters!
+        Your dedicated manual for <strong>46 authentic beach bar &amp; vacation cocktail recipes</strong> (Beach Bar Coolers &amp; Buckets, Coastal Irish Pub Classics, Steamer Specialties, and All-Time Vacation Favorites) with the interactive <strong>Smart Bar Builder</strong>. Select the cocktails you want to create an instant consolidated shopping list with retail price estimates, batch scaling, and expense splitting.
       </p>
 
       <div class="streamlined-toolbar">
@@ -92,7 +88,7 @@
           </button>
         </div>
         <div style="font-size: 0.85rem; font-weight: 700; opacity: 0.9;">
-          📍 Vacation Rental Bar • Retail Spirits &amp; 1.75L Handle Planning Guide
+          📍 Smart Bar Mixology • Bar Builder &amp; Recipe Guide
         </div>
       </div>
     </header>
@@ -275,57 +271,6 @@
       </div>
 
       <div class="section-collapsible-body" id="customBarBody" style="display: none;">
-      <!-- BRAND CONSOLIDATION STRATEGY CALLOUT -->
-      <div class="brand-strategy-box" id="brandStrategyBox">
-        <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 10px;" onclick="toggleSectionCollapse('brandStrategy')">
-          <div class="brand-strategy-title" style="margin: 0;">
-            <span>🏆</span> 1.75L Handle Strategy for 6–8 Adults &amp; 30–40oz Tumblers (Standard Retail Spirit Handles):
-          </div>
-          <button type="button" class="section-collapse-btn" id="btnToggleBrandStrategy" onclick="event.stopPropagation(); toggleSectionCollapse('brandStrategy')" style="padding: 4px 12px; font-size: 0.78rem;" title="Collapse or expand 1.75L handle strategy guide">
-            <span>▲</span> Expand
-          </button>
-        </div>
-        <div id="brandStrategyBody" style="display: none;">
-          <p class="brand-strategy-desc" style="margin-top: 10px;">
-            For <strong>6–8 adults drinking 2–4 drinks per day in 30–40oz Yeti mugs with heavy ice</strong>, standard 750ml bottles run dry in 1 afternoon! Stocking <strong>1.75L handles</strong> of core workhorse spirits slashes alcohol costs by <strong>30%–48% per ounce</strong> compared to 750ml fifths, giving your group ample volume for double beach pours all week without buying duplicate bottles:
-          </p>
-          <div class="brand-pill-grid">
-            <div class="brand-pill">
-              <span>🥃</span>
-              <div><strong>Tequila (1.75L Handle):</strong> Espolòn 100% Blue Agave (~$48.99) — <em>100% Blue Weber Agave workhorse; saves $50+ vs Casamigos handle ($99+) with pure agave taste</em></div>
-            </div>
-            <div class="brand-pill">
-              <span>🍸</span>
-              <div><strong>Vodka (1.75L Handle):</strong> Tito's Handmade Vodka (~$29.99) — <em>6x-distilled corn vodka; handle cuts cost to $0.51/oz (vs $0.87/oz in 750ml) for 30–40oz Yeti coolers</em></div>
-            </div>
-            <div class="brand-pill">
-              <span>🌴</span>
-              <div><strong>Rum (1.75L Handles):</strong> Bacardi Superior (~$21.99) &amp; Myers's Dark (~$39.99) — <em>Bulk 1.75L pairing for all Back Porch punches, buckets &amp; dark rum floats</em></div>
-            </div>
-            <div class="brand-pill">
-              <span>🥥</span>
-              <div><strong>Coconut Rum (1.75L Handle):</strong> Malibu Caribbean Rum (~$24.99) — <em>Essential tropical coconut base for 30–40oz Yeti mugs, porch punch &amp; beach buckets</em></div>
-            </div>
-            <div class="brand-pill">
-              <span>🍀</span>
-              <div><strong>Irish Whiskey (1.75L Handle):</strong> Bushmills Original (~$54.39) or Jameson (~$44.99) — <em>McGuire's authentic house pour in a full 1.75L handle for iced coffees &amp; mules</em></div>
-            </div>
-            <div class="brand-pill">
-              <span>🍊</span>
-              <div><strong>Orange Liqueur (1.0L Bottle):</strong> DeKuyper Triple Sec 48° (~$10.99) — <em>1.0-Liter bottle saves $27+ vs Grand Marnier/Cointreau with great citrus sweetness</em></div>
-            </div>
-            <div class="brand-pill">
-              <span>☕</span>
-              <div><strong>Coffee &amp; Cream (1.75L Handles):</strong> Kahlúa (~$52.99) &amp; Carolans Irish Cream (~$26.99) — <em>Carolans handle saves $20 vs Baileys 1.75L with real honey &amp; cream</em></div>
-            </div>
-            <div class="brand-pill">
-              <span>🍇</span>
-              <div><strong>Cordials:</strong> DeKuyper Peachtree (1.0L ~$13.99), Blue Curaçao (750ml ~$11.99), Dark Crème de Cacao (750ml ~$11.99) — <em>Exact specialty notes from 1 brand line</em></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- PRESET BUTTONS -->
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
         <span style="font-size: 0.86rem; font-weight: 700; color: var(--text-main);">Quick Cocktail Selection Presets &amp; Drink Matrix:</span>
@@ -427,53 +372,6 @@
         <div class="custom-kpi-card grand-total-card">
           <div class="kpi-number" id="kpi-grand-total">$0</div>
           <div class="kpi-label">Grand Total Est.</div>
-        </div>
-      </div>
-
-      <!-- SERVINGS & VACATION GROUP CONSUMPTION BREAKDOWN -->
-      <div class="servings-breakdown-box" id="servingsBreakdownBox">
-        <div class="servings-breakdown-header" style="cursor: pointer;" onclick="toggleSectionCollapse('servingsBreakdown')">
-          <div class="servings-title">
-            <span>🪣🍺</span> Authentic 32-oz Buckets &amp; Mason Jars Scale (6–8 Adults, 7-Day Stay):
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="servings-savings-pill" id="servingsSavingsPill">Save ~$0 vs Beach Bars</span>
-            <button type="button" class="section-collapse-btn" id="btnToggleServings" onclick="event.stopPropagation(); toggleSectionCollapse('servingsBreakdown')" style="padding: 4px 10px; font-size: 0.78rem;" title="Collapse or expand servings scale">
-              <span>▲</span> Expand
-            </button>
-          </div>
-        </div>
-        <div id="servingsBreakdownBody" style="display: none;">
-        <div class="servings-breakdown-grid">
-          <div class="servings-item">
-            <span class="servings-icon">🧊</span>
-            <div>
-              <div class="servings-main-val" id="servings-total-cocktails">~0 Standard Drinks (~0 Yeti Doubles)</div>
-              <div class="servings-sub-text" id="servings-pitchers-text">Equivalent to ~0 packed 30–40oz Yeti mugs (or ~0 condo pitchers)</div>
-            </div>
-          </div>
-          <div class="servings-item">
-            <span class="servings-icon">🏖️</span>
-            <div>
-              <div class="servings-main-val" id="servings-pace-val">~0.0 Yeti Mugs / Adult / Day</div>
-              <div class="servings-sub-text" id="servings-pace-sub">Paced for 6–8 adults (avg 7, 49 adult-days) over 7 days with heavy ice</div>
-            </div>
-          </div>
-          <div class="servings-item">
-            <span class="servings-icon">💰</span>
-            <div>
-              <div class="servings-main-val" id="servings-cost-per-drink">~$0.00 Standard / ~$0.00 Yeti Mug</div>
-              <div class="servings-sub-text">vs. $14–$18 standard / $25+ doubles at beachfront resort bars &amp; party boats</div>
-            </div>
-          </div>
-          <div class="servings-item">
-            <span class="servings-icon">🧒</span>
-            <div>
-              <div class="servings-main-val">Kid Mocktails &amp; Hydration</div>
-              <div class="servings-sub-text">Zero-alcohol tropical punch, root beer floats &amp; lemonade for 2 kids</div>
-            </div>
-          </div>
-        </div>
         </div>
       </div>
 
@@ -641,7 +539,7 @@
             <option value="bp_painkiller">🥥 Coastal Vacation Painkiller (Rich Coconut, Dark Rum &amp; Nutmeg)</option>
             <option value="bp_rumrunner">🌴 Gulf Coast Rum Runner (Classic Florida Keys Tiki Punch)</option>
             <option value="bp_peachlemonade">🍋 Sunset Beach Peach Lemonade (Vodka, Peach Schnapps &amp; Pink Sunset Blush)</option>
-            <option value="bp_sunset_punch_kid">🧒 The "Little Porch Sunset Punch" Mocktail (Fizzy Non-Alcoholic for the 2 Kids!)</option>
+            <option value="bp_sunset_punch_kid">🧒 The "Little Porch Sunset Punch" Mocktail (Fizzy Non-Alcoholic Tropical Punch)</option>
           </optgroup>
           <optgroup label="🍀 McGuire's Irish Pub Specialties (12 Drinks)" data-cat="mc">
             <option value="mc_irish_wake">🍀 The Famous "Irish Wake" (McGuire's #1 Mason Jar Legend)</option>
@@ -655,7 +553,7 @@
             <option value="mc_james_bond">🍸 The "James Bond" Double Shot Martini (Beefeater Gin, Tito's Vodka &amp; Lillet)</option>
             <option value="mc_south_of_the_border">🌶️ McGuire's "South of the Border" Pub Margarita (100% Agave, Cointreau &amp; Jalapeño)</option>
             <option value="mc_smoked_old_fashioned">🥃 McGuire's Tavern Old Fashioned (Bushmills Irish Whiskey &amp; Bitters)</option>
-            <option value="mc_root_beer_float_kid">🧒 McGuire's House Draft Root Beer Float (Craft Vanilla Mocktail for the 2 Kids!)</option>
+            <option value="mc_root_beer_float_kid">🧒 McGuire's House Draft Root Beer Float (Craft Vanilla Mocktail)</option>
           </optgroup>
           <optgroup label="🦀 Old Bay Steamer Specialties (9 Drinks)" data-cat="obs">
             <option value="obs_blt">🥃 The Steamer "BLT" (Bourbon/Whiskey, Lemonade &amp; Southern Sweet Tea)</option>
@@ -666,7 +564,7 @@
             <option value="obs_seafoodbloodymary">🦀 The Old Bay Steamer Seafood Bloody Mary (Old Bay Rim &amp; Loaded Skewer)</option>
             <option value="obs_topshelfmargarita">🧂 The Steamer Grand Sunset Margarita (100% Agave, Grand Marnier &amp; Old Bay Rim)</option>
             <option value="obs_bushwacker">🍫 The Classic Coastal Bushwacker (Dark Rum, Kahlúa, Cacao &amp; Coconut)</option>
-            <option value="obs_little_steamer_kid">🧒 The "Little Steamer" Lemon Sweet Tea (Sweet Tea &amp; Lemonade for Kids!)</option>
+            <option value="obs_little_steamer_kid">🧒 The "Little Steamer" Lemon Sweet Tea (Craft Sweet Tea &amp; Lemonade Mocktail)</option>
           </optgroup>
           <optgroup label="🍸 Resort &amp; Vacation Classics (11 Drinks)" data-cat="cl">
             <option value="cl_classic_mojito">🌿 The Classic Mojito (Fresh Muddled Mint, Lime &amp; Crisp Rum)</option>
@@ -697,8 +595,7 @@
         Smart Bar Mixology
       </p>
       <p style="font-size: 0.85rem;">
-        Calibrated for 12 People (10 Adults, 2 Kids) at the vacation rental on Holiday Isle • Sept 20–26, 2026<br>
-        Liquor prices based on standard retail beverage store benchmarks for 1.75L handles and 750ml bottles
+        Liquor and mixer prices based on standard retail beverage store benchmarks
       </p>
     </footer>
 
@@ -709,9 +606,9 @@
 
   <!-- Application Script -->
   <!-- Data & Application Scripts -->
-  <script src="js/recipes-data.js?v=4.2"></script>
-  <script src="js/pricing-data.js?v=4.2"></script>
-  <script src="js/app.js?v=4.2"></script>
+  <script src="js/recipes-data.js?v=4.3"></script>
+  <script src="js/pricing-data.js?v=4.3"></script>
+  <script src="js/app.js?v=4.3"></script>
 
   <!-- Mobile Bottom App Bar -->
   <nav class="mobile-bottom-app-bar" aria-label="Quick App Navigation">

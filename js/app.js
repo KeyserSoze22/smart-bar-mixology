@@ -789,9 +789,7 @@
       masterFilterHub: { bodyId: 'masterFilterHubBody', btnId: 'btnToggleFilterHub', defaultDisplay: 'block', name: 'Filter & Sort Gallery' },
       custombar: { bodyId: 'customBarBody', btnId: 'btnToggleCustomBar', defaultDisplay: 'block', name: 'Smart Bar Builder & Cart' },
       recipes: { bodyId: 'recipesBody', btnId: 'btnToggleRecipes', defaultDisplay: 'block', name: 'Selected Recipe Guide' },
-      brandStrategy: { bodyId: 'brandStrategyBody', btnId: 'btnToggleBrandStrategy', defaultDisplay: 'block', name: '1.75L Handle Strategy' },
       customBarSelectors: { bodyId: 'customBarVenuesGrid', btnId: 'btnToggleSelectors', defaultDisplay: 'grid', name: 'Drink Selectors' },
-      servingsBreakdown: { bodyId: 'servingsBreakdownBody', btnId: 'btnToggleServings', defaultDisplay: 'block', name: 'Servings Scale' },
       expenseSplitter: { bodyId: 'expenseSplitterBody', btnId: 'btnToggleExpenseSplitter', defaultDisplay: 'block', name: 'Expense Splitter' },
       customCart: { bodyId: 'customBarCartDisplayArea', btnId: 'btnToggleCart', defaultDisplay: 'block', name: 'Shopping List' }
     };
@@ -876,11 +874,9 @@
       const tabCab = document.getElementById('tabModeCabinet');
       const cabView = document.getElementById('cabinetModeView');
       const cartHeader = document.getElementById('cartModeHeader');
-      const brandStrategy = document.querySelector('.brand-strategy-box');
       const venuesGrid = document.querySelector('.custom-bar-venues-grid');
       const presets = document.querySelector('.custom-bar-presets');
       const kpiGrid = document.querySelector('.custom-bar-kpi-grid');
-      const breakdown = document.getElementById('servingsBreakdownBox');
       const splitter = document.getElementById('expenseSplitterBox');
       const cartWrap = document.getElementById('customCartItemsWrap');
 
@@ -890,11 +886,9 @@
         if (cabView) cabView.style.display = 'block';
 
         if (cartHeader) cartHeader.style.display = 'none';
-        if (brandStrategy) brandStrategy.style.display = 'none';
         if (venuesGrid) venuesGrid.style.display = 'none';
         if (presets) presets.style.display = 'none';
         if (kpiGrid) kpiGrid.style.display = 'none';
-        if (breakdown) breakdown.style.display = 'none';
         if (splitter) splitter.style.display = 'none';
         if (cartWrap) cartWrap.style.display = 'none';
 
@@ -906,11 +900,9 @@
         if (cabView) cabView.style.display = 'none';
 
         if (cartHeader) cartHeader.style.display = 'block';
-        if (brandStrategy) brandStrategy.style.display = 'block';
         if (venuesGrid) venuesGrid.style.display = 'grid';
         if (presets) presets.style.display = 'flex';
         if (kpiGrid) kpiGrid.style.display = 'grid';
-        if (breakdown) breakdown.style.display = 'block';
         if (splitter) splitter.style.display = 'block';
         if (cartWrap) cartWrap.style.display = 'block';
       }
@@ -1723,24 +1715,6 @@
       if (kpiSpirits) kpiSpirits.textContent = '~$' + cart.spiritsCost.toFixed(2);
       if (kpiGrand) kpiGrand.textContent = '~$' + cart.grandTotal.toFixed(2);
 
-      // Update Servings & Group Consumption Breakdown (32-oz Buckets & Mason Jars)
-      const sCocktails = document.getElementById('servings-total-cocktails');
-      const sPitchers = document.getElementById('servings-pitchers-text');
-      const sPace = document.getElementById('servings-pace-val');
-      const sCost = document.getElementById('servings-cost-per-drink');
-      const sSavings = document.getElementById('servingsSavingsPill');
-
-      if (sCocktails) sCocktails.textContent = '~' + cart.bucketServings + ' Authentic 32-oz Buckets & Mason Jars';
-      if (sPitchers) sPitchers.textContent = 'Fills ~' + cart.bucketServings + ' souvenir buckets, mason jars, or 30–40oz Yeti mugs (or ~' + cart.pitchersCount + ' 1-gal condo pitchers)';
-      if (sPace) sPace.textContent = '~' + cart.bucketsPerAdultPerDay + ' 32-oz Buckets / Adult / Day';
-      const sPaceSub = document.getElementById('servings-pace-sub');
-      if (sPaceSub) {
-        const adults = typeof groupAdultCount !== 'undefined' ? Math.max(1, groupAdultCount) : 7;
-        sPaceSub.textContent = `Paced for ${adults} ${adults === 1 ? 'adult' : 'adults'} (${adults * 7} adult-days) over 7 days with heavy ice`;
-      }
-      if (sCost) sCost.textContent = '~$' + cart.costPerBucket + ' per 32-oz Bucket / Mason Jar';
-      if (sSavings) sSavings.textContent = 'Save ~$' + cart.estSavings.toLocaleString() + ' vs Restaurant Buckets';
-
       // Update Packed Badge
       const packedCount = [...customBarPackedItems].filter(id => {
         return cart.categorized.spirits.some(i => i.id === id) ||
@@ -2117,7 +2091,7 @@
     function initPwaCapabilities() {
       // 1. Register Service Worker for offline capability
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=4.2', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('./sw.js?v=4.3', { updateViaCache: 'none' })
           .then(reg => {
             console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
             // Proactively check for service worker updates immediately
