@@ -1058,6 +1058,9 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
           <button type="button" class="qol-btn" onclick="copyCurrentRecipeIngredients()" style="background: var(--surface); color: var(--text-main); border: 1px solid var(--border); font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Copy Ingredients for this drink">
             <span>📋</span> Copy Ingredients
           </button>
+          <button type="button" class="qol-btn" onclick="resetRecipeChecks('${containerId}')" style="background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); font-size: 0.84rem; padding: 7px 14px; font-weight: 700; border-radius: var(--radius-full);" title="Clear ingredient and step checkmarks">
+            <span>🔄</span> Reset Checks
+          </button>
           ${jumpSectionHtml}
         </div>
       </div>
@@ -1162,13 +1165,14 @@ function getUnifiedStepperHtml(fullKey) {
   const prevTitle = (prevDetails.r?.title || 'Previous').replace(/^[^\w]+/, '').split('(')[0].trim();
   const nextTitle = (nextDetails.r?.title || 'Next').replace(/^[^\w]+/, '').split('(')[0].trim();
 
+  const isSingle = keys.length <= 1;
   return `
     <div class="recipe-stepper-bar">
-      <button type="button" class="recipe-stepper-btn" onclick="stepUnifiedRecipe(-1)" title="Previous: ${prevTitle}">
+      <button type="button" class="recipe-stepper-btn" onclick="stepUnifiedRecipe(-1)" title="Previous: ${prevTitle}" ${isSingle ? 'disabled style="opacity: 0.45; cursor: default;"' : ''}>
         ◀ Previous: ${prevTitle}
       </button>
-      <span class="recipe-stepper-indicator">${currentIdx + 1} of ${keys.length}</span>
-      <button type="button" class="recipe-stepper-btn" onclick="stepUnifiedRecipe(1)" title="Next: ${nextTitle}">
+      <span class="recipe-stepper-indicator">${keys.length === 0 ? '0 of 0' : `${currentIdx + 1} of ${keys.length}`}</span>
+      <button type="button" class="recipe-stepper-btn" onclick="stepUnifiedRecipe(1)" title="Next: ${nextTitle}" ${isSingle ? 'disabled style="opacity: 0.45; cursor: default;"' : ''}>
         Next: ${nextTitle} ▶
       </button>
     </div>
@@ -1218,8 +1222,28 @@ function filterRecipeCategory(cat, silent = false) {
       emptyOpt.value = '';
       emptyOpt.disabled = true;
       emptyOpt.selected = true;
-      emptyOpt.textContent = '⚠️ No cocktails selected above yet (Check drinks in Smart Bar Builder)';
+      emptyOpt.textContent = '⚠️ No cocktails selected in bar list yet';
       sel.appendChild(emptyOpt);
+      const displayArea = document.getElementById('unifiedRecipeDisplayArea');
+      if (displayArea) {
+        displayArea.innerHTML = `
+          <div style="background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 36px 20px; text-align: center; margin: 16px 0;">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">🛒🍸</div>
+            <h3 style="font-size: 1.15rem; color: var(--text-main); margin-bottom: 6px;">No Cocktails in Your Bar List Yet</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 440px; margin: 0 auto 16px;">
+              Check off drinks in the <strong>Smart Bar Builder</strong> above to populate your custom bar menu, or tap <strong>All Cocktails (46)</strong> to browse all recipes!
+            </p>
+            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <button type="button" class="btn btn-primary" onclick="filterRecipeCategory('all')" style="padding: 8px 18px; font-size: 0.85rem; border-radius: var(--radius-full);">
+                🍹 Browse All 46 Recipes
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="setCustomDrinkPreset('favorites'); filterRecipeCategory('selected');" style="padding: 8px 18px; font-size: 0.85rem; border-radius: var(--radius-full);">
+                ⭐ Load Top 8 Favorites
+              </button>
+            </div>
+          </div>
+        `;
+      }
       if (typeof showToast === 'function' && !silent) {
         showToast('ℹ️ No cocktails selected in Smart Bar above yet! Check off drinks above to filter here.');
       }
@@ -1287,25 +1311,40 @@ function filterRecipeCategory(cat, silent = false) {
 function copyCurrentRecipeIngredients() {
   const details = getRecipeDataAndMeta(currentUnifiedRecipeKey);
   if (!details || !details.r) return;
+  const currentServings = (typeof activeRecipeServings === 'number' && activeRecipeServings >= 1) ? activeRecipeServings : 1;
+  const label = getServingsLabelText(currentServings);
+  const scaled = scaleIngredients(details.r.single, currentServings);
+
+  const cleanTitle = details.r.title.trim();
   const lines = [
-    `${details.r.title} Ingredients:`,
-    '',
-    '[Single Serving (32-oz / Yeti)]',
-    ...details.r.single.map(s => `• ${s}`),
-    '',
-    '[1-Gallon Vacation Batch (Pours 4x)]',
-    ...details.r.pitcher.map(p => `• ${p}`)
+    cleanTitle,
+    `[${label}]`,
+    ...scaled.map(s => `• ${s}`)
   ];
+  if (currentServings !== 1) {
+    lines.push('');
+    lines.push('[Single Serving (32-oz / Yeti Baseline)]');
+    lines.push(...details.r.single.map(s => `• ${s}`));
+  }
   const text = lines.join('\n');
   navigator.clipboard.writeText(text).then(() => {
     if (typeof showToast === 'function') {
-      showToast(`✓ Copied ingredients for ${details.r.title.split('(')[0].trim()}`);
+      showToast(`✓ Copied ingredients (${label})`);
     } else {
-      alert(`Copied ingredients for ${details.r.title}`);
+      alert(`Copied ingredients for ${cleanTitle}`);
     }
   }).catch(() => {
     prompt('Copy ingredients below:', text);
   });
+}
+
+function resetRecipeChecks(containerId) {
+  const container = document.getElementById(containerId) || document.getElementById('unifiedRecipeDisplayArea');
+  if (!container) return;
+  container.querySelectorAll('.step-done').forEach(el => el.classList.remove('step-done'));
+  if (typeof showToast === 'function') {
+    showToast('✓ Recipe checklist reset');
+  }
 }
 
 function showRecipe(key) {

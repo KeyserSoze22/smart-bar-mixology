@@ -619,13 +619,14 @@
     function jumpToBarCart() {
       if (typeof expandSectionIfCollapsed === 'function') {
         expandSectionIfCollapsed('custombar');
+        expandSectionIfCollapsed('customCart');
       }
-      const bar = document.getElementById('section-custombar');
-      if (bar) {
+      const cartWrap = document.getElementById('customCartItemsWrap') || document.getElementById('section-custombar');
+      if (cartWrap) {
         const navBar = document.querySelector('.streamlined-nav-bar') || document.querySelector('.navbar');
         const isNavVisible = navBar && window.getComputedStyle(navBar).display !== 'none';
         const navHeight = isNavVisible ? navBar.offsetHeight + 18 : 20;
-        const rect = bar.getBoundingClientRect();
+        const rect = cartWrap.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         window.scrollTo({
           top: Math.max(0, rect.top + scrollTop - navHeight),
@@ -2091,7 +2092,7 @@
     function initPwaCapabilities() {
       // 1. Register Service Worker for offline capability
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js?v=4.3', { updateViaCache: 'none' })
+        navigator.serviceWorker.register('./sw.js?v=4.4', { updateViaCache: 'none' })
           .then(reg => {
             console.log('[PWA] Service Worker registered successfully, scope:', reg.scope);
             // Proactively check for service worker updates immediately

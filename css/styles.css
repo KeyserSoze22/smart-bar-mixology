@@ -4729,6 +4729,10 @@
       gap: 6px;
       transition: var(--transition);
       box-shadow: var(--shadow-sm);
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .recipe-stepper-btn:hover {
       background: var(--primary-light);

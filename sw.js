@@ -4,14 +4,14 @@
 // Cache v4.2 — force-busts prior caches to deliver mobile swipe and uncollapsed recipe updates
 // ==========================================================================
 
-const CACHE_NAME = 'smart-bar-mixology-v4.3';
+const CACHE_NAME = 'smart-bar-mixology-v4.4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './css/styles.css?v=4.3',
-  './js/recipes-data.js?v=4.3',
-  './js/pricing-data.js?v=4.3',
-  './js/app.js?v=4.3',
+  './css/styles.css?v=4.4',
+  './js/recipes-data.js?v=4.4',
+  './js/pricing-data.js?v=4.4',
+  './js/app.js?v=4.4',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
