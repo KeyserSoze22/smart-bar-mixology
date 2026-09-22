@@ -903,12 +903,36 @@ function scaleIngredients(ingredients, multiplier) {
 }
 
 /**
+ * Global persistent serving size across recipe navigation
+ */
+let activeRecipeServings = 1;
+
+function getServingsHeadingText(servings) {
+  if (servings === 1) return '🧪 Ingredients — 1 Serving (32-oz Vessel):';
+  if (servings === 2) return '🧊 Ingredients — 2 Servings (Fills 1 × 64-oz Growler w/ Ice):';
+  if (servings === 3) return '🧊 Ingredients — 3 Servings (Fills 1 × 64-oz Growler, No Ice):';
+  if (servings === 4) return '🍶 Ingredients — 1-Gallon Batch (Fills 2 × 64-oz Growlers):';
+  if (servings === 8) return '🎉 Ingredients — Double Batch (Fills 4 × 64-oz Growlers):';
+  return `🧪 Ingredients — ${servings} Servings:`;
+}
+
+function getServingsLabelText(servings) {
+  if (servings === 1) return '1 Serving — 32-oz Vessel';
+  if (servings === 2) return '2 Servings — 1 × 64-oz Growler (w/ Ice)';
+  if (servings === 3) return '3 Servings — 1 × 64-oz Growler (No Ice)';
+  if (servings === 4) return '4 Servings — 2 × 64-oz Growlers (1 Gallon)';
+  if (servings === 8) return '8 Servings — 4 × 64-oz Growlers';
+  return `${servings} Servings`;
+}
+
+/**
  * Called by the servings slider — re-renders the scaled ingredient list in-place
  * without re-rendering the whole card. Stores singleIngredients on the container.
  * @param {HTMLElement} sliderEl
  */
 function updateServingsSlider(sliderEl) {
   const servings = parseInt(sliderEl.value, 10);
+  activeRecipeServings = servings;
   const card = sliderEl.closest('.recipe-display-card');
   if (!card) return;
 
@@ -926,20 +950,7 @@ function updateServingsSlider(sliderEl) {
   // Update the ingredient box heading based on serving count
   const boxHeading = card.querySelector('.ingredient-box h4');
   if (boxHeading) {
-    let headingText = '';
-    if (servings === 1) {
-      headingText = '🧪 Ingredients — 1 Serving (32-oz Vessel):';
-    } else if (servings === 2) {
-      headingText = '🧊 Ingredients — 2 Servings (Fills 1 × 64-oz Growler w/ Ice):';
-    } else if (servings === 3) {
-      headingText = '🧊 Ingredients — 3 Servings (Fills 1 × 64-oz Growler, No Ice):';
-    } else if (servings === 4) {
-      headingText = '🍶 Ingredients — 1-Gallon Batch (Fills 2 × 64-oz Growlers):';
-    } else if (servings === 8) {
-      headingText = '🎉 Ingredients — Double Batch (Fills 4 × 64-oz Growlers):';
-    } else {
-      headingText = `🧪 Ingredients — ${servings} Servings:`;
-    }
+    const headingText = getServingsHeadingText(servings);
     boxHeading.innerHTML = `<span></span> ${headingText}`;
     boxHeading.style.color = venueColor;
   }
@@ -947,13 +958,7 @@ function updateServingsSlider(sliderEl) {
   // Update the servings label
   const labelEl = card.querySelector('.servings-label');
   if (labelEl) {
-    let labelText = '';
-    if (servings === 1)      labelText = '1 Serving — 32-oz Vessel';
-    else if (servings === 2) labelText = '2 Servings — 1 × 64-oz Growler (w/ Ice)';
-    else if (servings === 3) labelText = '3 Servings — 1 × 64-oz Growler (No Ice)';
-    else if (servings === 4) labelText = '4 Servings — 2 × 64-oz Growlers (1 Gallon)';
-    else if (servings === 8) labelText = '8 Servings — 4 × 64-oz Growlers';
-    else                     labelText = `${servings} Servings`;
+    const labelText = getServingsLabelText(servings);
     labelEl.textContent = labelText;
     labelEl.style.color = venueColor;
   }
@@ -973,10 +978,13 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
   // Escape single ingredients for JSON embedding in data attribute
   const singleJson = JSON.stringify(r.single).replace(/"/g, '&quot;');
 
-  // Default: 1 serving = single; show scaled list
-  const defaultServings = 1;
-  const defaultScaled = scaleIngredients(r.single, defaultServings);
+  // Persistent servings scale across recipe navigation
+  const currentServings = (typeof activeRecipeServings === 'number' && activeRecipeServings >= 1) ? activeRecipeServings : 1;
+  const defaultScaled = scaleIngredients(r.single, currentServings);
   const scaledItems = defaultScaled.map(i => `<li>${i}</li>`).join('');
+  const currentHeadingText = getServingsHeadingText(currentServings);
+  const currentLabelText = getServingsLabelText(currentServings);
+  const currentSliderPct = ((currentServings - 1) / 7) * 100;
 
   const stepsHtml = r.steps.map((s, idx) => `<li class="recipe-step-item" onclick="toggleRecipeStepCheck(this)" title="Tap to cross off step">${s}</li>`).join('');
 
@@ -1039,18 +1047,18 @@ function renderUnifiedRecipeCardHtml(dKey, containerId, isModal = false) {
       <div class="servings-scaler-row">
         <span style="font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">🪣 Servings</span>
         <div class="servings-slider-wrap">
-          <span class="servings-num-badge" style="border-color: ${venueColor}; color: ${venueColor};">1</span>
-          <input type="range" class="servings-slider" min="1" max="8" value="1" step="1"
-            style="background: linear-gradient(to right, ${venueColor} 0%, ${venueColor} 0%, var(--border) 0%, var(--border) 100%);"
+          <span class="servings-num-badge" style="border-color: ${venueColor}; color: ${venueColor};">${currentServings}</span>
+          <input type="range" class="servings-slider" min="1" max="8" value="${currentServings}" step="1"
+            style="background: linear-gradient(to right, ${venueColor} 0%, ${venueColor} ${currentSliderPct}%, var(--border) ${currentSliderPct}%, var(--border) 100%);"
             oninput="this.previousElementSibling.textContent = this.value; updateServingsSlider(this);"
             aria-label="Number of servings" />
           <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">8</span>
         </div>
-        <span class="servings-label" style="color: ${venueColor}; font-size: 0.85rem; font-weight: 700;">1 Serving — 32-oz Vessel</span>
+        <span class="servings-label" style="color: ${venueColor}; font-size: 0.85rem; font-weight: 700;">${currentLabelText}</span>
       </div>
 
       <div class="ingredient-box" style="border-color: ${venueColor}; margin-bottom: 18px;">
-        <h4 style="color: ${venueColor};"><span>🧪</span> Ingredients — 1 Serving (32-oz Vessel):</h4>
+        <h4 style="color: ${venueColor};"><span></span> ${currentHeadingText}</h4>
         <ul class="ingredient-list">${scaledItems}</ul>
       </div>
 
