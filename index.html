@@ -85,7 +85,7 @@
             <span>📲</span> Install App
           </button>
           <button onclick="toggleAllSections()" class="btn btn-secondary" id="toggleAllSectionsBtn" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.2); color: #fff; cursor: pointer;" title="Expand or collapse all main sections on the page">
-            <span>⤡</span> Collapse All
+            <span>⤢</span> Expand All
           </button>
           <button onclick="openSurpriseModal()" class="btn btn-secondary" style="padding: 8px 16px; border-radius: var(--radius-full); font-weight: 700; background: linear-gradient(135deg, #ec4899 0%, #d946ef 100%); color: #fff; border: 1px solid rgba(255,255,255,0.3); cursor: pointer;" title="Randomly Pick a Cocktail for the Group!">
             <span>🎲</span> Surprise Me!
@@ -112,12 +112,12 @@
             ↺ Reset Filters
           </button>
           <button type="button" class="section-collapse-btn" id="btnToggleFilterHub" onclick="toggleSectionCollapse('masterFilterHub')" title="Collapse or expand cocktail filters &amp; gallery">
-            <span>▼</span> Collapse
+            <span>▲</span> Expand
           </button>
         </div>
       </div>
 
-      <div class="section-collapsible-body" id="masterFilterHubBody">
+      <div class="section-collapsible-body" id="masterFilterHubBody" style="display: none;">
       <!-- Row 1: Drink Style Filter Pills (WHAT it is) -->
       <div class="style-filter-pills" id="styleFilterPills">
         <button type="button" class="style-pill-btn active" onclick="setDrinkStyleFilter('all')"><span>🍹</span> All Drinks (46)</button>
@@ -270,11 +270,11 @@
           </p>
         </div>
         <button type="button" class="section-collapse-btn" id="btnToggleCustomBar" onclick="toggleSectionCollapse('custombar')" title="Collapse or expand Smart Bar Builder">
-          <span>▼</span> Collapse
+          <span>▲</span> Expand
         </button>
       </div>
 
-      <div class="section-collapsible-body" id="customBarBody">
+      <div class="section-collapsible-body" id="customBarBody" style="display: none;">
       <!-- BRAND CONSOLIDATION STRATEGY CALLOUT -->
       <div class="brand-strategy-box" id="brandStrategyBox">
         <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 10px;" onclick="toggleSectionCollapse('brandStrategy')">
@@ -282,10 +282,10 @@
             <span>🏆</span> 1.75L Handle Strategy for 6–8 Adults &amp; 30–40oz Tumblers (Standard Retail Spirit Handles):
           </div>
           <button type="button" class="section-collapse-btn" id="btnToggleBrandStrategy" onclick="event.stopPropagation(); toggleSectionCollapse('brandStrategy')" style="padding: 4px 12px; font-size: 0.78rem;" title="Collapse or expand 1.75L handle strategy guide">
-            <span>▼</span> Collapse
+            <span>▲</span> Expand
           </button>
         </div>
-        <div id="brandStrategyBody">
+        <div id="brandStrategyBody" style="display: none;">
           <p class="brand-strategy-desc" style="margin-top: 10px;">
             For <strong>6–8 adults drinking 2–4 drinks per day in 30–40oz Yeti mugs with heavy ice</strong>, standard 750ml bottles run dry in 1 afternoon! Stocking <strong>1.75L handles</strong> of core workhorse spirits slashes alcohol costs by <strong>30%–48% per ounce</strong> compared to 750ml fifths, giving your group ample volume for double beach pours all week without buying duplicate bottles:
           </p>
@@ -330,7 +330,7 @@
       <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
         <span style="font-size: 0.86rem; font-weight: 700; color: var(--text-main);">Quick Cocktail Selection Presets &amp; Drink Matrix:</span>
         <button type="button" class="section-collapse-btn" id="btnToggleSelectors" onclick="toggleSectionCollapse('customBarSelectors')" style="padding: 4px 12px; font-size: 0.78rem;" title="Collapse or expand 46 cocktail selector matrix">
-          <span>▼</span> Collapse Selectors
+          <span>▲</span> Expand Selectors
         </button>
       </div>
       <div class="custom-bar-presets">
@@ -355,7 +355,7 @@
       </div>
 
       <!-- TWO COLUMN COCKTAIL SELECTOR GRID -->
-      <div class="custom-bar-venues-grid" id="customBarVenuesGrid">
+      <div class="custom-bar-venues-grid" id="customBarVenuesGrid" style="display: none;">
         <!-- BACK PORCH COLUMN -->
         <div class="venue-cocktail-box backporch-box">
           <div class="venue-box-header">
@@ -439,11 +439,11 @@
           <div style="display: flex; align-items: center; gap: 8px;">
             <span class="servings-savings-pill" id="servingsSavingsPill">Save ~$0 vs Beach Bars</span>
             <button type="button" class="section-collapse-btn" id="btnToggleServings" onclick="event.stopPropagation(); toggleSectionCollapse('servingsBreakdown')" style="padding: 4px 10px; font-size: 0.78rem;" title="Collapse or expand servings scale">
-              <span>▼</span> Collapse
+              <span>▲</span> Expand
             </button>
           </div>
         </div>
-        <div id="servingsBreakdownBody">
+        <div id="servingsBreakdownBody" style="display: none;">
         <div class="servings-breakdown-grid">
           <div class="servings-item">
             <span class="servings-icon">🧊</span>
@@ -496,12 +496,12 @@
               <span>📤</span> Share Bar List
             </button>
             <button type="button" class="section-collapse-btn" id="btnToggleExpenseSplitter" onclick="toggleSectionCollapse('expenseSplitter')" style="padding: 6px 12px; font-size: 0.82rem;" title="Collapse or expand expense splitter">
-              <span>▼</span> Collapse
+              <span>▲</span> Expand
             </button>
           </div>
         </div>
 
-        <div id="expenseSplitterBody">
+        <div id="expenseSplitterBody" style="display: none;">
         <!-- 1 TO 12 PEOPLE SLIDING BAR -->
         <div style="background: rgba(255, 255, 255, 0.6); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid rgba(147, 51, 234, 0.2); margin-bottom: 12px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -582,13 +582,13 @@
               <span>🔄</span> Reset Checks
             </button>
             <button type="button" class="section-collapse-btn" id="btnToggleCart" onclick="toggleSectionCollapse('customCart')" style="padding: 7px 12px; font-size: 0.82rem;" title="Collapse or expand shopping list items">
-              <span>▼</span> Collapse
+              <span>▲</span> Expand
             </button>
           </div>
         </div>
 
         <!-- ITEMS RENDER TARGET -->
-        <div id="customBarCartDisplayArea">
+        <div id="customBarCartDisplayArea" style="display: none;">
           <!-- Populated by JS -->
         </div>
       </div>
@@ -609,11 +609,11 @@
           </p>
         </div>
         <button type="button" class="section-collapse-btn" id="btnToggleRecipes" onclick="toggleSectionCollapse('recipes')" title="Collapse or expand Selected Recipe section">
-          <span>▼</span> Collapse
+          <span>▲</span> Expand
         </button>
       </div>
 
-      <div class="section-collapsible-body" id="recipesBody">
+      <div class="section-collapsible-body" id="recipesBody" style="display: none;">
       <!-- Quick Category Filter Chips for the Recipe Selector -->
       <div class="recipe-category-chips" id="recipeCategoryChips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;">
         <button type="button" class="filter-chip active" id="rcat_all" onclick="filterRecipeCategory('all')">All Cocktails (46)</button>

@@ -2183,6 +2183,7 @@
       initDeepLinkingAndHotkeys();
       initQuickViewTouchDismiss();
       initPwaCapabilities();
+      updateMasterCollapseButtonState();
       console.log('Smart Bar Mixology loaded successfully!');
     });
 
